@@ -8,9 +8,6 @@ import {StyleSheet, View} from 'react-native';
 import colors from '@/constants/colors';
 import {JSX} from "react";
 import {BellIcon, CalendarBlankIcon, HouseIcon, ShoppingCartIcon} from "phosphor-react-native";
-import * as Svg from "react-native-svg";
-import {Ionicons} from "@expo/vector-icons";
-import { Circle, Rect } from "react-native-svg";
 
 // ── Types ──────────────────────────────────────────────────────────────────
 // Defines which icon names are valid. Keeping this as a union type means

@@ -7,24 +7,22 @@
 // compare it to your <Routes> setup in React Router — it maps
 // paths to components, nothing more.
 
-import { useEffect } from 'react';
-import { Tabs } from 'expo-router';
+import {useEffect} from 'react';
+import {Tabs} from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import {
-    useFonts,
     Nunito_400Regular,
     Nunito_600SemiBold,
     Nunito_700Bold,
     Nunito_800ExtraBold,
     Nunito_900Black,
+    useFonts,
 } from '@expo-google-fonts/nunito';
-import {
-    NunitoSans_400Regular,
-    NunitoSans_600SemiBold,
-} from '@expo-google-fonts/nunito-sans';
+import {NunitoSans_400Regular, NunitoSans_600SemiBold,} from '@expo-google-fonts/nunito-sans';
 
-import { TabBarIcon }   from '@/components/navigation/TabBarIcon';
-import { tabBarConfig } from '@/components/navigation/tabBarConfig';
+import {TabBarIcon} from '@/components/navigation/TabBarIcon';
+import {tabBarConfig} from '@/components/navigation/tabBarConfig';
+import {StatusBar} from "react-native";
 
 // Hold the splash screen until fonts are ready.
 // Must be called before the component renders.
@@ -57,52 +55,55 @@ export default function RootLayout() {
     if (!fontsLoaded && !fontError) return null;
 
     return (
-        <Tabs screenOptions={tabBarConfig}>
+        <>
+            <StatusBar barStyle={'dark-content'} backgroundColor={'transparent'}/>
+            <Tabs screenOptions={tabBarConfig}>
 
-            {/* Each Tabs.Screen maps a filename to a tab entry.
+                {/* Each Tabs.Screen maps a filename to a tab entry.
           `name` must match the filename in app/(tabs)/ exactly.
           In Expo Router, index.tsx = the first/default tab. */}
 
-            <Tabs.Screen
-                name="index"
-                options={{
-                    title: 'Overview',
-                    tabBarIcon: ({ color, focused }) => (
-                        <TabBarIcon icon="house" color={color} focused={focused} />
-                    ),
-                }}
-            />
+                <Tabs.Screen
+                    name="index"
+                    options={{
+                        title: 'Overview',
+                        tabBarIcon: ({color, focused}) => (
+                            <TabBarIcon icon="house" color={color} focused={focused}/>
+                        ),
+                    }}
+                />
 
-            <Tabs.Screen
-                name="reminders"
-                options={{
-                    title: 'Reminders',
-                    tabBarIcon: ({ color, focused }) => (
-                        <TabBarIcon icon="bell" color={color} focused={focused} />
-                    ),
-                }}
-            />
+                <Tabs.Screen
+                    name="reminders"
+                    options={{
+                        title: 'Reminders',
+                        tabBarIcon: ({color, focused}) => (
+                            <TabBarIcon icon="bell" color={color} focused={focused}/>
+                        ),
+                    }}
+                />
 
-            <Tabs.Screen
-                name="activities"
-                options={{
-                    title: 'Activities',
-                    tabBarIcon: ({ color, focused }) => (
-                        <TabBarIcon icon="calendar" color={color} focused={focused} />
-                    ),
-                }}
-            />
+                <Tabs.Screen
+                    name="activities"
+                    options={{
+                        title: 'Activities',
+                        tabBarIcon: ({color, focused}) => (
+                            <TabBarIcon icon="calendar" color={color} focused={focused}/>
+                        ),
+                    }}
+                />
 
-            <Tabs.Screen
-                name="expenses"
-                options={{
-                    title: 'Expenses',
-                    tabBarIcon: ({ color, focused }) => (
-                        <TabBarIcon icon="cart" color={color} focused={focused} />
-                    ),
-                }}
-            />
+                <Tabs.Screen
+                    name="expenses"
+                    options={{
+                        title: 'Expenses',
+                        tabBarIcon: ({color, focused}) => (
+                            <TabBarIcon icon="cart" color={color} focused={focused}/>
+                        ),
+                    }}
+                />
 
-        </Tabs>
+            </Tabs>
+        </>
     );
 }
