@@ -4,6 +4,8 @@
   "version": "1.0.0",
   "scripts": {
     "start": "expo start",
+    "dev": "adb reverse tcp:8081 tcp:8081 && expo start --clear",
+    "dev:fast": "adb reverse tcp:8081 tcp:8081 && expo start",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo run:android",
     "ios": "expo run:ios",

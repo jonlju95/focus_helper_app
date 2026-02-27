@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
         paddingTop: 32,
         paddingBottom: 12,
         backgroundColor: colors.bgApp,
+        gap: 12
     },
 
     button: {

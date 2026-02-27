@@ -39,6 +39,7 @@ function DailyCards({icon, iconBg, title, time, urgent}: CardProps) {
 
 function DailyReminders() {
     return (
+
         <View style={styles.container}>
 
             {/* Badge */}

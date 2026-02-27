@@ -15,6 +15,7 @@ import {TabBarIcon} from '@/components/navigation/TabBarIcon';
 import {tabBarConfig} from '@/components/navigation/tabBarConfig';
 import {StatusBar} from "react-native";
 import colors from "@/constants/colors";
+import {DefaultTheme, ThemeProvider} from "@react-navigation/native";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -37,52 +38,67 @@ export default function RootLayout() {
 
     if (!fontsLoaded && !fontError) return null;
 
+    const AppTheme = {
+        ...DefaultTheme,
+        colors: {
+            ...DefaultTheme.colors,
+            background: colors.bgScreen,   // this sets the nav container background
+            card: colors.bgScreen,   // this sets the header/tab bar area
+        },
+    };
+
     return (
         <>
             <StatusBar barStyle={'dark-content'} backgroundColor={colors.bgApp}/>
-            <Tabs screenOptions={tabBarConfig}>
+            <ThemeProvider value={AppTheme}>
+                <Tabs screenOptions={tabBarConfig}>
 
-                <Tabs.Screen
-                    name="index"
-                    options={{
-                        title: 'Overview',
-                        tabBarIcon: ({color, focused}) => (
-                            <TabBarIcon icon="house" color={color} focused={focused}/>
-                        ),
-                    }}
-                />
+                    <Tabs.Screen
+                        name="index"
+                        options={{
+                            title: 'Overview',
+                            sceneStyle: {backgroundColor: colors.bgApp},
+                            tabBarIcon: ({color, focused}) => (
+                                <TabBarIcon icon="house" color={color} focused={focused}/>
+                            ),
+                        }}
+                    />
 
-                <Tabs.Screen
-                    name="reminders"
-                    options={{
-                        title: 'Reminders',
-                        tabBarIcon: ({color, focused}) => (
-                            <TabBarIcon icon="bell" color={color} focused={focused}/>
-                        ),
-                    }}
-                />
+                    <Tabs.Screen
+                        name="reminders"
+                        options={{
+                            title: 'Reminders',
+                            sceneStyle: {backgroundColor: colors.bgApp},
+                            tabBarIcon: ({color, focused}) => (
+                                <TabBarIcon icon="bell" color={color} focused={focused}/>
+                            ),
+                        }}
+                    />
 
-                <Tabs.Screen
-                    name="activities"
-                    options={{
-                        title: 'Activities',
-                        tabBarIcon: ({color, focused}) => (
-                            <TabBarIcon icon="calendar" color={color} focused={focused}/>
-                        ),
-                    }}
-                />
+                    <Tabs.Screen
+                        name="activities"
+                        options={{
+                            title: 'Activities',
+                            sceneStyle: {backgroundColor: colors.bgApp},
+                            tabBarIcon: ({color, focused}) => (
+                                <TabBarIcon icon="calendar" color={color} focused={focused}/>
+                            ),
+                        }}
+                    />
 
-                <Tabs.Screen
-                    name="expenses"
-                    options={{
-                        title: 'Expenses',
-                        tabBarIcon: ({color, focused}) => (
-                            <TabBarIcon icon="cart" color={color} focused={focused}/>
-                        ),
-                    }}
-                />
+                    <Tabs.Screen
+                        name="expenses"
+                        options={{
+                            title: 'Expenses',
+                            sceneStyle: {backgroundColor: colors.bgApp},
+                            tabBarIcon: ({color, focused}) => (
+                                <TabBarIcon icon="cart" color={color} focused={focused}/>
+                            ),
+                        }}
+                    />
 
-            </Tabs>
+                </Tabs>
+            </ThemeProvider>
         </>
     );
 }
