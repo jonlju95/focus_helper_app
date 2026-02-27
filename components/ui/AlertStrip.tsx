@@ -57,12 +57,11 @@ function AlertItem({item}: { item: AlertItem }) {
     );
 }
 
-// ── Styles ─────────────────────────────────────────────────────────────────
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginHorizontal: 20,
+        marginHorizontal: 16,
         backgroundColor: '#fff3e8',
         borderWidth: 1.5,
         borderColor: colors.borderWarm,
@@ -88,7 +87,7 @@ const styles = StyleSheet.create({
     iconWrap: {
         width: 30,
         height: 30,
-        borderRadius: 9,
+        borderRadius: 8,
         alignItems: 'center',
         justifyContent: 'center',
         flexShrink: 0,

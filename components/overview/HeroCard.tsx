@@ -43,7 +43,7 @@ function HeroCard() {
 
 const styles = StyleSheet.create({
     container: {
-        marginHorizontal: 20,
+        marginHorizontal: 16,
         gap: 12,
     },
 
@@ -60,12 +60,12 @@ const styles = StyleSheet.create({
     sectionLabel: {
         flexDirection: "row",
         alignItems: "center",
-        gap: 5
+        gap: 6
     },
 
     card: {
-        padding: 22,
-        paddingBottom: 18,
+        padding: 20,
+        paddingBottom: 24,
         borderRadius: 24,
     },
 
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
         gap: 5,
         alignSelf: 'flex-start',
         borderRadius: 20,
-        marginBottom: 10,
+        marginBottom: 8,
     },
 
     cardBadgeText: {
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
         borderStyle: 'solid',
         borderColor: 'rgba(255,255,255,0.4)',
         paddingHorizontal: 16,
-        paddingVertical: 9,
+        paddingVertical: 8,
         borderRadius: 20,
     },
 

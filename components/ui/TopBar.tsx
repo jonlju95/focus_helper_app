@@ -37,9 +37,10 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         alignItems: 'center',   // remove justifyContent entirely
-        paddingHorizontal: 20,
-        paddingTop: 52,
-        paddingBottom: 10,
+        paddingHorizontal: 16,
+        paddingTop: 32,
+        paddingBottom: 12,
+        backgroundColor: colors.bgApp,
     },
 
     button: {
