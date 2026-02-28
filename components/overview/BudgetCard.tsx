@@ -2,6 +2,7 @@ import {StyleSheet, Text, View} from 'react-native';
 import {ListChecksIcon, ShoppingCartIcon} from 'phosphor-react-native';
 import colors from '@/constants/colors';
 import {ReactNode} from "react";
+import ProgressBar from "@/components/ui/ProgressBar";
 
 type Variant = 'dark' | 'light';
 
@@ -37,9 +38,7 @@ function StatCard({icon, label, amount, currency, progress, variant}: CardData &
 
             {/* Progress bar — only renders if progress prop is passed */}
             {progress !== undefined && (
-                <View style={styles.progressTrack}>
-                    <View style={[styles.progressFill, {width: `${progress * 100}%`}]}/>
-                </View>
+                <ProgressBar progress={progress} color={colors.primary} />
             )}
 
         </View>
@@ -70,7 +69,7 @@ function BudgetCard() {
                     label="Budget remaining"
                     amount="5 436"
                     currency="kr"
-                    progress={0.62}   // 62% spent — pass undefined to hide
+                    progress={0.62}
                 />
             </View>
 

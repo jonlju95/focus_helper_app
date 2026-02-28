@@ -3,7 +3,6 @@ import {Pressable, StyleSheet, Text, View} from "react-native";
 import colors from "@/constants/colors";
 import {ReminderType} from "@/types/reminder";
 
-// Remove the internal useState — parent owns it now
 interface ReminderTabsProps {
     activeTab: ReminderType;
     onChange: (tab: ReminderType) => void;
@@ -23,7 +22,7 @@ function ReminderTabs({activeTab, onChange}: ReminderTabsProps) {
                 return (
                     <Pressable
                         key={tab.type}
-                        onPress={() => onChange(tab.type)}  // ← calls parent's setter
+                        onPress={() => onChange(tab.type)}
                         style={[styles.tabButton, isActive && styles.activeTab]}
                     >
                         <Text style={[styles.tabButtonText, isActive && styles.activeTabText]}>

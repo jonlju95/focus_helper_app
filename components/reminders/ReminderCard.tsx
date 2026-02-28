@@ -2,6 +2,7 @@ import {Pressable, StyleSheet, Text, View} from "react-native";
 import {ArrowRightIcon, BellIcon, ClockIcon, DotOutlineIcon, StarIcon} from "phosphor-react-native";
 import colors from "@/constants/colors";
 import {Task} from "@/types/reminder";
+import ProgressBar from "@/components/ui/ProgressBar";
 
 interface CardProps {
     iconColor: string,
@@ -37,15 +38,11 @@ function ReminderCard({iconColor, iconBg, title, time, priority, tasks, onPress}
                         </>
                     )}
                 </View>
-                <View style={styles.progressTrack}>
-                    <View style={[styles.progressFill, {
-                        width: `${tasks.length > 0
-                            ? (tasks.filter(t => t.completed).length / tasks.length) * 100
-                            : 0}%`
-                    }]}/>
-                </View>
+
                 <View>
-                    <Text style={styles.cardTasks}>{tasks.filter(t => t.completed).length}/{tasks.length}</Text>
+                    <ProgressBar progress={tasks.filter(t => t.completed).length / tasks.length} height={4}/>
+                    <Text style={styles.cardTasks}>{tasks.filter(t => t.completed).length}/{tasks.length} tasks
+                        done</Text>
                 </View>
             </View>
             <View>
@@ -91,7 +88,8 @@ const styles = StyleSheet.create({
     cardLabelTime: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 4
+        gap: 4,
+        marginBottom: 8
     },
     cardLabelText: {
         fontSize: 12,
@@ -118,6 +116,7 @@ const styles = StyleSheet.create({
         fontSize: 11,
         fontFamily: "Nunito_600",
         color: colors.textMuted,
+        marginTop: 4
     }
 })
 

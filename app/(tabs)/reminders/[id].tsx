@@ -1,21 +1,56 @@
 import {router, useLocalSearchParams} from "expo-router";
-import {Pressable, ScrollView, StyleSheet, Text, View} from "react-native";
+import {LayoutAnimation, Pressable, ScrollView, StyleSheet, Text, View} from "react-native";
 import TopBar from "@/components/ui/TopBar";
 import colors from "@/constants/colors";
 import {MOCK_REMINDERS} from "@/data/reminders";
 import {ClockIcon, PenIcon, StarIcon} from "phosphor-react-native";
+import ReminderTable from "@/components/reminders/ReminderTable";
+import {useState} from "react";
+import ProgressBar from "@/components/ui/ProgressBar";
+import ToggleButton from "@/components/ui/ToggleButton";
+import Button from "@/components/ui/Button";
 
 function ReminderDetail() {
     const {id} = useLocalSearchParams<{ id: string }>();
 
-    const reminder = MOCK_REMINDERS.find(r => r.id === id);
-    if (!reminder) {
-        return <View><Text>Reminder not found</Text></View>
+    const foundReminder = MOCK_REMINDERS.find(r => r.id === id);
+    const [reminder, setReminder] = useState(foundReminder);
+
+    const progress = reminder && reminder.tasks.length > 0
+        ? reminder.tasks.filter(t => t.completed).length / reminder.tasks.length
+        : 0;
+
+    if (!reminder) return <View><Text>Reminder not found</Text></View>;
+
+    const toggleTask = (taskId: string) => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        setReminder(prev => {
+            if (!prev) return prev;
+            return {
+                ...prev,
+                tasks: prev.tasks.map(task =>
+                    task.id === taskId
+                        ? {...task, completed: !task.completed}
+                        : task
+                ),
+            };
+        });
+    };
+
+    const togglePriority = (priority: boolean) => {
+        setReminder(prev => {
+            if (!prev) return prev;
+            return {
+                ...prev,
+                prioritized: priority
+            };
+        });
     }
 
     return (
         <View style={styles.container}>
-            <TopBar title={reminder.title} showBack={true} onBack={() => router.back()} onMenu={() => {}}/>
+            <TopBar title={reminder.title} showBack={true} onBack={() => router.back()} onMenu={() => {
+            }}/>
 
             <ScrollView
                 style={styles.scroll}
@@ -31,19 +66,42 @@ function ReminderDetail() {
                         </Pressable>
                     </View>
                     <View style={styles.timeLabel}>
-                        <ClockIcon size={12} color={colors.textMuted} weight={'fill'} />
+                        <ClockIcon size={12} color={colors.textMuted} weight={'fill'}/>
                         <Text style={styles.timeLabelText}>{reminder.time}</Text>
                     </View>
                     {reminder.prioritized && (
                         <View style={styles.prioritizedTag}>
-                            <StarIcon size={11} color={colors.primary} weight={'fill'} />
+                            <StarIcon size={11} color={colors.primary} weight={'fill'}/>
                             <Text style={styles.prioritizedTagText}>Prioritized</Text>
                         </View>
                     )}
                 </View>
-                <View></View>
-                <View></View>
-                <View></View>
+                <View style={styles.progressCard}>
+                    <View style={styles.progressCardBar}>
+                        <Text style={styles.progressCardText}>Task progress</Text>
+                        <View style={styles.progressTrack}>
+                            <ProgressBar
+                                progress={progress}
+                                showLabel
+                                completed={reminder.tasks.filter(t => t.completed).length}
+                                total={reminder.tasks.length}
+                            />
+                        </View>
+                    </View>
+                    <View style={styles.tasksTextContainer}>
+                        <Text
+                            style={styles.completeTasksText}>{reminder.tasks.filter(t => t.completed).length}</Text>
+                        <Text style={styles.incompleteTasksText}>/{reminder.tasks.length}</Text>
+                    </View>
+                </View>
+                <ReminderTable tasks={reminder.tasks} onToggle={(id) => toggleTask(id)}/>
+                <View style={styles.buttonContainer}>
+                    <View style={styles.priorityContainer}>
+                        <Text style={styles.priorityContainerText}>Prioritized</Text>
+                        <ToggleButton value={reminder.prioritized} onChange={togglePriority}/>
+                    </View>
+                    <Button label={'Save'}/>
+                </View>
             </ScrollView>
         </View>
     );
@@ -68,9 +126,9 @@ const styles = StyleSheet.create({
         borderRadius: 16
     },
     editWrapperTitle: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
     },
     editWrapperTitleText: {
         color: colors.textPrimary,
@@ -118,6 +176,66 @@ const styles = StyleSheet.create({
         fontSize: 11,
         fontFamily: "Nunito_800",
         color: colors.primary,
+    },
+    progressCard: {
+        flexDirection: "row",
+        alignItems: "center",
+        paddingHorizontal: 16,
+        paddingVertical: 12,
+        marginHorizontal: 16,
+        borderRadius: 16,
+        backgroundColor: colors.bgCard,
+        gap: 12
+    },
+    progressCardBar: {
+        flex: 1
+    },
+    progressCardText: {
+        color: colors.textMuted,
+        fontSize: 12,
+        fontFamily: "Nunito_700",
+    },
+    progressTrack: {
+        height: 6,
+        backgroundColor: '#f0ebe4',
+        borderRadius: 4,
+        overflow: 'hidden',
+        marginTop: 6,
+    },
+    progressFill: {
+        height: '100%',
+        backgroundColor: colors.primary,
+        borderRadius: 4,
+    },
+    tasksTextContainer: {
+        flexDirection: "row",
+        alignItems: "baseline",
+    },
+    completeTasksText: {
+        color: colors.primary,
+        fontSize: 22,
+        fontFamily: "Nunito_900",
+    },
+    incompleteTasksText: {
+        color: colors.textMuted,
+        fontSize: 14,
+        fontFamily: "Nunito_900",
+    },
+    buttonContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        paddingHorizontal: 16,
+    },
+    priorityContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 12
+    },
+    priorityContainerText: {
+        fontSize: 14,
+        fontFamily: "Nunito_800",
+        color: colors.textPrimary,
     }
 });
 
