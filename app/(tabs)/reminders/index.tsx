@@ -6,9 +6,10 @@ import {ReminderType} from "@/types/reminder";
 import React, {useState} from "react";
 import ReminderCard from "@/components/reminders/ReminderCard";
 import {router} from "expo-router";
-import {CalendarBlankIcon, ClockIcon} from "phosphor-react-native";
+import {CalendarBlankIcon, ClockIcon, PlusIcon} from "phosphor-react-native";
 import AlertStrip from "@/components/ui/AlertStrip";
 import { MOCK_REMINDERS } from "@/data/reminders";
+import SharedButton from "@/components/ui/SharedButton";
 
 
 export default function RemindersScreen() {
@@ -92,6 +93,10 @@ export default function RemindersScreen() {
                         />
                     ))}
                 </View>
+                <View style={styles.buttonContainer}>
+                    <SharedButton icon={<PlusIcon size={12} color={'white'} weight={'bold'}/>} label={'Add new reminder'}
+                                  customStyle={{alignSelf: 'stretch'}} onPress={() => router.push('/reminders/new')}/>
+                </View>
             </ScrollView>
         </View>
     );
@@ -124,4 +129,9 @@ const styles = StyleSheet.create({
         letterSpacing: 1.2,
         textTransform: 'uppercase',
     },
+    buttonContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginHorizontal: 60
+    }
 });

@@ -8,7 +8,7 @@ import ReminderTable from "@/components/reminders/ReminderTable";
 import {useState} from "react";
 import ProgressBar from "@/components/ui/ProgressBar";
 import ToggleButton from "@/components/ui/ToggleButton";
-import Button from "@/components/ui/Button";
+import SharedButton from "@/components/ui/SharedButton";
 
 function ReminderDetail() {
     const {id} = useLocalSearchParams<{ id: string }>();
@@ -94,13 +94,15 @@ function ReminderDetail() {
                         <Text style={styles.incompleteTasksText}>/{reminder.tasks.length}</Text>
                     </View>
                 </View>
-                <ReminderTable tasks={reminder.tasks} onToggle={(id) => toggleTask(id)}/>
+                <View>
+                    <ReminderTable tasks={reminder.tasks} onToggle={(id) => toggleTask(id)}/>
+                </View>
                 <View style={styles.buttonContainer}>
                     <View style={styles.priorityContainer}>
                         <Text style={styles.priorityContainerText}>Prioritized</Text>
                         <ToggleButton value={reminder.prioritized} onChange={togglePriority}/>
                     </View>
-                    <Button label={'Save'}/>
+                    <SharedButton label={'Save'}/>
                 </View>
             </ScrollView>
         </View>
@@ -116,11 +118,11 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     scrollContent: {
+        paddingHorizontal: 16,
         paddingBottom: 16,
         gap: 16,
     },
     editWrapper: {
-        marginHorizontal: 16,
         padding: 16,
         backgroundColor: colors.bgCard,
         borderRadius: 16
@@ -182,7 +184,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         paddingHorizontal: 16,
         paddingVertical: 12,
-        marginHorizontal: 16,
         borderRadius: 16,
         backgroundColor: colors.bgCard,
         gap: 12
@@ -225,7 +226,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        paddingHorizontal: 16,
     },
     priorityContainer: {
         flexDirection: "row",

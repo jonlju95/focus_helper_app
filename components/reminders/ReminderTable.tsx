@@ -1,15 +1,26 @@
 import {Task} from '@/types/reminder';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
-import {CheckSquareIcon, ListChecksIcon, SquareIcon} from 'phosphor-react-native';
+import {CheckSquareIcon, ListChecksIcon, PlusIcon, SquareIcon, TrashIcon} from 'phosphor-react-native';
 import colors from '@/constants/colors';
+import SharedInput from "@/components/ui/SharedInput";
+import {useState} from "react";
 
 interface ReminderTableProps {
     tasks?: Task[];
     onToggle?: (id: string) => void;
+    onAddTask?: (label: string) => void;
+    onDeleteTask?: (id: string) => void;
+    isEditing?: boolean;
 }
 
-function ReminderTable({tasks, onToggle}: ReminderTableProps) {
-    if (!tasks || tasks.length === 0) return null;
+function ReminderTable({tasks, onToggle, isEditing = false, onAddTask}: ReminderTableProps) {
+    const [newTaskLabel, setNewTaskLabel] = useState('');
+
+    const handleAdd = () => {
+        if (!newTaskLabel.trim()) return;  // don't add empty tasks
+        onAddTask?.(newTaskLabel.trim());
+        setNewTaskLabel('');               // clear input after adding
+    };
 
     return (
         <View style={styles.container}>
@@ -17,48 +28,63 @@ function ReminderTable({tasks, onToggle}: ReminderTableProps) {
             {/* Header */}
             <View style={styles.tableHeader}>
                 <View style={styles.tableHeaderLeft}>
-                    <ListChecksIcon size={14} color="#fff" weight="bold"/>
+                    <ListChecksIcon size={14} color="#FFF" weight="bold"/>
                     <Text style={styles.tableHeaderText}>Task / Description</Text>
                 </View>
-                <Text style={styles.tableHeaderText}>Done</Text>
+                {!isEditing && (
+                    <Text style={styles.tableHeaderText}>Done</Text>
+                )}
             </View>
 
             {/* Rows */}
-            {tasks.map((task, index) => (
+            {tasks?.map((task, index) => (
                 <View
                     key={task.id}
                     style={[
                         styles.tableRow,
-                        index === tasks.length - 1 && styles.tableRowLast,
+                        !isEditing && index === tasks.length - 1 && styles.tableRowLast,
                         task.completed && styles.tableRowCompleted,
-                    ]}
-                >
+                    ]}>
                     <Text style={[
                         styles.taskLabel,
-                        task.completed && styles.taskLabelCompleted,
-                    ]}>
+                        task.completed && styles.taskLabelCompleted]}>
                         {task.label}
                     </Text>
 
                     <Pressable
-                        onPress={() => onToggle?.(task.id)}
+                        onPress={() => isEditing ? onDeleteTask?.(task.id) : onToggle?.(task.id)}
                         hitSlop={8}
                     >
-                        {task.completed
-                            ? <CheckSquareIcon size={20} color={colors.primary} weight="fill"/>
-                            : <SquareIcon size={20} color={colors.textMuted} weight="regular"/>
-                        }
+                        {isEditing
+                            ? <TrashIcon size={20} color={colors.urgent} weight="fill"/>
+                            : task.completed
+                                ? <CheckSquareIcon size={20} color={colors.primary} weight="fill"/>
+                                : <SquareIcon size={20} color={colors.textMuted} weight="regular"/>}
                     </Pressable>
                 </View>
             ))}
 
+            {isEditing && (
+                <View style={[styles.tableRow, styles.tableRowLast, {paddingHorizontal: 0}]}>
+                    <View style={{flex: 1, marginRight: 8}}>
+                        <SharedInput
+                            value={newTaskLabel}
+                            onChangeText={setNewTaskLabel}
+                            showLabel={false} placeholder="Add a task"/>
+                    </View>
+                    <Pressable
+                        style={styles.addButton}
+                        onPress={handleAdd}>
+                        <PlusIcon size={18} color="white" weight="bold"/>
+                    </Pressable>
+                </View>
+            )}
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        marginHorizontal: 16,
         borderRadius: 16,
         overflow: 'hidden',
     },
@@ -117,6 +143,12 @@ const styles = StyleSheet.create({
     taskLabelCompleted: {
         textDecorationLine: 'line-through',
         color: colors.textMuted,
+    },
+    addButton: {
+        backgroundColor: colors.primary,
+        padding: 12,
+        borderRadius: 8,
+        alignSelf: 'center',
     },
 });
 

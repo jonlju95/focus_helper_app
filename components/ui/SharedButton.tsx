@@ -1,24 +1,29 @@
 import React, {ReactNode} from 'react';
-import {Pressable, StyleSheet, Text} from "react-native";
+import {Pressable, StyleSheet, Text, ViewStyle} from "react-native";
 import {CheckIcon} from "phosphor-react-native";
 import colors from "@/constants/colors";
 
 interface ButtonProps {
     icon?: ReactNode;
+    showIcon?: boolean;
     label: string;
-    onPress?: () => void
+    onPress?: () => void,
+    customStyle?: ViewStyle;
 }
 
-function Button({
+function SharedButton({
     icon = <CheckIcon size={16} color={'#FFF'} weight={'bold'}/>,
-    label, onPress
+    showIcon = true, label, onPress, customStyle
 }: ButtonProps) {
     return (
         <Pressable style={({pressed}) => [
             styles.container,
             pressed && styles.pressed,
+            customStyle
         ]} onPress={onPress}>
-            {icon}
+            {showIcon && (
+                icon
+            )}
             <Text style={styles.buttonLabel}>{label}</Text>
         </Pressable>
     );
@@ -29,6 +34,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         alignSelf: "flex-start",
+        justifyContent: "center",
         gap: 8,
         backgroundColor: colors.primary,
         borderRadius: 16,
@@ -50,4 +56,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Button;
+export default SharedButton;
