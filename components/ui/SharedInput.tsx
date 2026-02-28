@@ -27,7 +27,7 @@ function SharedInput({label, showLabel = true, value, onChangeText, placeholder,
             <TextInput value={value} placeholder={placeholder}
                        onChangeText={onChangeText}
                        onFocus={() => setFocused(true)}
-                       onBlur={()  => setFocused(false)}
+                       onBlur={() => setFocused(false)}
                        style={[styles.inputField, focused && styles.inputFocused]}
                        placeholderTextColor={'#C8C0B4'}/>
         </View>
@@ -58,12 +58,13 @@ const styles = StyleSheet.create({
         borderWidth: 1.5,
         borderRadius: 12,
         paddingHorizontal: 12,
+        paddingVertical: 12,
         fontSize: 14,
         fontFamily: 'Nunito_600',
         color: colors.textPrimary,
     },
     inputFocused: {
-        borderColor:     colors.primary,
+        borderColor: colors.primary,
         backgroundColor: colors.bgCard,
     },
 })

@@ -60,7 +60,12 @@ function ReminderDetail() {
                 <View style={styles.editWrapper}>
                     <View style={styles.editWrapperTitle}>
                         <Text style={styles.editWrapperTitleText}>{reminder.title}</Text>
-                        <Pressable style={styles.editButton}>
+                        <Pressable style={styles.editButton} onPress={() => {
+                            router.push({
+                                pathname: `/reminders/new`,
+                                params: {id: reminder.id}
+                            })
+                        }}>
                             <PenIcon size={14} color={colors.primary} weight={'bold'}/>
                             <Text style={styles.editButtonText}>Edit</Text>
                         </Pressable>
@@ -224,7 +229,7 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         flexDirection: "row",
-        alignItems: "center",
+        alignItems: "flex-start",
         justifyContent: "space-between",
     },
     priorityContainer: {

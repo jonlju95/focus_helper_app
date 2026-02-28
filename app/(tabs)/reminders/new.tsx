@@ -9,6 +9,8 @@ import colors from "@/constants/colors";
 import ReminderTable from "@/components/reminders/ReminderTable";
 import ToggleButton from "@/components/ui/ToggleButton";
 import SharedButton from "@/components/ui/SharedButton";
+import OptionPicker, {Option} from "@/components/ui/OptionPicker";
+import SharedDatePicker from "@/components/ui/SharedDatePicker";
 
 function New() {
     const {id} = useLocalSearchParams<{ id?: string }>();
@@ -26,6 +28,15 @@ function New() {
     });
 
     const isEditing = !!existing;
+
+    const options: Option[] = [
+        {label: 'Reminder', value: 'reminder'},
+        {label: 'Shopping', value: 'shopping'},
+        {label: 'Notes', value: 'notes'},
+    ]
+
+    const [selectedOption, setSelectedOption] = useState<Option>(options.filter(o => o.value === reminder.type)[0]);
+    const [selectedDate, setSelectedDate] = useState<Date>(existing ? new Date(reminder.date) : new Date(Date.now()));
 
     const addTask = (label: string) => {
         setReminder(prev => ({
@@ -61,6 +72,18 @@ function New() {
         });
     }
 
+    const changeSelectedOption = (optionValue: string) => {
+        const option = options.find(option => option.value === optionValue);
+        if (option) {
+            setSelectedOption(option);
+        }
+    }
+
+    const changeSelectedDate = (date: Date) => {
+        console.log(date)
+        setSelectedDate(date);
+    }
+
     return (
         <View style={styles.container}>
             <TopBar title={isEditing ? 'Edit reminder' : 'New reminder'} showBack={true} onBack={() => router.back()}
@@ -72,21 +95,27 @@ function New() {
                     <SharedInput label={'Title'} value={reminder.title} required={true} placeholder={'Title'}/>
                     <View style={styles.secondRow}>
                         <View style={{flex: 1}}>
-                            <SharedInput label={'Title'} value={reminder.title} required={true} placeholder={'Title'}/></View>
-                        <View style={{flex: 1}}>
-                            <SharedInput label={'Title'} value={reminder.title} required={true} placeholder={'Title'}/></View>
-                    </View>
-
-                    <ReminderTable tasks={reminder.tasks} isEditing={true} onAddTask={addTask} onDeleteTask={deleteTask}/>
-                    <View style={styles.buttonContainer}>
-                        <View style={styles.priorityContainer}>
-                            <Text style={styles.priorityContainerText}>Prioritized</Text>
-                            <ToggleButton value={reminder.prioritized} onChange={togglePriority}/>
+                            <SharedDatePicker label={'Date'} value={selectedDate} onChange={changeSelectedDate}/>
                         </View>
-                        <SharedButton label={'Save'}/>
+                        <View style={{flex: 1}}>
+                            <OptionPicker label={'Type'} options={options} value={selectedOption?.value}
+                                          onChange={changeSelectedOption}/>
+                        </View>
                     </View>
-                </View>
 
+
+                </View>
+                <View style={{marginHorizontal: 0, marginVertical: 16}}>
+                    <ReminderTable tasks={reminder.tasks} isEditing={true} onAddTask={addTask}
+                                   onDeleteTask={deleteTask}/>
+                </View>
+                <View style={styles.buttonContainer}>
+                    <View style={styles.priorityContainer}>
+                        <Text style={styles.priorityContainerText}>Prioritized</Text>
+                        <ToggleButton value={reminder.prioritized} onChange={togglePriority}/>
+                    </View>
+                    <SharedButton label={'Save'}/>
+                </View>
             </ScrollView>
         </View>
     );
@@ -99,6 +128,7 @@ const styles = StyleSheet.create({
     },
     scroll: {
         marginHorizontal: 16,
+
     },
     scrollContent: {
         paddingBottom: 16,
@@ -119,7 +149,7 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         flexDirection: "row",
-        alignItems: "center",
+        alignItems: "flex-start",
         justifyContent: "space-between",
     },
     priorityContainer: {

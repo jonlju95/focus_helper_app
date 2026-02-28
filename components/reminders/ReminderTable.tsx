@@ -13,7 +13,7 @@ interface ReminderTableProps {
     isEditing?: boolean;
 }
 
-function ReminderTable({tasks, onToggle, isEditing = false, onAddTask}: ReminderTableProps) {
+function ReminderTable({tasks, onToggle, isEditing = false, onAddTask, onDeleteTask}: ReminderTableProps) {
     const [newTaskLabel, setNewTaskLabel] = useState('');
 
     const handleAdd = () => {
@@ -56,7 +56,7 @@ function ReminderTable({tasks, onToggle, isEditing = false, onAddTask}: Reminder
                         hitSlop={8}
                     >
                         {isEditing
-                            ? <TrashIcon size={20} color={colors.urgent} weight="fill"/>
+                            ? <TrashIcon size={20} color={colors.urgent} weight="bold"/>
                             : task.completed
                                 ? <CheckSquareIcon size={20} color={colors.primary} weight="fill"/>
                                 : <SquareIcon size={20} color={colors.textMuted} weight="regular"/>}
@@ -65,7 +65,7 @@ function ReminderTable({tasks, onToggle, isEditing = false, onAddTask}: Reminder
             ))}
 
             {isEditing && (
-                <View style={[styles.tableRow, styles.tableRowLast, {paddingHorizontal: 0}]}>
+                <View style={[styles.tableRow, styles.tableRowLast, {paddingHorizontal: 12}]}>
                     <View style={{flex: 1, marginRight: 8}}>
                         <SharedInput
                             value={newTaskLabel}
