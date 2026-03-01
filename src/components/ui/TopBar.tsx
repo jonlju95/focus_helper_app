@@ -19,10 +19,10 @@ export default function TopBar({title, date, showBack, showDate, onBack, onMenu}
                     <ArrowLeftIcon size={20} color={colors.textSecondary} weight="bold"/>
                 </Pressable>
             )}
-            <View style={styles.titleContainer}>
+            <View style={styles.header}>
                 <Text style={styles.title}>{title}</Text>
                 {showDate && date && (
-                    <Text style={styles.dateTag}>{date}</Text>
+                    <Text style={styles.meta}>{date}</Text>
                 )}
             </View>
 
@@ -35,45 +35,69 @@ export default function TopBar({title, date, showBack, showDate, onBack, onMenu}
 
 const styles = StyleSheet.create({
     container: {
+        // Positioning
         flexDirection: 'row',
-        alignItems: 'center',   // remove justifyContent entirely
-        paddingHorizontal: 16,
+        alignItems: 'center',
         paddingTop: 32,
         paddingBottom: 12,
+        gap: 12,
+
+        // Colors
         backgroundColor: colors.bgApp,
-        gap: 12
+
+        // Other
+        borderRadius: 12,
     },
 
     button: {
-        width: 32,
-        height: 32,
+        // Positioning
         alignItems: 'center',
         justifyContent: 'center',
-        borderRadius: 12,
+
+        // Size
+        width: 32,
+        height: 32,
+
+        // Colors
         backgroundColor: colors.bgMuted,
+
+        // Other
+        borderRadius: 12,
     },
 
-    titleContainer: {
+    header: {
         flex: 1,
         flexShrink: 1,
     },
 
     title: {
+        // Size
+        flexShrink: 1,
+
+        // Colors
+        color: colors.textPrimary,
+
+        // Fonts
         fontSize: 26,
         fontFamily: 'Nunito_900',
-        color: colors.textPrimary,
-        flexShrink: 1,
     },
 
-    dateTag: {
+    meta: {
+        // Positioning
         alignSelf: 'flex-start',
-        backgroundColor: colors.bgMuted,
-        color: colors.textWarm,
         paddingHorizontal: 14,
         paddingVertical: 4,
-        borderRadius: 20,
+        marginTop: 8,
+
+        // Colors
+        backgroundColor: colors.bgMuted,
+        color: colors.textWarm,
+
+        // Fonts
         fontSize: 12,
         fontFamily: 'NunitoSans_600',
-        marginTop: 8,
+
+        // Other
+        borderRadius: 20,
     },
 })

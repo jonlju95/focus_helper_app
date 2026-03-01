@@ -2,6 +2,8 @@ import React, {ReactNode} from 'react';
 import {StyleSheet, Text, View} from "react-native";
 import {ArrowRightIcon, BasketIcon, BellIcon, ClockIcon, PhoneIcon, PillIcon} from "phosphor-react-native";
 import colors from "@/constants/colors";
+import spacing from "@/constants/spacing";
+import typography from "@/constants/typography";
 
 interface CardProps {
     icon: ReactNode,
@@ -13,15 +15,15 @@ interface CardProps {
 
 function DailyCards({icon, iconBg, title, time, urgent}: CardProps) {
     return (
-        <View style={styles.cardWrapper}>
+        <View style={styles.card}>
             <View style={[styles.cardIcon, {backgroundColor: iconBg}]}>
                 {icon}
             </View>
             <View style={styles.cardLabel}>
-                <Text style={styles.cardTitle}>{title}</Text>
+                <Text style={[typography.styles.cardTitle, { fontSize: 14}]}>{title}</Text>
                 <View style={styles.cardTime}>
                     <ClockIcon size={11} color={colors.textMuted} weight={'fill'}/>
-                    <Text style={styles.cardTimeText}>{time}</Text>
+                    <Text style={typography.styles.metaText}>{time}</Text>
                 </View>
             </View>
             {urgent ? (
@@ -37,19 +39,18 @@ function DailyCards({icon, iconBg, title, time, urgent}: CardProps) {
     )
 }
 
-function DailyReminders() {
+function DailyRemindersSection() {
     return (
-
         <View style={styles.container}>
 
             {/* Badge */}
             <View style={styles.sectionLabel}>
                 <View style={styles.sectionLabelTitle}>
                     <BellIcon size={16} color={colors.textPrimary} weight="fill"/>
-                    <Text style={styles.sectionLabelText}>Reminders today</Text>
+                    <Text style={typography.styles.cardTitle}>Reminders today</Text>
                 </View>
                 <View style={styles.sectionLabelTitle}>
-                    <Text style={styles.sectionLabelLink}>See all</Text>
+                    <Text style={typography.styles.label}>See all</Text>
                     <ArrowRightIcon size={12} color={colors.primary} weight="bold"/>
                 </View>
             </View>
@@ -68,72 +69,56 @@ function DailyReminders() {
 
 const styles = StyleSheet.create({
     container: {
-        marginHorizontal: 16,
-        gap: 12,
+        flex: 1,
+        gap: spacing[3],
     },
+
     sectionLabel: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
     },
+
     sectionLabelTitle: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 6
-    },
-    sectionLabelText: {
-        fontSize: 15,
-        fontFamily: 'Nunito_800',
-        color: colors.textPrimary,
-    },
-    sectionLabelLink: {
-        fontSize: 12,
-        fontFamily: 'Nunito_700',
-        color: colors.primary,
+        gap: spacing[1]
     },
 
-    cardWrapper: {
+    card: {
         backgroundColor: colors.bgCard,
-        paddingHorizontal: 16,
-        paddingVertical: 12,
+        paddingHorizontal: spacing[4],
+        paddingVertical: spacing[3],
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 12,
-        borderRadius: 16
+        gap: spacing[3],
+        borderRadius: spacing[4]
     },
 
     cardIcon: {
-        padding: 12,
-        borderRadius: 12,
+        padding: spacing[3],
+        borderRadius: spacing[3],
         alignItems: 'center',
         justifyContent: 'center',
     },
 
     cardLabel: {
         flex: 1,
-        gap: 2
+        gap: spacing[1]
     },
-    cardTitle: {
-        color: colors.textPrimary,
-        fontSize: 14,
-        fontFamily: 'Nunito_800',
 
-    },
     cardTime: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 4,
+        gap: spacing[1],
     },
-    cardTimeText: {
-        color: colors.textMuted,
-        fontSize: 12,
-        fontFamily: 'Nunito_600',
-    },
+
     cardTag: {
-        paddingHorizontal: 8,
-        paddingVertical: 4,
-        borderRadius: 20,
+        paddingHorizontal: spacing[2],
+        paddingVertical: spacing[1],
+        borderRadius: spacing[5],
     },
+
     cardTagText: {
         fontSize: 10,
         fontFamily: 'Nunito_800',
@@ -142,4 +127,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default DailyReminders;
+export default DailyRemindersSection;

@@ -4,6 +4,7 @@ import {CheckSquareIcon, ListChecksIcon, PlusIcon, SquareIcon, TrashIcon} from '
 import colors from '@/constants/colors';
 import SharedInput from "@/components/ui/SharedInput";
 import {useState} from "react";
+import spacing from "@/constants/spacing";
 
 interface ReminderTableProps {
     tasks?: Task[];
@@ -58,7 +59,7 @@ function ReminderTable({tasks, onToggle, isEditing = false, onAddTask, onDeleteT
                         {isEditing
                             ? <TrashIcon size={20} color={colors.urgent} weight="bold"/>
                             : task.completed
-                                ? <CheckSquareIcon size={20} color={colors.primary} weight="fill"/>
+                                ? <CheckSquareIcon size={20} color={colors.primary} weight="fill" />
                                 : <SquareIcon size={20} color={colors.textMuted} weight="regular"/>}
                     </Pressable>
                 </View>
@@ -85,7 +86,7 @@ function ReminderTable({tasks, onToggle, isEditing = false, onAddTask, onDeleteT
 
 const styles = StyleSheet.create({
     container: {
-        borderRadius: 16,
+        borderRadius: spacing[4],
         overflow: 'hidden',
     },
 
@@ -94,10 +95,10 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         backgroundColor: colors.textPrimary,
-        paddingHorizontal: 16,
-        paddingVertical: 12,
-        borderTopLeftRadius: 16,
-        borderTopRightRadius: 16,
+        paddingHorizontal: spacing[4],
+        paddingVertical: spacing[3],
+        borderTopLeftRadius: spacing[4],
+        borderTopRightRadius: spacing[4],
     },
     tableHeaderLeft: {
         flex: 1,
@@ -116,16 +117,16 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         backgroundColor: '#ffffff',
-        paddingHorizontal: 16,
-        paddingVertical: 12,
+        paddingHorizontal: spacing[4],
+        paddingVertical: spacing[3],
         borderBottomWidth: 1,
         borderBottomColor: '#f5f0ea',
     },
 
     tableRowLast: {
         borderBottomWidth: 0,
-        borderBottomLeftRadius: 16,
-        borderBottomRightRadius: 16,
+        borderBottomLeftRadius: spacing[4],
+        borderBottomRightRadius: spacing[4],
     },
 
     tableRowCompleted: {
@@ -146,8 +147,8 @@ const styles = StyleSheet.create({
     },
     addButton: {
         backgroundColor: colors.primary,
-        padding: 12,
-        borderRadius: 8,
+        padding: spacing[3],
+        borderRadius: spacing[2],
         alignSelf: 'center',
     },
 });

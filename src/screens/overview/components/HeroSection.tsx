@@ -3,26 +3,32 @@ import {ArrowRightIcon, LightningIcon, WarningIcon} from "phosphor-react-native"
 import colors from "@/constants/colors";
 import typography from "@/constants/typography";
 import {LinearGradient} from "expo-linear-gradient";
+import spacing from "@/constants/spacing";
 
+const {sizes, fonts} = typography;
 
-function HeroCard() {
+export default function HeroSection() {
     return (
         <View style={styles.container}>
+            {/* Label */}
             <View style={styles.sectionLabel}>
                 <LightningIcon size={13} color={colors.textMuted} weight="fill"/>
                 <Text style={typography.styles.sectionLabel}>Most urgent today</Text>
             </View>
+
+            {/* Card */}
             <LinearGradient
                 colors={[colors.primary, colors.primaryDark]}
                 start={{x: 0, y: 0}}
                 end={{x: 1, y: 1}}
                 style={styles.card}>
-                <View style={styles.circle}/>
+                <View style={styles.cardCircle}/>
 
                 {/* Type badge */}
-                <View style={styles.cardBadge}>
+                <View style={styles.cardLabel}>
                     <WarningIcon size={13} color="rgba(255,255,255,0.7)" weight="fill"/>
-                    <Text style={styles.cardBadgeText}>Invoice due soon</Text>
+                    <Text style={[typography.styles.sectionLabel, {color: 'rgba(255,255,255,0.7)'}]}>
+                        Invoice due soon</Text>
                 </View>
 
                 {/* Title */}
@@ -43,11 +49,23 @@ function HeroCard() {
 
 const styles = StyleSheet.create({
     container: {
-        marginHorizontal: 16,
-        gap: 12,
+        flex: 1,
+        gap: spacing[3],
     },
 
-    circle: {
+    sectionLabel: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: spacing[1],
+    },
+
+    card: {
+        padding: spacing[5],
+        paddingBottom: spacing[6],
+        borderRadius: spacing[6],
+    },
+
+    cardCircle: {
         position: 'absolute',
         top: -20,
         right: -20,
@@ -57,44 +75,25 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(255,255,255,0.08)',
     },
 
-    sectionLabel: {
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 6
-    },
-
-    card: {
-        padding: 20,
-        paddingBottom: 24,
-        borderRadius: 24,
-    },
-
-    cardBadge: {
+    cardLabel: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 5,
         alignSelf: 'flex-start',
-        borderRadius: 20,
-        marginBottom: 8,
-    },
-
-    cardBadgeText: {
-        fontSize: 11,
-        fontFamily: 'Nunito_800',
-        textTransform: 'uppercase',
-        color: 'rgba(255,255,255,0.7)',
+        gap: spacing[1],
+        borderRadius: spacing[5],
+        marginBottom: spacing[2],
     },
 
     cardTitle: {
-        fontSize: 28,
-        fontFamily: 'Nunito_900',
+        fontSize: sizes["4xl"],
+        fontFamily: `${fonts.heading}_900`,
         color: '#ffffff',
-        marginBottom: 4,
+        marginBottom: spacing[1],
     },
 
     cardSubtitle: {
-        fontSize: 13,
-        fontFamily: 'NunitoSans_500',
+        fontSize: sizes.md,
+        fontFamily: `${fonts.body}_600`,
         color: 'rgba(255,255,255,0.75)',
         marginBottom: 16,
     },
@@ -102,22 +101,19 @@ const styles = StyleSheet.create({
     cardButton: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 8,
         alignSelf: 'flex-start',
         backgroundColor: 'rgba(255,255,255,0.2)',
-        borderWidth: 1.5,
-        borderStyle: 'solid',
         borderColor: 'rgba(255,255,255,0.4)',
-        paddingHorizontal: 16,
-        paddingVertical: 8,
-        borderRadius: 20,
+        borderWidth: 1.5,
+        gap: spacing[2],
+        paddingHorizontal: spacing[4],
+        paddingVertical: spacing[2],
+        borderRadius: spacing[5],
     },
 
     cardButtonText: {
-        fontSize: 13,
-        fontFamily: 'Nunito_800',
+        fontSize: sizes.md,
+        fontFamily: `${fonts.heading}_800`,
         color: colors.bgCard,
     },
-})
-
-export default HeroCard;
+});

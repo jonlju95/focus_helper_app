@@ -45,17 +45,29 @@ function ToggleButton({value, onChange, color = colors.primary}: ToggleProps) {
 
 const styles = StyleSheet.create({
     track: {
+        // Positioning
+        justifyContent: 'center',
+
+        // Size
         width: 52,
         height: 28,
-        borderRadius: 14,
         padding: 3,
-        justifyContent: 'center',
+
+        // Other
+        borderRadius: 14,
     },
     thumb: {
+        // Size
         width: 22,
         height: 22,
-        borderRadius: 12,
+
+        // Colors
         backgroundColor: '#ffffff',
+
+        // Other
+        borderRadius: 12,
+
+        // Box shadow
         elevation: 2,
         shadowColor: '#000',
         shadowOffset: {width: 0, height: 1},

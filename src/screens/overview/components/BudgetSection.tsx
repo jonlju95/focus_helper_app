@@ -3,6 +3,8 @@ import {ListChecksIcon, ShoppingCartIcon} from 'phosphor-react-native';
 import colors from '@/constants/colors';
 import {ReactNode} from "react";
 import ProgressBar from "@/components/ui/ProgressBar";
+import spacing from "@/constants/spacing";
+import typography from "@/constants/typography";
 
 type Variant = 'dark' | 'light';
 
@@ -27,35 +29,35 @@ function StatCard({icon, label, amount, currency, progress, variant}: CardData &
             {/* Badge */}
             <View style={styles.cardBadge}>
                 {icon}
-                <Text style={[styles.badgeText, {color: textColor}]}>{label}</Text>
+                <Text style={[typography.styles.badgeText, {color: textColor}]}>{label}</Text>
             </View>
 
             {/* Amount */}
             <View style={styles.amountRow}>
-                <Text style={[styles.amount, {color: amountColor}]}>{amount}</Text>
-                <Text style={[styles.currency, {color: textColor}]}>{currency}</Text>
+                <Text style={[typography.styles.amount, {color: amountColor}]}>{amount}</Text>
+                <Text style={[typography.styles.metaText, {color: textColor}]}>{currency}</Text>
             </View>
 
-            {/* Progress bar — only renders if progress prop is passed */}
+            {/* Progress bar - only renders if progress prop is passed */}
             {progress !== undefined && (
-                <ProgressBar progress={progress} color={colors.primary} />
+                <ProgressBar progress={progress} color={colors.primary}/>
             )}
 
         </View>
     );
 }
 
-function BudgetCard() {
+function BudgetSection() {
     return (
         <View style={styles.container}>
 
-            {/* Section label */}
+            {/* Label */}
             <View style={styles.sectionLabel}>
                 <ShoppingCartIcon size={13} color={colors.textMuted} weight="fill"/>
-                <Text style={styles.sectionLabelText}>This month</Text>
+                <Text style={typography.styles.sectionLabel}>This month</Text>
             </View>
 
-            <View style={styles.cardWrapper}>
+            <View style={styles.sectionBody}>
                 <StatCard
                     variant="dark"
                     icon={<ShoppingCartIcon size={13} color="rgba(255,255,255,0.5)" weight="fill"/>}
@@ -79,71 +81,52 @@ function BudgetCard() {
 
 const styles = StyleSheet.create({
     container: {
-        marginHorizontal: 16,
-        gap: 12,
+        flex: 1,
+        gap: spacing[3],
     },
 
     sectionLabel: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 6,
-    },
-    sectionLabelText: {
-        fontSize: 11,
-        fontFamily: 'Nunito_800',
-        color: colors.textMuted,
-        letterSpacing: 1.2,
-        textTransform: 'uppercase',
+        gap: spacing[1],
     },
 
-    cardWrapper: {
+    sectionBody: {
         flexDirection: 'row',
-        gap: 12,
+        gap: spacing[3],
     },
 
     card: {
         flex: 1,
-        padding: 16,
-        borderRadius: 16,
-        gap: 6,
+        padding: spacing[4],
+        borderRadius: spacing[4],
+        gap: spacing[2],
     },
 
     cardBadge: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 5,
-    },
-    badgeText: {
-        fontSize: 11,
-        fontFamily: 'Nunito_700',
+        gap: spacing[1],
     },
 
     amountRow: {
         flexDirection: 'row',
         alignItems: 'baseline',
-        gap: 2,
-    },
-    amount: {
-        fontSize: 22,
-        fontFamily: 'Nunito_900',
-    },
-    currency: {
-        fontSize: 13,
-        fontFamily: 'Nunito_600',
+        gap: spacing[1],
     },
 
     progressTrack: {
-        height: 4,
+        height: spacing[1],
         backgroundColor: '#f0ebe4',
-        borderRadius: 4,
+        borderRadius: spacing[1],
         overflow: 'hidden',
-        marginTop: 4,
+        marginTop: spacing[1],
     },
     progressFill: {
         height: '100%',
         backgroundColor: colors.primary,
-        borderRadius: 4,
+        borderRadius: spacing[1],
     },
 });
 
-export default BudgetCard;
+export default BudgetSection;

@@ -31,14 +31,13 @@ export default function SharedDatePicker({
 
     const displayValue = mode === 'time'
         ? value.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})
-        : value.toLocaleDateString([], {day: 'numeric', month: '2-digit', year: 'numeric'});
+        : value.toLocaleDateString([], {day: '2-digit', month: '2-digit', year: 'numeric'});
 
     return (
         <View>
             {label && (
                 <View style={styles.labelWrapper}>
                     <Text style={styles.labelText}>{label}</Text>
-                    <Text>{label}</Text>
                 </View>
             )}
 

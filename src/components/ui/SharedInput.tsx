@@ -16,12 +16,12 @@ function SharedInput({label, showLabel = true, value, onChangeText, placeholder,
 
     return (
         <View style={styles.container}>
-            <View style={styles.labelWrapper}>
+            <View style={styles.InputHeader}>
                 {showLabel && (
-                    <Text style={styles.labelText}>{label}</Text>
+                    <Text style={styles.inputLabel}>{label}</Text>
                 )}
                 {required && (
-                    <Text style={styles.labelText}>*</Text>
+                    <Text style={styles.inputLabel}>*</Text>
                 )}
             </View>
             <TextInput value={value} placeholder={placeholder}
@@ -41,27 +41,39 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         gap: 2
     },
-    labelWrapper: {
+    InputHeader: {
         flexDirection: 'row',
         alignItems: 'center',
         gap: 2
     },
-    labelText: {
+    inputLabel: {
+        // Colors
+        color: colors.primary,
+
+        // Fonts
         fontSize: 11,
         fontFamily: 'Nunito_800',
-        color: colors.primary
     },
     inputField: {
+        // Positioning
         alignSelf: 'stretch',
-        backgroundColor: colors.bgInput,
-        borderColor: colors.border,
-        borderWidth: 1.5,
-        borderRadius: 12,
+
+        // Size
         paddingHorizontal: 12,
         paddingVertical: 12,
+
+        // Colors
+        backgroundColor: colors.bgInput,
+        color: colors.textPrimary,
+
+        // Fonts
         fontSize: 14,
         fontFamily: 'Nunito_600',
-        color: colors.textPrimary,
+
+        // Border
+        borderRadius: 12,
+        borderColor: colors.border,
+        borderWidth: 1.5,
     },
     inputFocused: {
         borderColor: colors.primary,
@@ -70,3 +82,10 @@ const styles = StyleSheet.create({
 })
 
 export default SharedInput;
+
+
+// Positioning
+// Size
+// Colors
+// Fonts
+// Border

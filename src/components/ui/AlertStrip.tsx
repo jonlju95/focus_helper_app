@@ -61,7 +61,6 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginHorizontal: 16,
         backgroundColor: '#fff3e8',
         borderWidth: 1.5,
         borderColor: colors.borderWarm,

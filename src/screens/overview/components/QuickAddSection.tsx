@@ -2,6 +2,8 @@ import {Pressable, StyleSheet, Text, View} from "react-native";
 import colors from "@/constants/colors";
 import {ReactNode} from "react";
 import {BellIcon, CalendarBlankIcon, ShoppingCartIcon} from "phosphor-react-native";
+import spacing from "@/constants/spacing";
+import typography from "@/constants/typography";
 
 interface ButtonProps {
     icon: ReactNode,
@@ -19,15 +21,15 @@ function QuickAddButton({icon, iconBg, label}: ButtonProps) {
             <View style={[styles.iconWrapper, {backgroundColor: iconBg}]}>
                 {icon}
             </View>
-            <Text style={styles.buttonLabel}>{label}</Text>
+            <Text style={[typography.styles.label, {color: colors.textSecondary}]}>{label}</Text>
         </Pressable>
     )
 }
 
-function QuickAdd() {
+function QuickAddSection() {
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Quick add</Text>
+            <Text style={typography.styles.cardTitle}>Quick add</Text>
             <View style={styles.buttonContent}>
                 <QuickAddButton
                     icon={<BellIcon size={20} color={colors.primary} weight={'fill'}/>}
@@ -51,13 +53,11 @@ function QuickAdd() {
 
 const styles = StyleSheet.create({
     container: {
-        padding: 16,
-        marginHorizontal: 16,
-        gap: 12,
+        padding: spacing[4],
+        gap: spacing[3],
         backgroundColor: colors.bgCard,
-        borderRadius: 16,
+        borderRadius: spacing[4],
     },
-
 
     title: {
         fontSize: 15,
@@ -71,21 +71,21 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',
-        borderRadius: 12,
-        gap: 12
+        borderRadius: spacing[3],
+        gap: spacing[3]
     },
 
     buttonWrapper: {
         alignItems: 'center',
         justifyContent: 'center',
-        gap: 8,
+        gap: spacing[2],
         backgroundColor: colors.bgInput,
         borderWidth: 1,
         borderStyle: 'solid',
         borderColor: colors.border,
-        borderRadius: 16,
-        paddingHorizontal: 6,
-        paddingVertical: 12,
+        borderRadius: spacing[4],
+        paddingHorizontal: spacing[2],
+        paddingVertical: spacing[3],
         flex: 1
     },
 
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        gap: 12
+        gap: spacing[3]
     },
     buttonLabel: {
         fontSize: 12,
@@ -107,4 +107,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default QuickAdd;
+export default QuickAddSection;

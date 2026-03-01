@@ -2,6 +2,7 @@ import React from 'react';
 import {Pressable, StyleSheet, Text, View} from "react-native";
 import colors from "@/constants/colors";
 import {ReminderType} from "@/types/reminder";
+import spacing from "@/constants/spacing";
 
 interface ReminderTabsProps {
     activeTab: ReminderType;
@@ -38,16 +39,15 @@ function ReminderTabs({activeTab, onChange}: ReminderTabsProps) {
 const styles = StyleSheet.create({
     container: {
         flexDirection: "row",
-        marginHorizontal: 16,
         alignItems: "center",
         backgroundColor: colors.bgCard,
-        borderRadius: 16,
-        padding: 4
+        borderRadius: spacing[4],
+        padding: spacing[1]
     },
     tabButton: {
-        paddingHorizontal: 6,
-        paddingVertical: 8,
-        borderRadius: 12,
+        paddingHorizontal: spacing[1],
+        paddingVertical: spacing[2],
+        borderRadius: spacing[3],
         flex: 1,
         alignItems: "center",
     },
