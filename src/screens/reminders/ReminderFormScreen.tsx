@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {ScrollView, StyleSheet, Text, View} from "react-native";
+import {StyleSheet, Text, View} from "react-native";
 import TopBar from "@/components/ui/TopBar";
 import {router, useLocalSearchParams} from "expo-router";
 import {MOCK_REMINDERS} from "@/screens/reminders/data/reminders";
@@ -13,6 +13,7 @@ import OptionPicker, {Option} from "@/components/ui/OptionPicker";
 import SharedDatePicker from "@/components/ui/SharedDatePicker";
 import spacing from "@/constants/spacing";
 import typography from "@/constants/typography";
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 
 function ReminderFormScreen() {
     const {id} = useLocalSearchParams<{ id?: string }>();
@@ -82,18 +83,27 @@ function ReminderFormScreen() {
     }
 
     const changeSelectedDate = (date: Date) => {
-        console.log(date)
         setSelectedDate(date);
     }
+
+    const updateField = <K extends keyof Reminder>(key: K, value: Reminder[K]) => {
+        setReminder(prev => ({...prev, [key]: value}));
+    };
 
     return (
         <View style={styles.container}>
             <TopBar title={isEditing ? 'Edit reminder' : 'New reminder'} showBack={true} onBack={() => router.back()}
                     onMenu={() => {
                     }}/>
-            <ScrollView contentContainerStyle={styles.scrollContent}>
+            <KeyboardAwareScrollView
+                contentContainerStyle={styles.scrollContent}
+                showsVerticalScrollIndicator={false}
+                enableOnAndroid={true}
+                extraScrollHeight={spacing[5]}
+            >
                 <View style={styles.wrapper}>
-                    <SharedInput label={'Title'} value={reminder.title} required={true} placeholder={'Title'}/>
+                    <SharedInput label={'Title'} value={reminder.title} required={true} placeholder={'Title'}
+                                 onChangeText={text => updateField('title', text)}/>
                     <View style={styles.secondRow}>
                         <View style={{flex: 1}}>
                             <SharedDatePicker label={'Date'} value={selectedDate} onChange={changeSelectedDate}/>
@@ -117,7 +127,7 @@ function ReminderFormScreen() {
                     </View>
                     <SharedButton label={'Save'}/>
                 </View>
-            </ScrollView>
+            </KeyboardAwareScrollView>
         </View>
     );
 }

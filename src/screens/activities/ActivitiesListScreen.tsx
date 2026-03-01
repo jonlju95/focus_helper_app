@@ -5,11 +5,13 @@ import colors from "@/constants/colors";
 import spacing from "@/constants/spacing";
 import AlertStrip from "@/components/ui/AlertStrip";
 import ActivityCalendar from "@/screens/activities/components/ActivityCalendar";
-import {CalendarBlankIcon} from "phosphor-react-native";
+import {CalendarBlankIcon, PlusIcon} from "phosphor-react-native";
 import typography from "@/constants/typography";
 import {router} from "expo-router";
 import {MOCK_ACTIVITIES} from "@/screens/activities/data/activities";
 import ActivityCard from "@/screens/activities/components/ActivityCard";
+import SharedButton from "@/components/ui/SharedButton";
+import {formatSelectedDate} from "@/utils/formatDate";
 
 function ActivitiesListScreen() {
     const [selectedDay, setSelectedDay] = useState<string>(new Date().toISOString().split('T')[0])
@@ -46,8 +48,7 @@ function ActivitiesListScreen() {
                     {/* Section label */}
                     <View style={styles.sectionLabel}>
                         <CalendarBlankIcon size={13} color={colors.textMuted} weight="fill"/>
-                        <Text style={typography.styles.sectionLabel}>Today</Text>
-                        <Text style={[typography.styles.sectionLabel, {color: colors.primary}]}>{filtered.length}</Text>
+                        <Text style={typography.styles.sectionLabel}>{`${formatSelectedDate(selectedDay)}  ·  ${filtered.length} ${filtered.length === 1 ? 'activity' : 'activities'}`}</Text>
                     </View>
                     {filtered.map(activity => (
                         <ActivityCard
@@ -62,6 +63,14 @@ function ActivitiesListScreen() {
                             })}
                         />
                     ))}
+                </View>
+                <View style={styles.buttonContainer}>
+                    <SharedButton icon={<PlusIcon size={12} color={'white'} weight={'bold'}/>}
+                                  label={'Add new activity'} customStyle={{alignSelf: 'stretch'}}
+                                  onPress={() => router.push({
+                                      pathname: `/activities/new`,
+                                      params: {date: selectedDay}
+                                  })}/>
                 </View>
             </ScrollView>
         </View>
