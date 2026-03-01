@@ -38,6 +38,7 @@ export default function SharedDatePicker({
             {label && (
                 <View style={styles.labelWrapper}>
                     <Text style={styles.labelText}>{label}</Text>
+                    <Text>{label}</Text>
                 </View>
             )}
 

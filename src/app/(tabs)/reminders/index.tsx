@@ -1,14 +1,14 @@
 import {ScrollView, StyleSheet, Text, View} from "react-native";
 import TopBar from "@/components/ui/TopBar";
 import colors from "@/constants/colors";
-import ReminderTabs from "@/components/reminders/ReminderTabs";
+import ReminderTabs from "@/screens/reminders/components/ReminderTabs";
 import {ReminderType} from "@/types/reminder";
 import React, {useState} from "react";
-import ReminderCard from "@/components/reminders/ReminderCard";
+import ReminderCard from "@/screens/reminders/components/ReminderCard";
 import {router} from "expo-router";
 import {CalendarBlankIcon, ClockIcon, PlusIcon} from "phosphor-react-native";
 import AlertStrip from "@/components/ui/AlertStrip";
-import { MOCK_REMINDERS } from "@/data/reminders";
+import { MOCK_REMINDERS } from "@/screens/reminders/data/reminders";
 import SharedButton from "@/components/ui/SharedButton";
 
 

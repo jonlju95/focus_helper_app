@@ -2,10 +2,10 @@ import {ScrollView, StyleSheet, View} from "react-native";
 import TopBar from "@/components/ui/TopBar";
 import AlertStrip from "@/components/ui/AlertStrip";
 import colors from "@/constants/colors";
-import HeroCard from "@/components/overview/HeroCard";
-import BudgetCard from "@/components/overview/BudgetCard";
-import QuickAdd from "@/components/overview/QuickAdd";
-import DailyReminders from "@/components/overview/DailyReminders";
+import HeroCard from "@/screens/overview/HeroCard";
+import BudgetCard from "@/screens/overview/BudgetCard";
+import QuickAdd from "@/screens/overview/QuickAdd";
+import DailyReminders from "@/screens/overview/DailyReminders";
 
 export default function Index() {
     return (
