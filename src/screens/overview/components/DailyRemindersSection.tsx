@@ -92,7 +92,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         gap: spacing[3],
-        borderRadius: spacing[4]
+        borderRadius: spacing[4],
+        elevation: 1,
+        shadowColor:   '#000',
+        shadowOffset:  { width: 0, height: 2 },
+        shadowOpacity: 0.05,
+        shadowRadius:  10,
     },
 
     cardIcon: {

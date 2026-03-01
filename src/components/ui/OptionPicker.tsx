@@ -13,11 +13,12 @@ interface OptionPickerProps {
     value: string;
     onChange: (value: string) => void;
     label?: string;
+    showLabel?: boolean;
     placeholder?: string;
     required?: boolean;
 }
 
-function OptionPicker({options, value, onChange, label, placeholder, required}: OptionPickerProps) {
+function OptionPicker({options, value, onChange, label, showLabel = true, placeholder, required}: OptionPickerProps) {
     const [visible, setVisible] = useState(false);
 
     // The label we display on the trigger button
@@ -25,12 +26,14 @@ function OptionPicker({options, value, onChange, label, placeholder, required}: 
 
     return (
         <View>
-            <View style={styles.labelWrapper}>
-                <Text style={styles.labelText}>{label}</Text>
-                {required && (
-                    <Text style={styles.labelText}>*</Text>
-                )}
-            </View>
+            {showLabel && (
+                <View style={styles.labelWrapper}>
+                    <Text style={styles.labelText}>{label}</Text>
+                    {required && (
+                        <Text style={styles.labelText}>*</Text>
+                    )}
+                </View>
+            )}
             <Pressable
                 style={[styles.trigger, visible && styles.triggerOpen]}
                 onPress={() => setVisible(true)}
@@ -107,8 +110,9 @@ const styles = StyleSheet.create({
         borderColor: colors.border,
         borderWidth: 1.5,
         borderRadius: 12,
-        paddingHorizontal: 14,
+        paddingHorizontal: 8,
         paddingVertical: 11,
+        gap: 8
     },
     triggerOpen: {
         borderColor: colors.primary,

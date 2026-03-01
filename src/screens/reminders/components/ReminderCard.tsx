@@ -59,7 +59,12 @@ const styles = StyleSheet.create({
         gap: 12,
         padding: 16,
         backgroundColor: colors.bgCard,
-        borderRadius: 16
+        borderRadius: 16,
+        elevation: 1,
+        shadowColor:   '#000',
+        shadowOffset:  { width: 0, height: 2 },
+        shadowOpacity: 0.05,
+        shadowRadius:  10,
     },
     pressed: {
         opacity: 0.85,
