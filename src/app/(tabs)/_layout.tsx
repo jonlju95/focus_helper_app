@@ -16,6 +16,8 @@ import {DefaultTheme, ThemeProvider} from '@react-navigation/native';
 import {TabBarIcon} from '@/components/navigation/TabBarIcon';
 import {tabBarConfig} from '@/components/navigation/tabBarConfig';
 import colors from '@/constants/colors';
+import {SidebarProvider} from "@/context/SidebarContext";
+import Sidebar from "@/components/Sidebar";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -48,8 +50,8 @@ export default function RootLayout() {
     if (!fontsLoaded && !fontError) return null;
 
     return (
-        <>
-            <StatusBar style="dark" backgroundColor={colors.bgApp}/>
+        <SidebarProvider>
+            <StatusBar style="dark" backgroundColor={'transparent'}/>
             <ThemeProvider value={AppTheme}>
                 <Tabs screenOptions={tabBarConfig}>
 
@@ -94,7 +96,8 @@ export default function RootLayout() {
                     />
 
                 </Tabs>
+                <Sidebar/>
             </ThemeProvider>
-        </>
+        </SidebarProvider>
     );
 }

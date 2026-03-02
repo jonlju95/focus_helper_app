@@ -1,6 +1,7 @@
 import {Pressable, StyleSheet, Text, View} from "react-native";
 import colors from '@/constants/colors';
 import {ArrowLeftIcon, ListIcon} from "phosphor-react-native";
+import {useSidebar} from "@/context/SidebarContext";
 
 interface TopBarProps {
     title: string;
@@ -8,10 +9,12 @@ interface TopBarProps {
     showBack?: boolean;
     showDate?: boolean;
     onBack?: () => void;
-    onMenu?: () => void;
 }
 
-export default function TopBar({title, date, showBack, showDate, onBack, onMenu}: TopBarProps) {
+
+export default function TopBar({title, date, showBack, showDate, onBack}: TopBarProps) {
+    const {open} = useSidebar();
+
     return (
         <View style={styles.container}>
             {showBack && (
@@ -26,7 +29,7 @@ export default function TopBar({title, date, showBack, showDate, onBack, onMenu}
                 )}
             </View>
 
-            <Pressable style={styles.button} onPress={onMenu}>
+            <Pressable style={styles.button} onPress={open}>
                 <ListIcon size={20} color={colors.textSecondary} weight="bold"/>
             </Pressable>
         </View>

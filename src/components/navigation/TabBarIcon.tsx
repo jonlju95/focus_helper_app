@@ -18,8 +18,7 @@ const ICONS: Record<IconName, (props: { size: number; color: string; weight: 'fi
     cart: (props) => <ShoppingCartIcon    {...props} />,
 };
 
-// ── Component ─────────────────────────────────────────────────────────────
-export function TabBarIcon({icon, color, focused}: TabBarIconProps): JSX.Element {
+export function TabBarIcon({icon, color, focused}: TabBarIconProps) {
     const IconComponent = ICONS[icon];
 
     return (
@@ -43,6 +42,6 @@ const styles = StyleSheet.create({
     },
 
     wrapActive: {
-        backgroundColor: colors.primaryLight,   // warm pill background
+        backgroundColor: colors.primaryLight,
     },
 });

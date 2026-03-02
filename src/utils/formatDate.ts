@@ -6,3 +6,9 @@ export const formatSelectedDate = (dateStr: string) => {
         day:     'numeric',
     });
 };
+
+export const getMonthName = (date: Date) => {
+    return date.toLocaleDateString('en-GB', {
+        month: 'long',
+    })
+}
