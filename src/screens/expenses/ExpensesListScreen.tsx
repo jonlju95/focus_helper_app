@@ -12,6 +12,7 @@ import ExpenseCard from "@/screens/expenses/components/ExpenseCard";
 import {MOCK_EXPENSES} from "@/screens/expenses/data/expenses";
 import {router} from "expo-router";
 import SharedButton from "@/components/ui/SharedButton";
+import {sharedStyles} from "@/constants/sharedStyles";
 
 interface CategoryCardItemProps {
     color: string;
@@ -38,10 +39,10 @@ function CategoryCardItem({color, title, amount}: CategoryCardItemProps) {
 
 function ExpensesListScreen() {
     return (
-        <View style={styles.container}>
-            <TopBar title="Activities" onMenu={() => {
-            }}/>
-            <ScrollView contentContainerStyle={styles.scrollContent}
+        <View style={sharedStyles.container}>
+            <TopBar title="Activities"/>
+            <ScrollView style={sharedStyles.scroll}
+                        contentContainerStyle={sharedStyles.scrollContent}
                         showsVerticalScrollIndicator={false}>
                 <AlertStrip left={{
                     icon: 'coin',
@@ -68,9 +69,9 @@ function ExpensesListScreen() {
                               progress={(8017 / 19245)}/>
                 </View>
 
-                {/*    Category spending */}
-                <View style={styles.spendingCard}>
-                    <View style={styles.spendingCardHeader}>
+                {/* Category spending */}
+                <View style={[sharedStyles.card, {gap: spacing[3]}]}>
+                    <View style={[sharedStyles.row, {gap: spacing[1]}]}>
                         <ReceiptIcon size={16} color={colors.textPrimary} weight={'fill'}/>
                         <Text style={styles.spendingCardHeaderText}>Categories</Text>
                     </View>
@@ -106,7 +107,7 @@ function ExpensesListScreen() {
                 </View>
 
                 {/* New expense button */}
-                <View style={styles.buttonContainer}>
+                <View style={sharedStyles.buttonContainer}>
                     <SharedButton icon={<PlusIcon size={12} color={'white'} weight={'bold'}/>}
                                   label={'Add new expense'} customStyle={{alignSelf: 'stretch'}}
                                   onPress={() => router.push({
@@ -120,30 +121,9 @@ function ExpensesListScreen() {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: colors.bgApp,
-        paddingHorizontal: spacing[4],
-        gap: spacing[3]
-    },
-    scrollContent: {
-        paddingBottom: spacing[4],
-        gap: spacing[4],
-    },
     budgetCardWrapper: {
         flexDirection: 'row',
         gap: spacing[3],
-    },
-    spendingCard: {
-        backgroundColor: colors.bgCard,
-        padding: spacing[4],
-        gap: spacing[3],
-        borderRadius: spacing[4],
-    },
-    spendingCardHeader: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: spacing[1],
     },
     spendingCardHeaderText: {
         fontSize: 14,
@@ -180,11 +160,6 @@ const styles = StyleSheet.create({
     expenseListBody: {
         gap: spacing[3],
     },
-    buttonContainer: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginHorizontal: spacing[15]
-    }
 })
 
 export default ExpensesListScreen;

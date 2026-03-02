@@ -4,13 +4,13 @@ import TopBar from "@/components/ui/TopBar";
 import {router, useLocalSearchParams} from "expo-router";
 import {MOCK_REMINDERS} from "@/screens/reminders/data/reminders";
 import {Reminder} from "@/types/reminder";
-import SharedInput from "@/components/ui/SharedInput";
+import SharedInput from "@/components/ui/sharedInputs/SharedInput";
 import colors from "@/constants/colors";
 import ReminderTable from "@/screens/reminders/components/ReminderTable";
-import ToggleButton from "@/components/ui/ToggleButton";
+import ToggleButton from "@/components/ui/sharedInputs/ToggleButton";
 import SharedButton from "@/components/ui/SharedButton";
-import OptionPicker, {Option} from "@/components/ui/OptionPicker";
-import SharedDatePicker from "@/components/ui/SharedDatePicker";
+import SharedOptionPicker, {Option} from "@/components/ui/sharedInputs/SharedOptionPicker";
+import SharedDatePicker from "@/components/ui/sharedInputs/SharedDatePicker";
 import spacing from "@/constants/spacing";
 import typography from "@/constants/typography";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
@@ -105,8 +105,8 @@ function ReminderFormScreen() {
                             <SharedDatePicker label={'Date'} value={selectedDate} onChange={changeSelectedDate}/>
                         </View>
                         <View style={{flex: 1}}>
-                            <OptionPicker label={'Type'} options={options} value={selectedOption?.value}
-                                          onChange={changeSelectedOption}/>
+                            <SharedOptionPicker label={'Type'} options={options} value={selectedOption?.value}
+                                                onChange={changeSelectedOption}/>
                         </View>
                     </View>
 

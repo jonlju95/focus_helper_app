@@ -3,7 +3,7 @@ import React from "react";
 import spacing from "@/constants/spacing";
 import colors from "@/constants/colors";
 import {BellIcon} from "phosphor-react-native";
-import ToggleButton from "@/components/ui/ToggleButton";
+import ToggleButton from "@/components/ui/sharedInputs/ToggleButton";
 import typography from "@/constants/typography";
 
 const SCREEN_WIDTH = Dimensions.get('window').width;

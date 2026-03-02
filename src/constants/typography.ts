@@ -60,13 +60,13 @@ const typography = {
         },
         bodyText: {
             fontSize: 14,
-            fontFamily: `Nunito_600`,
+            fontFamily: `NunitoSans_600`,
             color: '#3a3530',
             lineHeight: 23.8,   // fontSize * lineHeight.relaxed
         },
         metaText: {
             fontSize: 12,
-            fontFamily: `Nunito_600`,
+            fontFamily: `NunitoSans_600`,
             color: '#b0a090',
         },
         label: {
@@ -88,6 +88,16 @@ const typography = {
         badgeText: {
             fontSize: 11,
             fontFamily: `Nunito_700`,
+        },
+        inputText: {
+            fontSize: 14,
+            fontFamily: `NunitoSans_600`,
+            color: '#2a2420',
+        },
+        btnText: {
+            fontSize: 14,
+            fontFamily: 'Nunito_800',
+            color: 'white',
         }
     },
 } as const;

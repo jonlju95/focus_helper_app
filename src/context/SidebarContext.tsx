@@ -19,14 +19,11 @@ export function SidebarProvider({children}: { children: ReactNode }) {
         <SidebarContext.Provider value={{
             isOpen,
             open: () => setIsOpen(true),
-            close: () => {
-                setIsOpen(false);
-            },
+            close: () => setIsOpen(false),
         }}>
             {children}
         </SidebarContext.Provider>
     );
 }
 
-// Custom hook so screens don't import the context directly
 export const useSidebar = () => useContext(SidebarContext);

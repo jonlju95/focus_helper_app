@@ -6,11 +6,11 @@ import colors from "@/constants/colors";
 import spacing from "@/constants/spacing";
 import {MOCK_ACTIVITIES} from "@/screens/activities/data/activities";
 import {Activity} from "@/types/activity";
-import SharedInput from "@/components/ui/SharedInput";
-import SharedDatePicker from "@/components/ui/SharedDatePicker";
-import OptionPicker, {Option} from "@/components/ui/OptionPicker";
+import SharedInput from "@/components/ui/sharedInputs/SharedInput";
+import SharedDatePicker from "@/components/ui/sharedInputs/SharedDatePicker";
+import SharedOptionPicker, {Option} from "@/components/ui/sharedInputs/SharedOptionPicker";
 import typography from "@/constants/typography";
-import ToggleButton from "@/components/ui/ToggleButton";
+import ToggleButton from "@/components/ui/sharedInputs/ToggleButton";
 import SharedButton from "@/components/ui/SharedButton";
 import {capitalise} from "@/utils/formatLabel";
 import {ACTIVITY_COLORS} from "@/types/categoryColors";
@@ -92,8 +92,8 @@ function ActivitiesFormScreen() {
                             <SharedDatePicker label={'Date'} value={selectedDate} onChange={changeSelectedDate}/>
                         </View>
                         <View style={{flex: 1}}>
-                            <OptionPicker label={'Type'} options={options} value={selectedOption?.value}
-                                          onChange={changeSelectedOption}/>
+                            <SharedOptionPicker label={'Type'} options={options} value={selectedOption?.value}
+                                                onChange={changeSelectedOption}/>
                         </View>
                     </View>
                     <View style={[styles.typeTag, {backgroundColor: typeColor.bg}]}>

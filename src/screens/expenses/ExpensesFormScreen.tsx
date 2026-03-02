@@ -4,17 +4,16 @@ import {MOCK_EXPENSES} from "@/screens/expenses/data/expenses";
 import {Expense} from "@/types/expense";
 import React, {useState} from "react";
 import {CATEGORY_COLORS} from "@/types/categoryColors";
-import OptionPicker, {Option} from "@/components/ui/OptionPicker";
+import SharedOptionPicker, {Option} from "@/components/ui/sharedInputs/SharedOptionPicker";
 import TopBar from "@/components/ui/TopBar";
 import spacing from "@/constants/spacing";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
-import SharedInput from "@/components/ui/SharedInput";
-import SharedDatePicker from "@/components/ui/SharedDatePicker";
+import SharedInput from "@/components/ui/sharedInputs/SharedInput";
+import SharedDatePicker from "@/components/ui/sharedInputs/SharedDatePicker";
 import {capitalise} from "@/utils/formatLabel";
 import typography from "@/constants/typography";
 import SharedButton from "@/components/ui/SharedButton";
 import colors from "@/constants/colors";
-import {ActivityTypes} from "@/types/activityTypes";
 import {ExpenseTypes} from "@/types/expenseTypes";
 
 function ExpensesFormScreen() {
@@ -51,13 +50,13 @@ function ExpensesFormScreen() {
         const option = options.find(option => option.value === optionValue);
         if (option) {
             setSelectedOption(option);
-            setExpense(prev => ({...prev, type: option.value as ExpenseTypes }))
+            setExpense(prev => ({...prev, type: option.value as ExpenseTypes}))
         }
     }
 
     const changeSelectedDate = (date: Date) => {
         setSelectedDate(date);
-        setExpense(prev => ({...prev, date: new Date(date).toISOString() }))
+        setExpense(prev => ({...prev, date: new Date(date).toISOString()}))
     }
 
     const updateField = <K extends keyof Expense>(key: K, value: Expense[K]) => {
@@ -69,9 +68,7 @@ function ExpensesFormScreen() {
 
     return (
         <View style={styles.container}>
-            <TopBar title={isEditing ? 'Edit expense' : 'New expense'} showBack={true} onBack={() => router.back()}
-                    onMenu={() => {
-                    }}/>
+            <TopBar title={isEditing ? 'Edit expense' : 'New expense'} showBack={true} onBack={() => router.back()}/>
 
             <KeyboardAwareScrollView
                 showsVerticalScrollIndicator={false}
@@ -87,8 +84,8 @@ function ExpensesFormScreen() {
                             <SharedDatePicker label={'Date'} value={selectedDate} onChange={changeSelectedDate}/>
                         </View>
                         <View style={{flex: 1}}>
-                            <OptionPicker label={'Type'} options={options} value={selectedOption?.value}
-                                          onChange={changeSelectedOption}/>
+                            <SharedOptionPicker label={'Type'} options={options} value={selectedOption?.value}
+                                                onChange={changeSelectedOption}/>
                         </View>
                     </View>
                     <View style={[styles.typeTag, {backgroundColor: typeColor.bg}]}>

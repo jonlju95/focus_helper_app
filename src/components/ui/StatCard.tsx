@@ -4,6 +4,7 @@ import typography from "@/constants/typography";
 import ProgressBar from "@/components/ui/ProgressBar";
 import spacing from "@/constants/spacing";
 import {ReactNode} from "react";
+import {sharedStyles} from "@/constants/sharedStyles";
 
 type Variant = 'dark' | 'light';
 
@@ -24,16 +25,16 @@ function StatCard({icon, label, amount, currency, progress, variant}: CardData &
     const bgColor = isDark ? colors.textPrimary : colors.bgCard;
 
     return (
-        <View style={[styles.card, {backgroundColor: bgColor}]}>
+        <View style={[sharedStyles.card, {flex: 1, backgroundColor: bgColor}]}>
 
             {/* Badge */}
-            <View style={styles.cardBadge}>
+            <View style={[styles.cardHeader, sharedStyles.row]}>
                 {icon}
                 <Text style={[typography.styles.badgeText, {color: textColor}]}>{label}</Text>
             </View>
 
             {/* Amount */}
-            <View style={styles.amountRow}>
+            <View style={styles.cardBody}>
                 <Text style={[typography.styles.amount, {color: amountColor}]}>{amount}</Text>
                 <Text style={[typography.styles.metaText, {color: textColor}]}>{currency}</Text>
             </View>
@@ -42,42 +43,20 @@ function StatCard({icon, label, amount, currency, progress, variant}: CardData &
             {progress !== undefined && (
                 <ProgressBar progress={progress} color={colors.primary}/>
             )}
-
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-   card: {
-        flex: 1,
-        padding: spacing[4],
-        borderRadius: spacing[4],
-        gap: spacing[2],
-    },
-
-    cardBadge: {
-        flexDirection: 'row',
-        alignItems: 'center',
+    cardHeader: {
         gap: spacing[1],
     },
 
-    amountRow: {
+    cardBody: {
         flexDirection: 'row',
         alignItems: 'baseline',
         gap: spacing[1],
-    },
-
-    progressTrack: {
-        height: spacing[1],
-        backgroundColor: '#f0ebe4',
-        borderRadius: spacing[1],
-        overflow: 'hidden',
-        marginTop: spacing[1],
-    },
-    progressFill: {
-        height: '100%',
-        backgroundColor: colors.primary,
-        borderRadius: spacing[1],
+        marginBottom: spacing[2],
     },
 });
 

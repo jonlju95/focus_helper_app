@@ -6,7 +6,7 @@ import TopBar from "@/components/ui/TopBar";
 import colors from "@/constants/colors";
 import spacing from "@/constants/spacing";
 import typography from "@/constants/typography";
-import ToggleButton from "@/components/ui/ToggleButton";
+import ToggleButton from "@/components/ui/sharedInputs/ToggleButton";
 import SharedButton from "@/components/ui/SharedButton";
 import {ClockIcon, FileTextIcon, PenIcon, StarIcon} from "phosphor-react-native";
 import {capitalise} from "@/utils/formatLabel";

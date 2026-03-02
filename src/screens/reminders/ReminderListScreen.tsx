@@ -1,6 +1,8 @@
 import {ScrollView, StyleSheet, Text, View} from "react-native";
 import TopBar from "@/components/ui/TopBar";
 import colors from "@/constants/colors";
+import spacing from "@/constants/spacing";
+import typography from "@/constants/typography";
 import ReminderTabs from "@/screens/reminders/components/ReminderTabs";
 import {ReminderType} from "@/types/reminder";
 import React, {useState} from "react";
@@ -8,11 +10,10 @@ import ReminderCard from "@/screens/reminders/components/ReminderCard";
 import {router} from "expo-router";
 import {CalendarBlankIcon, ClockIcon, PlusIcon} from "phosphor-react-native";
 import AlertStrip from "@/components/ui/AlertStrip";
-import { MOCK_REMINDERS } from "@/screens/reminders/data/reminders";
+import {MOCK_REMINDERS} from "@/screens/reminders/data/reminders";
 import SharedButton from "@/components/ui/SharedButton";
-import spacing from "@/constants/spacing";
-import typography from "@/constants/typography";
-
+import SectionLabel from "@/components/ui/SectionLabel";
+import {sharedStyles} from "@/constants/sharedStyles";
 
 export default function ReminderListScreen() {
     const [activeTab, setActiveTab] = useState<ReminderType>('reminder');
@@ -20,12 +21,12 @@ export default function ReminderListScreen() {
     const filtered = MOCK_REMINDERS.filter(r => r.type === activeTab);
 
     return (
-        <View style={styles.container}>
+        <View style={sharedStyles.container}>
             <TopBar title="Reminders"/>
 
             <ScrollView
-                style={styles.scroll}
-                contentContainerStyle={styles.scrollContent}
+                style={sharedStyles.scroll}
+                contentContainerStyle={sharedStyles.scrollContent}
                 showsVerticalScrollIndicator={false}>
                 <AlertStrip left={{
                     icon: 'warning',
@@ -50,10 +51,7 @@ export default function ReminderListScreen() {
                 {/* Map over filtered - only shows reminders matching active tab */}
                 <View style={styles.dailyReminders}>
                     {/* Section label */}
-                    <View style={styles.sectionLabel}>
-                        <ClockIcon size={13} color={colors.textMuted} weight="fill"/>
-                        <Text style={typography.styles.sectionLabel}>Today</Text>
-                    </View>
+                    <SectionLabel icon={<ClockIcon size={13} color={colors.textMuted} weight="fill"/>} label={'Today'}/>
                     {filtered.map(reminder => (
                         <ReminderCard
                             key={reminder.id}
@@ -95,7 +93,8 @@ export default function ReminderListScreen() {
                     ))}
                 </View>
                 <View style={styles.buttonContainer}>
-                    <SharedButton icon={<PlusIcon size={12} color={'white'} weight={'bold'}/>} label={'Add new reminder'}
+                    <SharedButton icon={<PlusIcon size={12} color={'white'} weight={'bold'}/>}
+                                  label={'Add new reminder'}
                                   customStyle={{alignSelf: 'stretch'}} onPress={() => router.push('/reminders/new')}/>
                 </View>
             </ScrollView>
@@ -104,19 +103,6 @@ export default function ReminderListScreen() {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: colors.bgApp,
-        paddingHorizontal: spacing[4],
-        gap: spacing[3]
-    },
-    scroll: {
-        flex: 1,
-    },
-    scrollContent: {
-        paddingBottom: spacing[4],
-        gap: spacing[4],
-    },
     dailyReminders: {
         gap: spacing[3]
     },

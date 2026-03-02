@@ -25,8 +25,7 @@ function ActivitiesListScreen() {
 
     return (
         <View style={styles.container}>
-            <TopBar title="Activities" onMenu={() => {
-            }}/>
+            <TopBar title="Activities"/>
             <ScrollView
                 contentContainerStyle={styles.scrollContent}
                 showsVerticalScrollIndicator={false}>

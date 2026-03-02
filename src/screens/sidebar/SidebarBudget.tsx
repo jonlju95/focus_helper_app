@@ -2,7 +2,7 @@ import React from 'react';
 import {Pressable, StyleSheet, Text, View} from "react-native";
 import {CheckIcon, PenIcon, UserIcon} from "phosphor-react-native";
 import colors from "@/constants/colors";
-import SharedInput from "@/components/ui/SharedInput";
+import SharedInput from "@/components/ui/sharedInputs/SharedInput";
 import SharedButton from "@/components/ui/SharedButton";
 import spacing from "@/constants/spacing";
 import typography from "@/constants/typography";

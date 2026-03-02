@@ -7,7 +7,7 @@ import {ClockIcon, PenIcon, StarIcon} from "phosphor-react-native";
 import ReminderTable from "@/screens/reminders/components/ReminderTable";
 import {useState} from "react";
 import ProgressBar from "@/components/ui/ProgressBar";
-import ToggleButton from "@/components/ui/ToggleButton";
+import ToggleButton from "@/components/ui/sharedInputs/ToggleButton";
 import SharedButton from "@/components/ui/SharedButton";
 import spacing from "@/constants/spacing";
 import typography from "@/constants/typography";

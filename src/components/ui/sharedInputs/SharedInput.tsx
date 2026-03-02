@@ -1,6 +1,9 @@
 import React, {useState} from 'react';
 import {StyleSheet, Text, TextInput, View} from "react-native";
 import colors from "@/constants/colors";
+import typography from "@/constants/typography";
+import {sharedStyles} from "@/constants/sharedStyles";
+import spacing from "@/constants/spacing";
 
 interface InputProps {
     label?: string,
@@ -24,20 +27,21 @@ function SharedInput({
     const [focused, setFocused] = useState(false);
 
     return (
-        <View style={styles.container}>
-            <View style={styles.InputHeader}>
+        <View>
+            <View style={[styles.header, sharedStyles.row]}>
                 {showLabel && (
-                    <Text style={styles.inputLabel}>{label}</Text>
+                    <Text style={typography.styles.label}>{label}</Text>
                 )}
                 {required && (
-                    <Text style={styles.inputLabel}>*</Text>
+                    <Text style={typography.styles.label}>*</Text>
                 )}
             </View>
             <TextInput value={value} placeholder={placeholder}
                        onChangeText={onChangeText}
                        onFocus={() => setFocused(true)}
                        onBlur={() => setFocused(false)}
-                       style={[styles.inputField, focused && styles.inputFocused, customStyle]}
+                       style={[typography.styles.inputText, sharedStyles.row, sharedStyles.border,
+                           styles.inputField, focused && styles.inputFocused, customStyle]}
                        placeholderTextColor={'#C8C0B4'}
                        multiline={true}/>
         </View>
@@ -45,47 +49,24 @@ function SharedInput({
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flexDirection: 'column',
-        alignItems: 'flex-start',
-        justifyContent: 'flex-start',
-        gap: 2
+    header: {
+        gap: 2,
+        marginBottom: spacing[1],
     },
-    InputHeader: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 2
-    },
-    inputLabel: {
-        // Colors
-        color: colors.primary,
 
-        // Fonts
-        fontSize: 11,
-        fontFamily: 'Nunito_800',
-    },
     inputField: {
-        // Positioning
         alignSelf: 'stretch',
         textAlignVertical: 'top',
 
-        // Size
-        paddingHorizontal: 12,
-        paddingVertical: 12,
+        paddingHorizontal: spacing[2],
+        paddingVertical: spacing[3],
 
-        // Colors
         backgroundColor: colors.bgInput,
-        color: colors.textPrimary,
 
-        // Fonts
-        fontSize: 14,
-        fontFamily: 'Nunito_600',
-
-        // Border
-        borderRadius: 12,
-        borderColor: colors.border,
+        borderRadius: spacing[3],
         borderWidth: 1.5,
     },
+
     inputFocused: {
         borderColor: colors.primary,
         backgroundColor: colors.bgCard,
@@ -93,10 +74,3 @@ const styles = StyleSheet.create({
 })
 
 export default SharedInput;
-
-
-// Positioning
-// Size
-// Colors
-// Fonts
-// Border

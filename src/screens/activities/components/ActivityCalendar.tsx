@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Pressable, StyleSheet, Text, View} from "react-native";
-import OptionPicker from "@/components/ui/OptionPicker";
+import SharedOptionPicker from "@/components/ui/sharedInputs/SharedOptionPicker";
 import spacing from "@/constants/spacing";
 import typography from "@/constants/typography";
 import colors from "@/constants/colors";
@@ -79,14 +79,14 @@ function ActivityCalendar({markedDates = [], onDaySelect}: CalendarProps) {
             {/* Month + Year pickers */}
             <View style={styles.cardInputs}>
                 <View style={{flex: 1}}>
-                    <OptionPicker
+                    <SharedOptionPicker
                         options={months}
                         value={selectedMonth}
                         showLabel={false}
                         onChange={changeMonth}
                     />
                 </View>
-                <OptionPicker
+                <SharedOptionPicker
                     options={years}
                     value={selectedYear}
                     showLabel={false}

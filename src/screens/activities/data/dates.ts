@@ -1,4 +1,4 @@
-import {Option} from "@/components/ui/OptionPicker";
+import {Option} from "@/components/ui/sharedInputs/SharedOptionPicker";
 
 export const months: Option[] = [
     {label: 'January', value: '0'},

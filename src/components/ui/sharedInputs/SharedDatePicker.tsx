@@ -3,9 +3,12 @@ import {useState} from 'react';
 import {Platform, Pressable, StyleSheet, Text, View} from 'react-native';
 import {CalendarBlankIcon} from 'phosphor-react-native';
 import colors from '@/constants/colors';
+import {sharedStyles} from "@/constants/sharedStyles";
+import typography from "@/constants/typography";
+import spacing from "@/constants/spacing";
 
 interface DatePickerProps {
-    label?: string;
+    label: string;
     value: Date;
     onChange: (date: Date) => void;
     mode?: 'date' | 'time' | 'datetime';
@@ -17,13 +20,11 @@ export default function SharedDatePicker({
     onChange,
     mode = 'date',
 }: DatePickerProps) {
-    const [show, setShow] = useState(false);
+    const [visible, setVisible] = useState(false);
 
     const handleChange = (event: DateTimePickerEvent, selected?: Date) => {
-        // On Android the dialog closes itself — hide our show state too
-        if (Platform.OS === 'android') setShow(false);
+        if (Platform.OS === 'android') setVisible(false);
 
-        // event.type is 'set' when user confirms, 'dismissed' when cancelled
         if (event.type === 'set' && selected) {
             onChange(selected);
         }
@@ -35,25 +36,23 @@ export default function SharedDatePicker({
 
     return (
         <View>
-            {label && (
-                <View style={styles.labelWrapper}>
-                    <Text style={styles.labelText}>{label}</Text>
-                </View>
-            )}
+            <View style={[styles.header, sharedStyles.row]}>
+                <Text style={typography.styles.label}>{label}</Text>
+            </View>
 
-            {/* Trigger — same style as SharedInput and OptionPicker */}
+
+            {/* Trigger — same style as SharedInput and SharedOptionPicker */}
             <Pressable
-                style={[styles.trigger, show && styles.triggerOpen]}
-                onPress={() => setShow(true)}
-            >
-                <Text style={value ? styles.triggerText : styles.triggerPlaceholder}>
+                style={[sharedStyles.row, sharedStyles.border, styles.trigger, visible && styles.triggerOpen]}
+                onPress={() => setVisible(true)}>
+                <Text style={typography.styles.inputText}>
                     {displayValue}
                 </Text>
                 <CalendarBlankIcon size={16} color={colors.textMuted} weight="fill"/>
             </Pressable>
 
             {/* Picker — only shown when show is true */}
-            {show && (
+            {visible && (
                 <DateTimePicker
                     value={value}
                     mode={mode}
@@ -66,39 +65,23 @@ export default function SharedDatePicker({
 }
 
 const styles = StyleSheet.create({
-    labelWrapper: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 4,
+    header: {
+        gap: 2,
+        marginBottom: spacing[1],
     },
-    labelText: {
-        fontSize: 11,
-        fontFamily: 'Nunito_800',
-        color: colors.primary,
-    },
+
     trigger: {
-        flexDirection: 'row',
-        alignItems: 'center',
         justifyContent: 'space-between',
         backgroundColor: colors.bgInput,
-        borderColor: colors.border,
         borderWidth: 1.5,
-        borderRadius: 12,
-        paddingHorizontal: 14,
-        paddingVertical: 11,
+        borderRadius: spacing[3],
+        paddingHorizontal: spacing[2],
+        paddingVertical: spacing[3],
+        gap: spacing[2]
     },
+
     triggerOpen: {
         borderColor: colors.primary,
         backgroundColor: colors.bgCard,
-    },
-    triggerText: {
-        fontSize: 14,
-        fontFamily: 'Nunito_600',
-        color: colors.textPrimary,
-    },
-    triggerPlaceholder: {
-        fontSize: 14,
-        fontFamily: 'Nunito_600',
-        color: '#C8C0B4',
     },
 });

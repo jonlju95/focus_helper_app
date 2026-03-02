@@ -3,8 +3,8 @@ import {Pressable, StyleSheet, View} from "react-native";
 import spacing from "@/constants/spacing";
 import colors from "@/constants/colors";
 import {CheckIcon, PenIcon, UserIcon} from "phosphor-react-native";
-import SharedInput from "@/components/ui/SharedInput";
-import OptionPicker, {Option} from "@/components/ui/OptionPicker";
+import SharedInput from "@/components/ui/sharedInputs/SharedInput";
+import SharedOptionPicker, {Option} from "@/components/ui/sharedInputs/SharedOptionPicker";
 import SharedButton from "@/components/ui/SharedButton";
 
 interface SidebarProfileProps {
@@ -38,8 +38,8 @@ function SidebarProfile({onBack}: SidebarProfileProps) {
                     <SharedInput value={'Sunday'} label={'Your name'}/>
                 </View>
                 <View style={styles.settingsCardArea}>
-                    <OptionPicker options={options} value={greeting} label={'Greeting style'}
-                                  onChange={changeGreeting}/>
+                    <SharedOptionPicker options={options} value={greeting} label={'Greeting style'}
+                                        onChange={changeGreeting}/>
                 </View>
             </View>
             <View style={styles.buttonContainer}>

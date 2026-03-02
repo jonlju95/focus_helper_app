@@ -2,6 +2,9 @@ import React, {ReactNode} from 'react';
 import {Pressable, StyleSheet, Text, ViewStyle} from "react-native";
 import {CheckIcon} from "phosphor-react-native";
 import colors from "@/constants/colors";
+import {sharedStyles} from "@/constants/sharedStyles";
+import spacing from "@/constants/spacing";
+import typography from "@/constants/typography";
 
 interface ButtonProps {
     icon?: ReactNode;
@@ -17,43 +20,36 @@ function SharedButton({
 }: ButtonProps) {
     return (
         <Pressable style={({pressed}) => [
-            styles.container,
+            styles.btnBody,
+            sharedStyles.row,
             pressed && styles.pressed,
             customStyle
         ]} onPress={onPress}>
-            {showIcon && (
-                icon
-            )}
-            <Text style={styles.buttonLabel}>{label}</Text>
+            {showIcon && (icon)}
+            <Text style={typography.styles.btnText}>{label}</Text>
         </Pressable>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flexDirection: "row",
-        alignItems: "center",
+    btnBody: {
         alignSelf: "flex-start",
         justifyContent: "center",
-        gap: 8,
+        gap: spacing[2],
         backgroundColor: colors.primary,
-        borderRadius: 16,
-        paddingHorizontal: 24,
-        paddingVertical: 12,
-        elevation: 8,
+        borderRadius: spacing[4],
+        paddingHorizontal: spacing[6],
+        paddingVertical: spacing[3],
+
+        elevation: spacing[1],
         shadowColor: '#C4622D',
         shadowOffset: {width: 0, height: 4},
         shadowOpacity: 0.3,
-        shadowRadius: 16,
+        shadowRadius: spacing[4],
     },
     pressed: {
         opacity: 0.85,
     },
-    buttonLabel: {
-        fontSize: 14,
-        fontFamily: 'Nunito_800',
-        color: 'white',
-    }
 })
 
 export default SharedButton;

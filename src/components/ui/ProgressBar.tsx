@@ -2,6 +2,8 @@
 import {useEffect, useRef} from 'react';
 import {Animated, StyleSheet, Text, View} from 'react-native';
 import colors from '@/constants/colors';
+import spacing from "@/constants/spacing";
+import typography from "@/constants/typography";
 
 interface ProgressBarProps {
     progress: number;
@@ -33,7 +35,7 @@ export default function ProgressBar({
     }, [progress]);
 
     return (
-        <View style={styles.wrapper}>
+        <>
             <View style={[styles.track, {height, backgroundColor: trackColor}]}>
                 <Animated.View
                     style={[
@@ -52,20 +54,17 @@ export default function ProgressBar({
 
             {showLabel && (
                 <View style={styles.label}>
-                    <Text style={[styles.labelCompleted, {color}]}>{completed}</Text>
+                    <Text style={[typography.styles.amount, {color}]}>{completed}</Text>
                     <Text style={styles.labelTotal}>/{total}</Text>
                 </View>
             )}
-        </View>
+        </>
     );
 }
 
 const styles = StyleSheet.create({
-    wrapper: {
-        gap: 4,
-    },
     track: {
-        borderRadius: 4,
+        borderRadius: spacing[1],
         overflow: 'hidden',
         backgroundColor: '#f0ebe4',
     },
@@ -75,11 +74,9 @@ const styles = StyleSheet.create({
     label: {
         flexDirection: 'row',
         alignItems: 'baseline',
+        marginLeft: spacing[1]
     },
-    labelCompleted: {
-        fontSize: 22,
-        fontFamily: 'Nunito_900',
-    },
+
     labelTotal: {
         fontSize: 14,
         fontFamily: 'Nunito_900',

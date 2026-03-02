@@ -2,6 +2,9 @@ import {JSX} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {BellIcon, CoinsIcon, ReceiptIcon, WarningIcon,} from 'phosphor-react-native';
 import colors from '@/constants/colors';
+import spacing from "@/constants/spacing";
+import {sharedStyles} from "@/constants/sharedStyles";
+import typography from "@/constants/typography";
 
 type IconName = 'warning' | 'bell' | 'coin' | 'receipt';
 
@@ -29,7 +32,7 @@ const ICONS: Record<IconName, (props: { size: number; color: string; weight: 'fi
 
 function AlertStrip({left, right}: AlertStripProps) {
     return (
-        <View style={styles.container}>
+        <View style={[styles.section, sharedStyles.row]}>
             <AlertItem item={left}/>
             <View style={styles.divider}/>
             <AlertItem item={right}/>
@@ -43,18 +46,21 @@ function AlertItem({item}: { item: AlertItem }) {
     item.stacked = item.stacked ?? false;
 
     return (
-        <View style={styles.item}>
+        <View style={[styles.body, sharedStyles.row]}>
             {/* Icon bubble */}
-            <View style={[styles.iconWrap, {backgroundColor: item.iconBg}]}>
+            <View style={[styles.bodyIcon, {backgroundColor: item.iconBg}]}>
                 <IconComponent size={17} color={item.iconColor} weight="fill"/>
             </View>
+
             {/*(!item.expenseScreen && { flexDirection: 'row'})*/}
-            <View style={item.stacked ? styles.textCol : styles.textRow}>
+            <View style={item.stacked ? styles.textCol : [styles.textRow, sharedStyles.row]}>
+
                 {/* Label — two lines, small text */}
-                <Text style={styles.label}>{item.label}</Text>
+                <Text style={[typography.styles.metaText, styles.bodyLabel]}>{item.label}</Text>
 
                 {/* Value — big bold number on the right */}
-                <Text style={[styles.value, {color: item.valueColor ?? item.iconColor}, item.stacked && {fontSize: 16}]}>
+                <Text
+                    style={[typography.styles.amount, {color: item.valueColor ?? item.iconColor}, item.stacked && {fontSize: 16}]}>
                     {item.value}
                 </Text>
             </View>
@@ -63,15 +69,13 @@ function AlertItem({item}: { item: AlertItem }) {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flexDirection: 'row',
-        alignItems: 'center',
+    section: {
         backgroundColor: '#fff3e8',
         borderWidth: 1.5,
         borderColor: colors.borderWarm,
-        borderRadius: 16,
-        padding: 12,
-        gap: 16,
+        borderRadius: spacing[4],
+        padding: spacing[3],
+        gap: spacing[4],
     },
 
     divider: {
@@ -81,44 +85,33 @@ const styles = StyleSheet.create({
         marginHorizontal: 4,
     },
 
-    item: {
+    body: {
         flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 8,
+        gap: spacing[2],
     },
 
-    iconWrap: {
+    bodyIcon: {
         width: 30,
         height: 30,
-        borderRadius: 8,
+        borderRadius: spacing[2],
         alignItems: 'center',
         justifyContent: 'center',
-        flexShrink: 0,
     },
 
     textRow: {
-        flex:           1,
-        flexDirection:  'row',
+        flex: 1,
         justifyContent: 'space-between',
-        alignItems:     'center',
-    },
-    textCol: {
-        flex:          1,
-        flexDirection: 'column',
-        gap:           2,
     },
 
-    label: {
+    textCol: {
         flex: 1,
-        fontSize: 12,
-        fontFamily: 'NunitoSans_600',
-        color: '#7a5a3a',
-        lineHeight: 16,
+        flexDirection: 'column',
+        gap: 2,
     },
-    value: {
-        fontSize: 22,
-        fontFamily: 'Nunito_900',
+
+    bodyLabel: {
+        flex: 1,
+        color: '#7a5a3a',
     },
 });
 

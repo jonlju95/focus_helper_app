@@ -5,6 +5,7 @@ import colors from "@/constants/colors";
 import spacing from "@/constants/spacing";
 import typography from "@/constants/typography";
 import {StarIcon, XIcon} from "phosphor-react-native";
+import {sharedStyles} from "@/constants/sharedStyles";
 
 interface TagProps {
     title: string;
@@ -16,7 +17,7 @@ interface TagProps {
     deleteBtnBg?: string;
 }
 
-function SharedTag({
+function SharedBadge({
     title,
     color = colors.primary,
     bgColor = colors.primaryLight,
@@ -26,15 +27,15 @@ function SharedTag({
     deleteBtnBg,
 }: TagProps) {
     return (
-        <View style={[styles.tagContainer, {backgroundColor: bgColor}]}>
+        <View style={[styles.badge, sharedStyles.row, {backgroundColor: bgColor}]}>
             {prioritized && (
                 <StarIcon color={colors.primary} size={11} weight={'fill'}/>
             )}
-            <Text style={[styles.tagText, {color: color}]}>
+            <Text style={[typography.styles.metaText, {color: color ?? colors.primary}]}>
                 {capitalise(title)}
             </Text>
             {deletable && (
-                <Pressable style={[styles.deleteTagBtn, {backgroundColor: deleteBtnBg}]} onPress={onDelete}>
+                <Pressable style={[styles.deleteBadgeBtn, {backgroundColor: deleteBtnBg}]} onPress={onDelete}>
                     <XIcon size={9} color={color} weight={'bold'}/>
                 </Pressable>
             )}
@@ -43,8 +44,7 @@ function SharedTag({
 }
 
 const styles = StyleSheet.create({
-    tagContainer: {
-        flexDirection: 'row',
+    badge: {
         paddingLeft: spacing[2],
         paddingRight: 2,
         paddingVertical: 2,
@@ -52,16 +52,12 @@ const styles = StyleSheet.create({
         backgroundColor: colors.primaryLight,
         gap: spacing[1],
     },
-    tagText: {
-        fontSize: 12,
-        fontFamily: `${typography.fonts.heading}_600`,
-        color: colors.primary,
-    },
-    deleteTagBtn: {
+
+    deleteBadgeBtn: {
         alignSelf: 'center',
         padding: spacing[1],
         borderRadius: spacing[10],
     }
 })
 
-export default SharedTag;
+export default SharedBadge;

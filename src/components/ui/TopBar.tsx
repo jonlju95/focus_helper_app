@@ -2,6 +2,9 @@ import {Pressable, StyleSheet, Text, View} from "react-native";
 import colors from '@/constants/colors';
 import {ArrowLeftIcon, ListIcon} from "phosphor-react-native";
 import {useSidebar} from "@/context/SidebarContext";
+import {sharedStyles} from "@/constants/sharedStyles";
+import typography from "@/constants/typography";
+import spacing from "@/constants/spacing";
 
 interface TopBarProps {
     title: string;
@@ -16,16 +19,16 @@ export default function TopBar({title, date, showBack, showDate, onBack}: TopBar
     const {open} = useSidebar();
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, sharedStyles.row]}>
             {showBack && (
                 <Pressable style={styles.button} onPress={onBack}>
                     <ArrowLeftIcon size={20} color={colors.textSecondary} weight="bold"/>
                 </Pressable>
             )}
             <View style={styles.header}>
-                <Text style={styles.title}>{title}</Text>
+                <Text style={typography.styles.pageTitle}>{title}</Text>
                 {showDate && date && (
-                    <Text style={styles.meta}>{date}</Text>
+                    <Text style={[typography.styles.metaText, styles.meta]}>{date}</Text>
                 )}
             </View>
 
@@ -39,17 +42,18 @@ export default function TopBar({title, date, showBack, showDate, onBack}: TopBar
 const styles = StyleSheet.create({
     container: {
         // Positioning
+        flex: 0,
         flexDirection: 'row',
         alignItems: 'center',
-        paddingTop: 48,
-        paddingBottom: 12,
-        gap: 12,
+        paddingTop: spacing[12],
+        paddingBottom: spacing[3],
+        gap: spacing[3],
 
         // Colors
         backgroundColor: colors.bgApp,
 
         // Other
-        borderRadius: 12,
+        borderRadius: spacing[3],
     },
 
     button: {
@@ -65,7 +69,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.bgMuted,
 
         // Other
-        borderRadius: 12,
+        borderRadius: spacing[3],
     },
 
     header: {
@@ -73,34 +77,18 @@ const styles = StyleSheet.create({
         flexShrink: 1,
     },
 
-    title: {
-        // Size
-        flexShrink: 1,
-
-        // Colors
-        color: colors.textPrimary,
-
-        // Fonts
-        fontSize: 26,
-        fontFamily: 'Nunito_900',
-    },
-
     meta: {
         // Positioning
         alignSelf: 'flex-start',
         paddingHorizontal: 14,
         paddingVertical: 4,
-        marginTop: 8,
+        marginTop: spacing[2],
 
         // Colors
         backgroundColor: colors.bgMuted,
         color: colors.textWarm,
 
-        // Fonts
-        fontSize: 12,
-        fontFamily: 'NunitoSans_600',
-
         // Other
-        borderRadius: 20,
+        borderRadius: spacing[4],
     },
 })

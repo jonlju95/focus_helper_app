@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 import {Pressable, StyleSheet, Text, View} from "react-native";
-import SharedTag from "@/components/ui/SharedTag";
+import SharedBadge from "@/components/ui/SharedBadge";
 import spacing from "@/constants/spacing";
 import typography from "@/constants/typography";
 import colors from "@/constants/colors";
-import SharedInput from "@/components/ui/SharedInput";
+import SharedInput from "@/components/ui/sharedInputs/SharedInput";
 import {CheckIcon, PlusIcon} from "phosphor-react-native";
 import SharedButton from "@/components/ui/SharedButton";
 
@@ -36,8 +36,8 @@ function SidebarCategories({onBack}: SidebarCategoriesProps) {
             <Text style={styles.header}>Tap a category to remove it. These appear in Expenses and Activities.</Text>
             <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: spacing[3]}}>
                 {categories.map((c) => (
-                    <SharedTag title={c.title} color={c.color} bgColor={c.bgColor} deleteBtnBg={c.btnBg}
-                               deletable={true}/>
+                    <SharedBadge title={c.title} color={c.color} bgColor={c.bgColor} deleteBtnBg={c.btnBg}
+                                 deletable={true}/>
                 ))}
             </View>
             <View style={[styles.inputContainer]}>

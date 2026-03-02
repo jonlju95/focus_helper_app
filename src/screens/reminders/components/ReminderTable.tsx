@@ -2,7 +2,7 @@ import {Task} from '@/types/reminder';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import {CheckSquareIcon, ListChecksIcon, PlusIcon, SquareIcon, TrashIcon} from 'phosphor-react-native';
 import colors from '@/constants/colors';
-import SharedInput from "@/components/ui/SharedInput";
+import SharedInput from "@/components/ui/sharedInputs/SharedInput";
 import {useState} from "react";
 import spacing from "@/constants/spacing";
 
