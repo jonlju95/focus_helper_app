@@ -14,6 +14,8 @@ import {capitalise} from "@/utils/formatLabel";
 import typography from "@/constants/typography";
 import SharedButton from "@/components/ui/SharedButton";
 import colors from "@/constants/colors";
+import {ActivityTypes} from "@/types/activityTypes";
+import {ExpenseTypes} from "@/types/expenseTypes";
 
 function ExpensesFormScreen() {
     const {id} = useLocalSearchParams<{ id: string }>();
@@ -49,11 +51,13 @@ function ExpensesFormScreen() {
         const option = options.find(option => option.value === optionValue);
         if (option) {
             setSelectedOption(option);
+            setExpense(prev => ({...prev, type: option.value as ExpenseTypes }))
         }
     }
 
     const changeSelectedDate = (date: Date) => {
         setSelectedDate(date);
+        setExpense(prev => ({...prev, date: new Date(date).toISOString() }))
     }
 
     const updateField = <K extends keyof Expense>(key: K, value: Expense[K]) => {

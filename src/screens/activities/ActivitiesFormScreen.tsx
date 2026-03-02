@@ -15,6 +15,7 @@ import SharedButton from "@/components/ui/SharedButton";
 import {capitalise} from "@/utils/formatLabel";
 import {ACTIVITY_COLORS} from "@/types/categoryColors";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
+import {ActivityTypes} from "@/types/activityTypes";
 
 function ActivitiesFormScreen() {
     const {id} = useLocalSearchParams<{ id: string }>();
@@ -59,11 +60,13 @@ function ActivitiesFormScreen() {
         const option = options.find(option => option.value === optionValue);
         if (option) {
             setSelectedOption(option);
+            setActivity(prev => ({...prev, type: option.value as ActivityTypes }))
         }
     }
 
     const changeSelectedDate = (date: Date) => {
         setSelectedDate(date);
+        setActivity(prev => ({...prev, date: new Date(date).toISOString() }));
     }
 
     const updateField = <K extends keyof Activity>(key: K, value: Activity[K]) => {
