@@ -34,7 +34,7 @@ const ICONS: Record<IconName, (props: { size: number; color: string; }) => JSX.E
 };
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
-const SIDEBAR_WIDTH = SCREEN_WIDTH * 0.82;
+const SIDEBAR_WIDTH = SCREEN_WIDTH * 0.85;
 
 function SidebarLink({icon, color, bg, title, subtitle, onPress}: SidebarLinkProps) {
     const IconComponent = ICONS[icon];
@@ -59,7 +59,8 @@ const styles = StyleSheet.create({
     linkBody: {
         flexDirection: 'row',
         alignItems: 'center',
-        padding: spacing[3],
+        paddingHorizontal: spacing[4],
+        paddingVertical: spacing[2],
         width: SIDEBAR_WIDTH - (SCREEN_WIDTH - SIDEBAR_WIDTH),
     },
     iconBody: {

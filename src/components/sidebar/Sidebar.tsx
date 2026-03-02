@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Animated, BackHandler, Dimensions, Pressable, StyleSheet} from 'react-native';
+import {Animated, BackHandler, Dimensions, Pressable, ScrollView, StyleSheet} from 'react-native';
 import {useSidebar} from '@/context/SidebarContext';
 import SidebarMenu from '@/screens/sidebar/SidebarMenu';
 import SidebarProfile from '@/screens/sidebar/SidebarProfile';
@@ -11,9 +11,12 @@ import SidebarAbout from '@/screens/sidebar/SidebarAbout';
 import colors from '@/constants/colors';
 import {SidebarPanel} from "@/types/sidebar";
 import SidebarFooter from "@/components/sidebar/SidebarFooter";
+import spacing from "@/constants/spacing";
+import SidebarHeader from "@/components/sidebar/SidebarHeader";
+import {capitalise} from "@/utils/formatLabel";
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
-const SIDEBAR_WIDTH = SCREEN_WIDTH * 0.82;
+const SIDEBAR_WIDTH = SCREEN_WIDTH * 0.85;
 
 export default function Sidebar() {
     const {isOpen, close} = useSidebar();
@@ -68,17 +71,17 @@ export default function Sidebar() {
             case 'menu':
                 return <SidebarMenu onNavigate={setActivePanel}/>;
             case 'profile':
-                return <SidebarProfile onBack={() => setActivePanel('menu')}/>;
+                return <SidebarProfile/>;
             case 'budget':
-                return <SidebarBudget onBack={() => setActivePanel('menu')}/>;
+                return <SidebarBudget/>;
             case 'notifications':
-                return <SidebarNotifications onBack={() => setActivePanel('menu')}/>;
+                return <SidebarNotifications/>;
             case 'categories':
-                return <SidebarCategories onBack={() => setActivePanel('menu')}/>;
+                return <SidebarCategories/>;
             case 'export':
-                return <SidebarExport onBack={() => setActivePanel('menu')}/>;
+                return <SidebarExport/>;
             case 'about':
-                return <SidebarAbout onBack={() => setActivePanel('menu')}/>;
+                return <SidebarAbout/>;
         }
     };
 
@@ -97,7 +100,14 @@ export default function Sidebar() {
                 styles.sidebar,
                 {transform: [{translateX}]}
             ]}>
-                {renderContent()}
+                <SidebarHeader isMenu={activePanel === 'menu'} title={capitalise(activePanel)}
+                               onBack={() => setActivePanel('menu')}/>
+                <ScrollView
+                    style={styles.scroll}
+                    contentContainerStyle={styles.scrollContent}
+                    showsVerticalScrollIndicator={false}>
+                    {renderContent()}
+                </ScrollView>
                 <SidebarFooter/>
             </Animated.View>
         </>
@@ -114,10 +124,11 @@ const styles = StyleSheet.create({
     sidebar: {
         position: 'absolute',
         top: 0,
-        right: 0,
+        right: (SCREEN_WIDTH - SIDEBAR_WIDTH),
         bottom: 0,
-        width: SIDEBAR_WIDTH,
-        backgroundColor: colors.bgApp,
+        width: SIDEBAR_WIDTH - (SCREEN_WIDTH - SIDEBAR_WIDTH),
+        alignItems: 'stretch',
+        backgroundColor: colors.bgScreen,
         zIndex: 101,
         elevation: 101,
         shadowColor: '#000',
@@ -125,4 +136,12 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.15,
         shadowRadius: 16,
     },
+    scroll: {
+        flex: 1,
+    },
+    scrollContent: {
+        paddingBottom: spacing[4],
+        gap: spacing[4],
+    },
+
 });

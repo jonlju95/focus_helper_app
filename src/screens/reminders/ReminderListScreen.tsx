@@ -21,8 +21,7 @@ export default function ReminderListScreen() {
 
     return (
         <View style={styles.container}>
-            <TopBar title="Reminders" onMenu={() => {
-            }}/>
+            <TopBar title="Reminders"/>
 
             <ScrollView
                 style={styles.scroll}

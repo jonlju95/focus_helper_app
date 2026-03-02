@@ -17,7 +17,7 @@ import {TabBarIcon} from '@/components/navigation/TabBarIcon';
 import {tabBarConfig} from '@/components/navigation/tabBarConfig';
 import colors from '@/constants/colors';
 import {SidebarProvider} from "@/context/SidebarContext";
-import Sidebar from "@/components/Sidebar";
+import Sidebar from "@/components/sidebar/Sidebar";
 
 SplashScreen.preventAutoHideAsync();
 

@@ -1,11 +1,8 @@
-import {Dimensions, Pressable, StyleSheet, Text, View} from 'react-native';
+import {Dimensions, StyleSheet, Text, View} from 'react-native';
 import {SidebarPanel} from '@/types/sidebar';
 import spacing from "@/constants/spacing";
 import colors from "@/constants/colors";
-import {LinearGradient} from "expo-linear-gradient";
-import {PenIcon, UserIcon, XIcon} from "phosphor-react-native";
 import typography from "@/constants/typography";
-import {useSidebar} from "@/context/SidebarContext";
 import {getMonthName} from "@/utils/formatDate";
 import ProgressBar from "@/components/ui/ProgressBar";
 import SidebarLink from "@/components/sidebar/SidebarLink";
@@ -15,37 +12,11 @@ interface SidebarMenuProps {
 }
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
-const SIDEBAR_WIDTH = SCREEN_WIDTH * 0.82;
+const SIDEBAR_WIDTH = SCREEN_WIDTH * 0.85;
 
 function SidebarMenu({onNavigate}: SidebarMenuProps) {
-    const {close} = useSidebar();
-
     return (
         <>
-            <LinearGradient
-                colors={[colors.primary, colors.primaryDark]}
-                start={{x: 0.2, y: 1}}
-                end={{x: 0.7, y: 0}}
-                style={styles.sidebarHeader}>
-                <View style={styles.sidebarBigCircle}/>
-                <View style={styles.sidebarSmallCircle}/>
-                <Pressable style={styles.sidebarCloseButton} onPress={close}>
-                    <XIcon size={14} color="white" weight={'bold'}/>
-                </Pressable>
-                <View style={{gap: spacing[2]}}>
-                    <View style={styles.sidebarProfile}>
-                        <UserIcon size={28} color="white" weight={'bold'}/>
-                    </View>
-                    <View>
-                        <Text style={styles.sidebarHeaderTitle}>Sunday</Text>
-                        <Text style={styles.sidebarHeaderSubtitle}>Your personal helper</Text>
-                    </View>
-                    <Pressable style={styles.sidebarEditProfile}>
-                        <PenIcon size={14} color="white" weight={'bold'}/>
-                        <Text style={styles.sidebarEditProfileText}>Edit profile</Text>
-                    </Pressable>
-                </View>
-            </LinearGradient>
             <View style={styles.monthlyBudgetCard}>
                 <Text style={styles.monthlyBudgetTitle}>{getMonthName(new Date())} budget</Text>
                 <View>
@@ -83,75 +54,6 @@ function SidebarMenu({onNavigate}: SidebarMenuProps) {
 }
 
 const styles = StyleSheet.create({
-    sidebarHeader: {
-        paddingHorizontal: spacing[5],
-        paddingTop: spacing[8],
-        paddingBottom: spacing[5],
-        backgroundColor: colors.primary,
-    },
-    sidebarBigCircle: {
-        position: 'absolute',
-        width: 160,
-        height: 160,
-        top: -30,
-        right: SCREEN_WIDTH - SIDEBAR_WIDTH - 30,
-        borderRadius: '50%',
-        backgroundColor: 'rgba(255, 255, 255, 0.08)',
-    },
-    sidebarSmallCircle: {
-        position: 'absolute',
-        width: 100,
-        height: 100,
-        bottom: -40,
-        right: SCREEN_WIDTH - SIDEBAR_WIDTH + 40,
-        borderRadius: '50%',
-        backgroundColor: 'rgba(255, 255, 255, 0.08)',
-    },
-    sidebarCloseButton: {
-        alignSelf: 'flex-start',
-        padding: spacing[2],
-        backgroundColor: 'rgba(255, 255, 255, 0.2)',
-        borderRadius: spacing[3],
-        position: 'absolute',
-        top: spacing[8],
-        right: SCREEN_WIDTH - SIDEBAR_WIDTH + spacing[4],
-        zIndex: 999,
-    },
-    sidebarProfile: {
-        alignSelf: 'flex-start',
-        padding: spacing[3],
-        backgroundColor: 'rgba(255, 255, 255, 0.2)',
-        borderRadius: spacing[4],
-        borderWidth: 2,
-        borderColor: 'rgba(255, 255, 255, 0.4)',
-    },
-    sidebarHeaderTitle: {
-        fontSize: 20,
-        fontFamily: `${typography.fonts.heading}_900`,
-        color: 'white',
-    },
-    sidebarHeaderSubtitle: {
-        fontSize: 12,
-        fontFamily: `${typography.fonts.heading}_600`,
-        color: 'rgba(255, 255, 255, 0.7)',
-    },
-    sidebarEditProfile: {
-        alignSelf: 'flex-start',
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: spacing[1],
-        paddingHorizontal: spacing[3],
-        paddingVertical: spacing[1],
-        backgroundColor: 'rgba(255, 255, 255, 0.18)',
-        borderRadius: spacing[4],
-        borderWidth: 1,
-        borderColor: 'rgba(255, 255, 255, 0.3)',
-    },
-    sidebarEditProfileText: {
-        fontSize: 11,
-        fontFamily: `${typography.fonts.heading}_800`,
-        color: 'white',
-    },
     monthlyBudgetCard: {
         padding: spacing[4],
         backgroundColor: colors.bgCard,
