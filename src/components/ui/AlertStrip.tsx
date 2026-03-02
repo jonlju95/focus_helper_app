@@ -1,6 +1,6 @@
 import {JSX} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {BellIcon, CoinIcon, ReceiptIcon, WarningIcon,} from 'phosphor-react-native';
+import {BellIcon, CoinsIcon, ReceiptIcon, WarningIcon,} from 'phosphor-react-native';
 import colors from '@/constants/colors';
 
 type IconName = 'warning' | 'bell' | 'coin' | 'receipt';
@@ -12,6 +12,7 @@ interface AlertItem {
     label: string;
     value: string;
     valueColor?: string;
+    stacked?: boolean;
 }
 
 interface AlertStripProps {
@@ -22,7 +23,7 @@ interface AlertStripProps {
 const ICONS: Record<IconName, (props: { size: number; color: string; weight: 'fill' | 'regular' }) => JSX.Element> = {
     warning: (props) => <WarningIcon {...props} />,
     bell: (props) => <BellIcon          {...props} />,
-    coin: (props) => <CoinIcon          {...props} />,
+    coin: (props) => <CoinsIcon          {...props} />,
     receipt: (props) => <ReceiptIcon       {...props} />,
 };
 
@@ -39,20 +40,24 @@ function AlertStrip({left, right}: AlertStripProps) {
 function AlertItem({item}: { item: AlertItem }) {
     const IconComponent = ICONS[item.icon];
 
+    item.stacked = item.stacked ?? false;
+
     return (
         <View style={styles.item}>
             {/* Icon bubble */}
             <View style={[styles.iconWrap, {backgroundColor: item.iconBg}]}>
                 <IconComponent size={17} color={item.iconColor} weight="fill"/>
             </View>
+            {/*(!item.expenseScreen && { flexDirection: 'row'})*/}
+            <View style={item.stacked ? styles.textCol : styles.textRow}>
+                {/* Label — two lines, small text */}
+                <Text style={styles.label}>{item.label}</Text>
 
-            {/* Label — two lines, small text */}
-            <Text style={styles.label}>{item.label}</Text>
-
-            {/* Value — big bold number on the right */}
-            <Text style={[styles.value, {color: item.valueColor ?? item.iconColor}]}>
-                {item.value}
-            </Text>
+                {/* Value — big bold number on the right */}
+                <Text style={[styles.value, {color: item.valueColor ?? item.iconColor}, item.stacked && {fontSize: 16}]}>
+                    {item.value}
+                </Text>
+            </View>
         </View>
     );
 }
@@ -92,6 +97,18 @@ const styles = StyleSheet.create({
         flexShrink: 0,
     },
 
+    textRow: {
+        flex:           1,
+        flexDirection:  'row',
+        justifyContent: 'space-between',
+        alignItems:     'center',
+    },
+    textCol: {
+        flex:          1,
+        flexDirection: 'column',
+        gap:           2,
+    },
+
     label: {
         flex: 1,
         fontSize: 12,
@@ -99,7 +116,6 @@ const styles = StyleSheet.create({
         color: '#7a5a3a',
         lineHeight: 16,
     },
-
     value: {
         fontSize: 22,
         fontFamily: 'Nunito_900',

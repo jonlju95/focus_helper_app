@@ -1,51 +1,46 @@
 import {Pressable, StyleSheet, Text, View} from "react-native";
-import {ActivityTypes} from "@/types/activityTypes";
-import {ArrowRightIcon, CalendarBlankIcon, ClockIcon, StarIcon} from "phosphor-react-native";
+import {CATEGORY_COLORS} from "@/types/categoryColors";
+import {ExpenseTypes} from "@/types/expenseTypes";
+import {ClockIcon, ShoppingCartIcon} from "phosphor-react-native";
 import colors from "@/constants/colors";
+import {capitalise} from "@/utils/formatLabel";
 import spacing from "@/constants/spacing";
 import typography from "@/constants/typography";
-import {ACTIVITY_COLORS} from "@/types/categoryColors";
-import {capitalise} from "@/utils/formatLabel";
 
-interface ActivityCardProps {
+interface ExpenseCardProps {
     title: string;
-    time: string;
-    priority?: boolean;
-    type: ActivityTypes;
+    date: string;
+    amount: number;
+    type: ExpenseTypes;
     onPress?: () => void;
 }
 
-function ActivityCard({ title, time, priority = false, type = 'appointment', onPress }: ActivityCardProps) {
-    const typeColor = ACTIVITY_COLORS[type];
+function ExpenseCard({title, date, amount, type = 'groceries', onPress}: ExpenseCardProps) {
+    const typeColor = CATEGORY_COLORS[type];
 
     return (
         <Pressable style={({pressed}) => [
             styles.card,
-            pressed && styles.pressed,
-            priority && styles.priority
-        ]}
-        onPress={onPress}>
-            <View style={[styles.cardIcon, { backgroundColor: typeColor.bg }]}>
-                <CalendarBlankIcon size={20} color={typeColor.icon} weight={'fill'}/>
+            pressed && styles.pressed
+        ]} onPress={onPress}>
+
+            <View style={[styles.cardIcon, {backgroundColor: typeColor.bg}]}>
+                <ShoppingCartIcon size={20} color={typeColor.icon} weight={'fill'}/>
             </View>
             <View style={styles.cardContent}>
                 <Text style={styles.cardTitle}>{title}</Text>
                 <View style={styles.cardMeta}>
                     <ClockIcon size={11} color={colors.textMuted} weight={'fill'}/>
-                    <Text style={styles.cardMetaText}>{time}</Text>
+                    <Text style={styles.cardMetaText}>{date}</Text>
 
-                    <View style={[styles.cardMetaType, { backgroundColor: typeColor.bg }]}>
-                        <Text style={[styles.cardMetaTypeText, { color: typeColor.text }]}>
+                    <View style={[styles.cardMetaType, {backgroundColor: typeColor.bg}]}>
+                        <Text style={[styles.cardMetaTypeText, {color: typeColor.text}]}>
                             {capitalise(type)}
                         </Text>
                     </View>
-
-                    {priority && (
-                        <StarIcon size={12} color={colors.primary} weight={'fill'}/>
-                    )}
                 </View>
             </View>
-            <ArrowRightIcon size={16} color={'#C8C0B4'} weight={'bold'} />
+            <Text style={styles.cardAmount}>{amount} kr</Text>
         </Pressable>
     );
 }
@@ -62,10 +57,10 @@ const styles = StyleSheet.create({
         borderColor: 'transparent',
         borderWidth: 1.5,
         elevation: 1,
-        shadowColor:   '#000',
-        shadowOffset:  { width: 0, height: 2 },
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 2},
         shadowOpacity: 0.05,
-        shadowRadius:  10,
+        shadowRadius: 10,
     },
     pressed: {
         opacity: 0.85,
@@ -109,7 +104,12 @@ const styles = StyleSheet.create({
         fontSize: 12,
         fontFamily: `${typography.fonts.heading}_600`,
         color: colors.primary,
+    },
+    cardAmount: {
+        fontSize: 16,
+        fontFamily: `${typography.fonts.heading}_900`,
+        color: colors.primary,
     }
 })
 
-export default ActivityCard;
+export default ExpenseCard;
