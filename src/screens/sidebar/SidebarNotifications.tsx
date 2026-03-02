@@ -1,10 +1,13 @@
-import {StyleSheet, Text, View} from "react-native";
+import {Dimensions, StyleSheet, Text, View} from "react-native";
 import React from "react";
 import spacing from "@/constants/spacing";
 import colors from "@/constants/colors";
 import {BellIcon} from "phosphor-react-native";
 import ToggleButton from "@/components/ui/ToggleButton";
 import typography from "@/constants/typography";
+
+const SCREEN_WIDTH = Dimensions.get('window').width;
+const SIDEBAR_WIDTH = SCREEN_WIDTH * 0.85;
 
 interface NotificationProps {
     color: string;
@@ -95,12 +98,14 @@ const styles = StyleSheet.create({
     settingsCard: {
         backgroundColor: colors.bgCard,
         borderRadius: spacing[4],
+        width: SIDEBAR_WIDTH - (SCREEN_WIDTH - SIDEBAR_WIDTH) - 32,
     },
     settingsCardArea: {
         padding: spacing[4],
         flexDirection: "row",
         alignItems: "center",
         gap: spacing[2],
+        flex: 1
     },
     linkIcon: {
         padding: spacing[2],
@@ -109,7 +114,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     linkContent: {
-        width: '50%'
+        flex: 1
     },
     linkTitle: {
         fontSize: 14,
