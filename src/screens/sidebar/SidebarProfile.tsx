@@ -26,29 +26,27 @@ function SidebarProfile({onBack}: SidebarProfileProps) {
     }
 
     return (
-        <>
-            <View style={styles.container}>
-                <View style={styles.userIcon}>
-                    <UserIcon size={36} color={colors.primary} weight={'bold'}/>
-                    <Pressable style={styles.userEdit}>
-                        <PenIcon size={11} color={colors.primaryLight} weight={'bold'}/>
-                    </Pressable>
+        <View style={styles.container}>
+            <View style={styles.userIcon}>
+                <UserIcon size={36} color={colors.primary} weight={'bold'}/>
+                <Pressable style={styles.userEdit}>
+                    <PenIcon size={11} color={colors.primaryLight} weight={'bold'}/>
+                </Pressable>
+            </View>
+            <View style={styles.settingsCard}>
+                <View style={[styles.settingsCardArea, {borderBottomWidth: 1, borderBottomColor: '#F5F0EA'}]}>
+                    <SharedInput value={'Sunday'} label={'Your name'}/>
                 </View>
-                <View style={styles.settingsCard}>
-                    <View style={[styles.settingsCardArea, {borderBottomWidth: 1, borderBottomColor: '#F5F0EA'}]}>
-                        <SharedInput value={'Sunday'} label={'Your name'}/>
-                    </View>
-                    <View style={styles.settingsCardArea}>
-                        <OptionPicker options={options} value={greeting} label={'Greeting style'}
-                                      onChange={changeGreeting}/>
-                    </View>
-                </View>
-                <View style={styles.buttonContainer}>
-                    <SharedButton icon={<CheckIcon size={12} color={'white'} weight={'bold'}/>} label={'Save changes'}
-                                  customStyle={{alignSelf: 'stretch'}} onPress={onBack}/>
+                <View style={styles.settingsCardArea}>
+                    <OptionPicker options={options} value={greeting} label={'Greeting style'}
+                                  onChange={changeGreeting}/>
                 </View>
             </View>
-        </>
+            <View style={styles.buttonContainer}>
+                <SharedButton icon={<CheckIcon size={12} color={'white'} weight={'bold'}/>} label={'Save changes'}
+                              customStyle={{alignSelf: 'stretch'}} onPress={onBack}/>
+            </View>
+        </View>
     );
 }
 

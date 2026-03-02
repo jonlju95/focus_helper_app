@@ -92,9 +92,7 @@ function ReminderFormScreen() {
 
     return (
         <View style={styles.container}>
-            <TopBar title={isEditing ? 'Edit reminder' : 'New reminder'} showBack={true} onBack={() => router.back()}
-                    onMenu={() => {
-                    }}/>
+            <TopBar title={isEditing ? 'Edit reminder' : 'New reminder'} showBack={true} onBack={() => router.back()}/>
             <KeyboardAwareScrollView
                 showsVerticalScrollIndicator={false}
                 enableOnAndroid={true}

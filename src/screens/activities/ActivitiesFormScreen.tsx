@@ -60,13 +60,13 @@ function ActivitiesFormScreen() {
         const option = options.find(option => option.value === optionValue);
         if (option) {
             setSelectedOption(option);
-            setActivity(prev => ({...prev, type: option.value as ActivityTypes }))
+            setActivity(prev => ({...prev, type: option.value as ActivityTypes}))
         }
     }
 
     const changeSelectedDate = (date: Date) => {
         setSelectedDate(date);
-        setActivity(prev => ({...prev, date: new Date(date).toISOString() }));
+        setActivity(prev => ({...prev, date: new Date(date).toISOString()}));
     }
 
     const updateField = <K extends keyof Activity>(key: K, value: Activity[K]) => {
@@ -78,10 +78,7 @@ function ActivitiesFormScreen() {
 
     return (
         <View style={styles.container}>
-            <TopBar title={isEditing ? 'Edit activity' : 'New activity'} showBack={true} onBack={() => router.back()}
-                    onMenu={() => {
-                    }}/>
-
+            <TopBar title={isEditing ? 'Edit activity' : 'New activity'} showBack={true} onBack={() => router.back()}/>
             <KeyboardAwareScrollView
                 showsVerticalScrollIndicator={false}
                 enableOnAndroid={true}
