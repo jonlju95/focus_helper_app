@@ -80,10 +80,8 @@ function ActivitiesFormScreen() {
                     }}/>
 
             <KeyboardAwareScrollView
-                contentContainerStyle={styles.scrollContent}
                 showsVerticalScrollIndicator={false}
                 enableOnAndroid={true}
-                extraScrollHeight={spacing[5]}
             >
                 <View style={styles.wrapper}>
                     <SharedInput label={'Title'} value={activity.title} required={true}
@@ -128,9 +126,6 @@ const styles = StyleSheet.create({
         backgroundColor: colors.bgApp,
         paddingHorizontal: spacing[4],
         gap: spacing[3]
-    },
-    scrollContent: {
-        paddingBottom: spacing[4],
     },
     wrapper: {
         padding: spacing[4],

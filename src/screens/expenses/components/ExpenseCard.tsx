@@ -10,7 +10,7 @@ import typography from "@/constants/typography";
 interface ExpenseCardProps {
     title: string;
     date: string;
-    amount: number;
+    amount: string;
     type: ExpenseTypes;
     onPress?: () => void;
 }

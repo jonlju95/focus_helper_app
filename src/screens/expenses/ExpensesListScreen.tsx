@@ -110,7 +110,8 @@ function ExpensesListScreen() {
                     <SharedButton icon={<PlusIcon size={12} color={'white'} weight={'bold'}/>}
                                   label={'Add new expense'} customStyle={{alignSelf: 'stretch'}}
                                   onPress={() => router.push({
-                                      pathname: `/expenses/new`
+                                      pathname: `/expenses/new`,
+                                      params: {date: new Date().toISOString()}
                                   })}/>
                 </View>
             </ScrollView>

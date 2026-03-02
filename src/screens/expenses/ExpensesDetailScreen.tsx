@@ -34,7 +34,7 @@ function ExpensesDetailScreen() {
                         <Text style={styles.cardHeaderText}>{expense.title}</Text>
                         <Pressable style={styles.editButton} onPress={() => {
                             router.push({
-                                pathname: `/activities/new`,
+                                pathname: `/expenses/new`,
                                 params: {id: expense.id}
                             })
                         }}>
