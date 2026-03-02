@@ -19,8 +19,8 @@ export default function HeroSection() {
             {/* Card */}
             <LinearGradient
                 colors={[colors.primary, colors.primaryDark]}
-                start={{x: 0, y: 0}}
-                end={{x: 1, y: 1}}
+                start={{x: 0.2, y: 1}}
+                end={{x: 0.8, y: 0}}
                 style={styles.card}>
                 <View style={styles.cardCircle}/>
 

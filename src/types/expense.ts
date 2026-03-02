@@ -6,4 +6,6 @@ export interface Expense {
     date: string;
     amount: number;
     type: ExpenseTypes;
+    location?: string;
+    description?: string;
 }

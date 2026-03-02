@@ -6,7 +6,9 @@ export const MOCK_EXPENSES: Expense[] = [
         title: 'Grocery run',
         date: '2026-02-25',
         amount: -649,
-        type: 'groceries'
+        type: 'groceries',
+        location: 'ICA Maxi',
+        description: 'Weekly groceries: fruits, vegetables, dairy, bread and a few extras.'
     },{
         id: '2',
         title: 'Coffee & pastry',
