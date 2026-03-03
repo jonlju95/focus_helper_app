@@ -18,7 +18,7 @@ export const reminders = sqliteTable('reminders', {
     title: text('title').notNull(),
     date: text('date').notNull(),
     time: text('time'),
-    prioritized: integer({ mode: 'boolean'}).default(false),
+    prioritized: integer({ mode: 'boolean'}).notNull().default(false),
     type_id: text('type_id').references(() => reminder_types.id, { onDelete: "set null" }),
 });
 

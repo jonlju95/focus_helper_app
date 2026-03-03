@@ -12,11 +12,11 @@ import spacing from "@/constants/spacing";
 import typography from "@/constants/typography";
 import {sharedStyles} from "@/constants/sharedStyles";
 import SharedBadge from "@/components/ui/SharedBadge";
-import {useReminders} from "@/screens/reminders/hooks/useReminders";
+import {useRemindersDB} from "@/screens/reminders/hooks/useRemindersDB";
 
 function ReminderDetailScreen() {
     const {id} = useLocalSearchParams<{ id: string }>();
-    const {reminders, getReminder} = useReminders();
+    const {reminders, getReminder} = useRemindersDB();
     const [reminder, setReminder] = useState<Awaited<ReturnType<typeof getReminder>>>();
 
     const progress = reminder && reminder.tasks.length > 0

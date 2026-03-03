@@ -3,8 +3,8 @@ import TopBar from "@/components/ui/TopBar";
 import colors from "@/constants/colors";
 import spacing from "@/constants/spacing";
 import ReminderTabs from "@/screens/reminders/components/ReminderTabs";
-import {ReminderType} from "@/types/reminder";
-import React, {useState} from "react";
+import {Reminder, ReminderType} from "@/types/reminder";
+import React, {useEffect, useState} from "react";
 import ReminderCard from "@/screens/reminders/components/ReminderCard";
 import {router} from "expo-router";
 import {CalendarBlankIcon, ClockIcon, PlusIcon} from "phosphor-react-native";
@@ -12,26 +12,34 @@ import AlertStrip from "@/components/ui/AlertStrip";
 import SharedButton from "@/components/ui/SharedButton";
 import SectionLabel from "@/components/ui/SectionLabel";
 import {sharedStyles} from "@/constants/sharedStyles";
-import {useReminders} from "@/screens/reminders/hooks/useReminders";
+import {useRemindersDB} from "@/screens/reminders/hooks/useRemindersDB";
+import EmptyState from "@/components/ui/EmptyState";
+import {useReminderTabs} from "@/screens/reminders/hooks/useReminderTabs";
 
 export default function ReminderListScreen() {
-    const {reminders} = useReminders();
-    const [activeTab, setActiveTab] = useState<ReminderType>({
-        id: '22a9b3b6-ea54-4cd9-8497-69726fb07159',
-        name: 'REMINDERS',
-    });
+    const {getReminders} = useRemindersDB();
+    const {getReminderTabs} = useReminderTabs();
+    const [todayReminders, setTodayReminders] = useState<Reminder[]>([]);
+    const [upcomingReminders, setUpcomingReminders] = useState<Reminder[]>([]);
+    const [activeTab, setActiveTab] = useState<ReminderType>();
 
-    const today = new Date().toISOString().split('T')[0]; // "2026-03-03"
+    useEffect(() => {
+        const today = new Date().toISOString().split('T')[0]; // "2026-03-03"
+        getReminderTabs().then(tabs => {
+            setActiveTab(activeTab ?? tabs[0]);
+        })
 
-    const todayReminders = reminders.filter(r =>
-        r.typeId === activeTab.id &&
-        r.date === today
-    );
-
-    const upcomingReminders = reminders.filter(r =>
-        r.typeId === activeTab.id &&
-        r.date > today
-    );
+        getReminders().then(reminders => {
+            setTodayReminders(reminders.filter(r =>
+                r.typeId === activeTab?.id &&
+                r.date === today
+            ));
+            setUpcomingReminders(reminders.filter(r =>
+                r.typeId === activeTab?.id &&
+                r.date > today
+            ));
+        })
+    }, [activeTab]);
 
     return (
         <View style={sharedStyles.container}>
@@ -46,40 +54,44 @@ export default function ReminderListScreen() {
                     iconColor: colors.urgent,
                     iconBg: colors.urgentLight,
                     label: 'Reminders today',
-                    value: '3',
+                    value: todayReminders.length.toString(),
                 }} right={{
                     icon: 'bell',
                     iconColor: colors.warning,
                     iconBg: colors.warningLight,
                     label: 'Upcoming reminders',
-                    value: '2',
+                    value: upcomingReminders.length.toString(),
                 }}/>
 
                 {/* Pass activeTab and setter down to the tabs component */}
-                <ReminderTabs
-                    activeTab={activeTab}
-                    onChange={setActiveTab}
-                />
+                {activeTab && (
+                    <ReminderTabs
+                        activeTab={activeTab}
+                        onChange={setActiveTab}
+                    />
+                )}
 
                 {/* Map over filtered - only shows reminders matching active tab */}
                 <View style={styles.dailyReminders}>
                     {/* Section label */}
                     <SectionLabel icon={<ClockIcon size={13} color={colors.textMuted} weight="fill"/>} label={'Today'}/>
-                    {todayReminders.map(reminder => (
-                        <ReminderCard
-                            key={reminder.id}
-                            title={reminder.title}
-                            time={reminder.time ?? reminder.date}
-                            iconColor={reminder.prioritized ? colors.primary : colors.info}
-                            iconBg={reminder.prioritized ? colors.primaryLight : colors.infoLight}
-                            priority={reminder.prioritized}
-                            tasks={reminder.tasks}
-                            onPress={() => router.push({
-                                pathname: '/reminders/[id]',
-                                params: {id: reminder.id},
-                            })}
-                        />
-                    ))}
+                    {todayReminders.length === 0
+                        ? <EmptyState message={'Nothing due today'}/>
+                        : todayReminders.map(reminder => (
+                            <ReminderCard
+                                key={reminder.id}
+                                title={reminder.title}
+                                time={reminder.time ?? reminder.date}
+                                iconColor={reminder.prioritized ? colors.primary : colors.info}
+                                iconBg={reminder.prioritized ? colors.primaryLight : colors.infoLight}
+                                priority={reminder.prioritized}
+                                tasks={reminder.tasks}
+                                onPress={() => router.push({
+                                    pathname: '/reminders/[id]',
+                                    params: {id: reminder.id},
+                                })}
+                            />
+                        ))}
                 </View>
 
                 {/* Map over filtered - only shows reminders matching active tab */}
@@ -88,21 +100,24 @@ export default function ReminderListScreen() {
                     <SectionLabel icon={<CalendarBlankIcon size={13} color={colors.textMuted} weight="fill"/>}
                                   label={'Upcoming'}/>
 
-                    {upcomingReminders.map(reminder => (
-                        <ReminderCard
-                            key={reminder.id}
-                            title={reminder.title}
-                            time={reminder.time ?? reminder.date}
-                            iconColor={reminder.prioritized ? colors.primary : colors.info}
-                            iconBg={reminder.prioritized ? colors.primaryLight : colors.infoLight}
-                            priority={reminder.prioritized}
-                            tasks={reminder.tasks}
-                            onPress={() => router.push({
-                                pathname: '/reminders/[id]',
-                                params: {id: reminder.id},
-                            })}
-                        />
-                    ))}
+                    {upcomingReminders.length === 0
+                        ? <EmptyState message={'Nothing upcoming'}/>
+                        : upcomingReminders.map(reminder => (
+                            <ReminderCard
+                                key={reminder.id}
+                                title={reminder.title}
+                                time={reminder.time ?? reminder.date}
+                                iconColor={reminder.prioritized ? colors.primary : colors.info}
+                                iconBg={reminder.prioritized ? colors.primaryLight : colors.infoLight}
+                                priority={reminder.prioritized}
+                                tasks={reminder.tasks}
+                                onPress={() => router.push({
+                                    pathname: '/reminders/[id]',
+                                    params: {id: reminder.id},
+                                })}
+                            />
+                        ))
+                    }
                 </View>
                 <View style={sharedStyles.buttonContainer}>
                     <SharedButton icon={<PlusIcon size={12} color={'white'} weight={'bold'}/>}

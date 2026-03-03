@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Pressable, StyleSheet, Text, View} from "react-native";
 import colors from "@/constants/colors";
 import {ReminderType} from "@/types/reminder";
@@ -12,7 +12,15 @@ interface ReminderTabsProps {
 }
 
 function ReminderTabs({activeTab, onChange}: ReminderTabsProps) {
-    const {reminderTabs} = useReminderTabs();
+    const {getReminderTabs} = useReminderTabs();
+
+    const [reminderTabs, setReminderTabs] = useState<ReminderType[]>([]);
+
+    useEffect(() => {
+        getReminderTabs().then(tabs => {
+            setReminderTabs(tabs);
+        })
+    }, []);
 
     return (
         <View style={[sharedStyles.row, sharedStyles.card, {padding: spacing[1]}]}>

@@ -1,51 +1,46 @@
-// src/hooks/useReminders.ts
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import {Reminder} from '@/types/reminder';
 import {openDatabaseSync} from "expo-sqlite";
 import {drizzle} from "drizzle-orm/expo-sqlite/driver";
 import {DATABASE_NAME} from "@/app/(tabs)/_layout";
 import * as schema from '../../../db/schema';
 import * as relations from '../../../db/relations';
+import {reminders, tasks} from '@/db/schema';
 
 const expoDb = openDatabaseSync(DATABASE_NAME);
 const db = drizzle(expoDb, {
     schema: {...schema, ...relations}
 });
 
-export function useReminders() {
-    const [reminders, setReminders] = useState<Reminder[]>([]);
+export function useRemindersDB() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<Error | null>(null);
 
-    // ── Load all reminders on mount ──────────────────────────
-    useEffect(() => {
-        db.query.reminders.findMany({
+    const getReminders = async () => {
+        let reminders: Reminder[] = [];
+        await db.query.reminders.findMany({
             with: {
                 tasks: true,
                 type: true,
             },
             orderBy: (reminders, {asc}) => [asc(reminders.date), asc(reminders.time), asc(reminders.prioritized)],
         }).then(result => {
-            const mapped: Reminder[] = result.map(r => ({
+            reminders = result.map(r => ({
                 id: r.id,
                 title: r.title,
                 date: r.date,
                 time: r.time ?? undefined,
-                prioritized: r.prioritized ?? false,
+                prioritized: r.prioritized,
                 typeId: r.type?.id,
                 tasks: r.tasks.map(t => ({
                     id: t.id,
-                    label: t.label ?? '',
-                    completed: t.completed ?? false,
+                    label: t.label,
+                    completed: t.completed,
                 })),
             }));
-            setReminders(mapped);
         })
-        // TODO: query reminders + their tasks from db
-        // Hint: you'll need two queries — one for reminders,
-        // one for tasks — then combine them
-        // Set loading false when done, catch errors into setError
-    }, []);
+        return reminders;
+    }
 
     const getReminder = async (id: string) => {
         return db.query.reminders.findFirst({
@@ -59,10 +54,17 @@ export function useReminders() {
 
     // ── Add ───────────────────────────────────────────────────
     const addReminder = async (reminder: Reminder) => {
-        // TODO: insert into reminders table
-        // TODO: insert all tasks into tasks table
-        // TODO: update local state — don't refetch everything,
-        //       just append to existing array
+        await db.transaction(async (tx) => {
+            await tx.insert(reminders).values(reminder);
+            await tx.insert(tasks).values(
+                reminder.tasks.map((task, index) => ({
+                    ...task,
+                    reminder_id: reminder.id,
+                    sort_order: index,
+                })));
+        });
+
+        return reminder;
     };
 
     // ── Update ────────────────────────────────────────────────
@@ -88,9 +90,9 @@ export function useReminders() {
     };
 
     return {
-        reminders,
         loading,
         error,
+        getReminders,
         getReminder,
         addReminder,
         updateReminder,
