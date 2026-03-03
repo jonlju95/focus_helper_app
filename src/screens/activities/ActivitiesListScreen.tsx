@@ -1,17 +1,17 @@
 import React, {useState} from 'react';
-import {ScrollView, StyleSheet, Text, View} from "react-native";
+import {ScrollView, View} from "react-native";
 import TopBar from "@/components/ui/TopBar";
 import colors from "@/constants/colors";
-import spacing from "@/constants/spacing";
 import AlertStrip from "@/components/ui/AlertStrip";
 import ActivityCalendar from "@/screens/activities/components/ActivityCalendar";
 import {CalendarBlankIcon, PlusIcon} from "phosphor-react-native";
-import typography from "@/constants/typography";
 import {router} from "expo-router";
 import {MOCK_ACTIVITIES} from "@/screens/activities/data/activities";
 import ActivityCard from "@/screens/activities/components/ActivityCard";
 import SharedButton from "@/components/ui/SharedButton";
 import {formatSelectedDate} from "@/utils/formatDate";
+import {sharedStyles} from "@/constants/sharedStyles";
+import SectionLabel from "@/components/ui/SectionLabel";
 
 function ActivitiesListScreen() {
     const [selectedDay, setSelectedDay] = useState<string>(new Date().toISOString().split('T')[0])
@@ -24,10 +24,12 @@ function ActivitiesListScreen() {
     }
 
     return (
-        <View style={styles.container}>
+        <View style={sharedStyles.container}>
             <TopBar title="Activities"/>
+
             <ScrollView
-                contentContainerStyle={styles.scrollContent}
+                style={sharedStyles.scroll}
+                contentContainerStyle={sharedStyles.scrollContent}
                 showsVerticalScrollIndicator={false}>
                 <AlertStrip left={{
                     icon: 'warning',
@@ -42,13 +44,14 @@ function ActivitiesListScreen() {
                     label: 'Upcoming activities',
                     value: '3',
                 }}/>
+
                 <ActivityCalendar markedDates={markedDates} onDaySelect={onChangeSelectedDay}/>
-                <View style={styles.dailyActivities}>
+
+
+                <View style={sharedStyles.section}>
                     {/* Section label */}
-                    <View style={styles.sectionLabel}>
-                        <CalendarBlankIcon size={13} color={colors.textMuted} weight="fill"/>
-                        <Text style={typography.styles.sectionLabel}>{`${formatSelectedDate(selectedDay)}  ·  ${filtered.length} ${filtered.length === 1 ? 'activity' : 'activities'}`}</Text>
-                    </View>
+                    <SectionLabel icon={<CalendarBlankIcon size={13} color={colors.textMuted} weight="fill"/>}
+                                  label={`${formatSelectedDate(selectedDay)}  ·  ${filtered.length} ${filtered.length === 1 ? 'activity' : 'activities'}`}/>
                     {filtered.map(activity => (
                         <ActivityCard
                             key={activity.id}
@@ -63,7 +66,7 @@ function ActivitiesListScreen() {
                         />
                     ))}
                 </View>
-                <View style={styles.buttonContainer}>
+                <View style={sharedStyles.buttonContainer}>
                     <SharedButton icon={<PlusIcon size={12} color={'white'} weight={'bold'}/>}
                                   label={'Add new activity'} customStyle={{alignSelf: 'stretch'}}
                                   onPress={() => router.push({
@@ -75,31 +78,5 @@ function ActivitiesListScreen() {
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: colors.bgApp,
-        paddingHorizontal: spacing[4],
-        gap: spacing[3]
-    },
-    scrollContent: {
-        paddingBottom: spacing[4],
-        gap: spacing[4],
-    },
-    dailyActivities: {
-        gap: spacing[3]
-    },
-    sectionLabel: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: spacing[1],
-    },
-    buttonContainer: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginHorizontal: spacing[15]
-    }
-});
 
 export default ActivitiesListScreen;

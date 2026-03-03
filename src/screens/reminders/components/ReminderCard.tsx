@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
 
     priorityCard: {
         backgroundColor: '#FFFBF7',
-        borderWidth: 1,
+        borderWidth: 1.5,
         borderStyle: 'solid',
         borderColor: colors.borderWarm,
     },

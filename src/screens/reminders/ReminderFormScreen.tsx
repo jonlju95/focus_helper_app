@@ -94,6 +94,8 @@ function ReminderFormScreen() {
         <View style={sharedStyles.container}>
             <TopBar title={isEditing ? 'Edit reminder' : 'New reminder'} showBack={true} onBack={() => router.back()}/>
             <KeyboardAwareScrollView
+                style={sharedStyles.scroll}
+                contentContainerStyle={sharedStyles.scrollContent}
                 showsVerticalScrollIndicator={false}
                 enableOnAndroid={true}>
                 <View style={[sharedStyles.card, {gap: spacing[3]}]}>

@@ -131,26 +131,6 @@ const styles = StyleSheet.create({
         flex: 1
     },
 
-    progressCardText: {
-        color: colors.textMuted,
-        fontSize: 12,
-        fontFamily: "Nunito_700",
-    },
-
-    progressTrack: {
-        height: 6,
-        backgroundColor: '#f0ebe4',
-        borderRadius: spacing[4],
-        overflow: 'hidden',
-        marginTop: spacing[1],
-    },
-
-    progressFill: {
-        height: '100%',
-        backgroundColor: colors.primary,
-        borderRadius: spacing[1],
-    },
-
     progressCardAmount: {
         flexDirection: "row",
         alignItems: "baseline",

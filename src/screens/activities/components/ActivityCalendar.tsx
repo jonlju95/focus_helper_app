@@ -5,6 +5,7 @@ import spacing from "@/constants/spacing";
 import typography from "@/constants/typography";
 import colors from "@/constants/colors";
 import {months, years} from "@/screens/activities/data/dates";
+import {sharedStyles} from "@/constants/sharedStyles";
 
 interface CalendarProps {
     markedDates?: string[];
@@ -74,7 +75,7 @@ function ActivityCalendar({markedDates = [], onDaySelect}: CalendarProps) {
     };
 
     return (
-        <View style={styles.card}>
+        <View style={sharedStyles.card}>
 
             {/* Month + Year pickers */}
             <View style={styles.cardInputs}>
@@ -83,6 +84,7 @@ function ActivityCalendar({markedDates = [], onDaySelect}: CalendarProps) {
                         options={months}
                         value={selectedMonth}
                         showLabel={false}
+                        label={'month'}
                         onChange={changeMonth}
                     />
                 </View>
@@ -90,6 +92,7 @@ function ActivityCalendar({markedDates = [], onDaySelect}: CalendarProps) {
                     options={years}
                     value={selectedYear}
                     showLabel={false}
+                    label={'year'}
                     onChange={changeYear}
                 />
             </View>
@@ -158,13 +161,6 @@ function ActivityCalendar({markedDates = [], onDaySelect}: CalendarProps) {
 }
 
 const styles = StyleSheet.create({
-    card: {
-        flex: 1,
-        justifyContent: 'center',
-        backgroundColor: 'white',
-        borderRadius: spacing[4],
-        padding: spacing[4],
-    },
     cardInputs: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -249,7 +245,6 @@ const styles = StyleSheet.create({
     },
     dotToday: {
         backgroundColor: colors.primary,
-
     },
 
 })

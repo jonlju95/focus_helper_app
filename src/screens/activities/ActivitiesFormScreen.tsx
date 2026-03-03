@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import {StyleSheet, Text, View} from "react-native";
 import TopBar from "@/components/ui/TopBar";
 import {router, useLocalSearchParams} from "expo-router";
-import colors from "@/constants/colors";
 import spacing from "@/constants/spacing";
 import {MOCK_ACTIVITIES} from "@/screens/activities/data/activities";
 import {Activity} from "@/types/activity";
@@ -12,10 +11,11 @@ import SharedOptionPicker, {Option} from "@/components/ui/sharedInputs/SharedOpt
 import typography from "@/constants/typography";
 import ToggleButton from "@/components/ui/sharedInputs/ToggleButton";
 import SharedButton from "@/components/ui/SharedButton";
-import {capitalise} from "@/utils/formatLabel";
 import {ACTIVITY_COLORS} from "@/types/categoryColors";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import {ActivityTypes} from "@/types/activityTypes";
+import {sharedStyles} from "@/constants/sharedStyles";
+import SharedBadge from "@/components/ui/SharedBadge";
 
 function ActivitiesFormScreen() {
     const {id} = useLocalSearchParams<{ id: string }>();
@@ -77,17 +77,18 @@ function ActivitiesFormScreen() {
     const [selectedDate, setSelectedDate] = useState<Date>(new Date(activity.date));
 
     return (
-        <View style={styles.container}>
+        <View style={sharedStyles.container}>
             <TopBar title={isEditing ? 'Edit activity' : 'New activity'} showBack={true} onBack={() => router.back()}/>
             <KeyboardAwareScrollView
+                style={sharedStyles.scroll}
+                contentContainerStyle={sharedStyles.scrollContent}
                 showsVerticalScrollIndicator={false}
-                enableOnAndroid={true}
-            >
-                <View style={styles.wrapper}>
+                enableOnAndroid={true}>
+                <View style={[sharedStyles.card, {gap: spacing[3]}]}>
                     <SharedInput label={'Title'} value={activity.title} required={true}
                                  placeholder={'e.g. Morning routine'}
                                  onChangeText={text => updateField('title', text)}/>
-                    <View style={styles.secondRow}>
+                    <View style={[sharedStyles.row, styles.dateTypeRow]}>
                         <View style={{flex: 1}}>
                             <SharedDatePicker label={'Date'} value={selectedDate} onChange={changeSelectedDate}/>
                         </View>
@@ -96,11 +97,7 @@ function ActivitiesFormScreen() {
                                                 onChange={changeSelectedOption}/>
                         </View>
                     </View>
-                    <View style={[styles.typeTag, {backgroundColor: typeColor.bg}]}>
-                        <Text style={[styles.typeTagText, {color: typeColor.text}]}>
-                            {capitalise(activity.type)}
-                        </Text>
-                    </View>
+                    <SharedBadge title={activity.type} color={typeColor.text} bgColor={typeColor.bg}/>
                     <View>
                         <SharedInput label={'Description'} value={activity.description} required={true}
                                      placeholder={'What do you need to remember about this activity?'}
@@ -108,8 +105,8 @@ function ActivitiesFormScreen() {
                                      onChangeText={text => updateField('description', text)}/>
                     </View>
                 </View>
-                <View style={styles.buttonContainer}>
-                    <View style={styles.priorityContainer}>
+                <View style={[sharedStyles.row, {justifyContent: 'space-between'}]}>
+                    <View style={[sharedStyles.row, {gap: spacing[3]}]}>
                         <Text style={typography.styles.cardTitle}>Prioritized</Text>
                         <ToggleButton value={activity.prioritized} onChange={togglePriority}/>
                     </View>
@@ -121,48 +118,10 @@ function ActivitiesFormScreen() {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: colors.bgApp,
-        paddingHorizontal: spacing[4],
-        gap: spacing[3]
-    },
-    wrapper: {
-        padding: spacing[4],
-        backgroundColor: colors.bgCard,
-        borderRadius: spacing[4],
-        flexDirection: 'column',
-        gap: spacing[3]
-    },
-    secondRow: {
-        flexDirection: 'row',
+    dateTypeRow: {
         alignSelf: 'stretch',
         justifyContent: 'space-between',
-        flex: 1,
         gap: spacing[3]
-    },
-    typeTag: {
-        alignSelf: 'flex-start',
-        paddingHorizontal: spacing[2],
-        paddingVertical: 2,
-        borderRadius: spacing[4],
-        backgroundColor: colors.primaryLight,
-    },
-    typeTagText: {
-        fontSize: 12,
-        fontFamily: `${typography.fonts.heading}_600`,
-        color: colors.primary,
-    },
-    buttonContainer: {
-        flexDirection: "row",
-        alignItems: "flex-start",
-        justifyContent: "space-between",
-        marginTop: spacing[3]
-    },
-    priorityContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        gap: spacing[3],
     },
 })
 
