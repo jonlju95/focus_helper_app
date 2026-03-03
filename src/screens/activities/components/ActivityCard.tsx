@@ -26,8 +26,7 @@ function ActivityCard({title, time, priority = false, type = 'appointment', onPr
             pressed && styles.pressed,
             priority && styles.priority,
             {gap: spacing[3]}
-        ]}
-                   onPress={onPress}>
+        ]} onPress={onPress}>
             <View style={[styles.cardIcon, {backgroundColor: typeColor.bg}]}>
                 <CalendarBlankIcon size={20} color={typeColor.icon} weight={'fill'}/>
             </View>

@@ -13,6 +13,7 @@ import {MOCK_EXPENSES} from "@/screens/expenses/data/expenses";
 import {router} from "expo-router";
 import SharedButton from "@/components/ui/SharedButton";
 import {sharedStyles} from "@/constants/sharedStyles";
+import SectionLabel from "@/components/ui/SectionLabel";
 
 interface CategoryCardItemProps {
     color: string;
@@ -22,16 +23,16 @@ interface CategoryCardItemProps {
 
 function CategoryCardItem({color, title, amount}: CategoryCardItemProps) {
     return (
-        <View style={styles.categoryCardItemWrapper}>
-            <View style={{flexDirection: 'row', alignItems: 'center', gap: spacing[2]}}>
+        <View style={[sharedStyles.row, {justifyContent: 'space-between'}]}>
+            <View style={[sharedStyles.row, {gap: spacing[2]}]}>
                 <CircleIcon size={10} color={color} weight={'fill'}/>
                 <Text style={styles.categoryCardItemTitle}>{title}</Text>
             </View>
-            <View style={{flexDirection: 'row', alignItems: 'center', gap: spacing[4]}}>
+            <View style={[sharedStyles.row, {gap: spacing[4]}]}>
                 <View style={{width: 80}}>
                     <ProgressBar progress={0.62} color={color}/>
                 </View>
-                <Text style={styles.categoryCardItemAmount}>{amount} kr</Text>
+                <Text style={[typography.styles.cardTitle, styles.categoryCardItemAmount]}>{amount} kr</Text>
             </View>
         </View>
     )
@@ -61,19 +62,28 @@ function ExpensesListScreen() {
                 }}/>
 
                 {/* Spending/budget cards */}
-                <View style={styles.budgetCardWrapper}>
-                    <StatCard icon={<TrendDownIcon size={11} color={'rgba(255,255,255,0.5)'} weight={'bold'}/>}
-                              label={'Spent this month'} amount={'-2 398'} currency={'kr'} variant={'dark'}/>
-                    <StatCard icon={<CoinsIcon size={11} color={colors.textMuted} weight={'bold'}/>}
-                              label={'Remaining budget'} amount={'8 017'} currency={'kr'} variant={'light'}
-                              progress={(8017 / 19245)}/>
+                <View style={sharedStyles.section}>
+                    <View style={[sharedStyles.row, {gap: spacing[3], flex: 1}]}>
+                        <StatCard icon={<TrendDownIcon size={11} color={'rgba(255,255,255,0.5)'} weight={'bold'}/>}
+                                  label={'Spent this month'}
+                                  amount={'-2 398'}
+                                  currency={'kr'}
+                                  variant={'dark'}/>
+
+                        <StatCard icon={<CoinsIcon size={11} color={colors.textMuted} weight={'bold'}/>}
+                                  label={'Remaining budget'}
+                                  amount={'8 017'}
+                                  currency={'kr'}
+                                  variant={'light'}
+                                  progress={(8017 / 19245)}/>
+                    </View>
                 </View>
 
                 {/* Category spending */}
                 <View style={[sharedStyles.card, {gap: spacing[3]}]}>
                     <View style={[sharedStyles.row, {gap: spacing[1]}]}>
                         <ReceiptIcon size={16} color={colors.textPrimary} weight={'fill'}/>
-                        <Text style={styles.spendingCardHeaderText}>Categories</Text>
+                        <Text style={typography.styles.cardTitle}>Categories</Text>
                     </View>
                     <View style={{gap: spacing[3]}}>
                         <CategoryCardItem color={colors.categories.groceries.text} title={'Groceries'} amount={649}/>
@@ -84,14 +94,12 @@ function ExpensesListScreen() {
                 </View>
 
                 {/*    Expense list */}
-                <View style={styles.expenseListSection}>
+                <View style={sharedStyles.section}>
                     {/* Label */}
-                    <View style={styles.expenseListHeader}>
-                        <CalendarBlankIcon size={13} color={colors.textMuted} weight="fill"/>
-                        <Text style={typography.styles.sectionLabel}>This month</Text>
-                    </View>
+                    <SectionLabel icon={<CalendarBlankIcon size={13} color={colors.textMuted} weight="fill"/>}
+                                  label={'This month'}/>
 
-                    <View style={styles.expenseListBody}>
+                    <View style={{gap: spacing[3]}}>
                         {MOCK_EXPENSES.map(expense => (
                             <ExpenseCard key={expense.id}
                                          title={expense.title}
@@ -125,41 +133,19 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         gap: spacing[3],
     },
-    spendingCardHeaderText: {
-        fontSize: 14,
-        fontFamily: `${typography.fonts.heading}_800`,
-        color: colors.textPrimary,
-    },
 
-    categoryCardItemWrapper: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-    },
     categoryCardItemTitle: {
         fontSize: 12,
         fontFamily: `${typography.fonts.heading}_700`,
         color: colors.textSecondary
     },
+
     categoryCardItemAmount: {
         minWidth: 64,
         textAlign: 'right',
         fontSize: 13,
-        fontFamily: `${typography.fonts.heading}_800`,
-        color: colors.textPrimary
     },
-    expenseListSection: {
-        flex: 1,
-        gap: spacing[3],
-    },
-    expenseListHeader: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: spacing[1],
-    },
-    expenseListBody: {
-        gap: spacing[3],
-    },
+
 })
 
 export default ExpensesListScreen;

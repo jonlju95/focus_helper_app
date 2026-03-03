@@ -4,7 +4,7 @@ import spacing from "@/constants/spacing";
 
 
 export const sharedStyles = StyleSheet.create({
-    // Root screen container — used on every list/detail screen
+    // Root screen container - used on every list/detail screen
     container: {
         flex: 1,
         backgroundColor: colors.bgApp,
@@ -22,7 +22,7 @@ export const sharedStyles = StyleSheet.create({
         gap: spacing[4],
     },
 
-    // White card — used everywhere
+    // White card - used everywhere
     card: {
         backgroundColor: colors.bgCard,
         borderRadius: spacing[4],

@@ -53,6 +53,7 @@ const styles = StyleSheet.create({
     },
 
     cardBody: {
+        flex: 1,
         flexDirection: 'row',
         alignItems: 'baseline',
         gap: spacing[1],
