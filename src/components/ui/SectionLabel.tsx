@@ -1,7 +1,8 @@
 import React, {ReactNode} from 'react';
-import {StyleSheet, Text, View} from "react-native";
+import {Text, View} from "react-native";
 import spacing from "@/constants/spacing";
 import typography from "@/constants/typography";
+import {sharedStyles} from "@/constants/sharedStyles";
 
 interface SectionLabelProps {
     icon: ReactNode;
@@ -11,29 +12,16 @@ interface SectionLabelProps {
 
 function SectionLabel({icon, label, right}: SectionLabelProps) {
     return (
-        <View style={styles.container}>
-            <View style={styles.left}>
+        <View style={[sharedStyles.row, {justifyContent: 'space-between'}]}>
+            <View style={[sharedStyles.row, {gap: spacing[1]}]}>
                 {icon}
                 <Text style={typography.styles.sectionLabel}>{label}</Text>
             </View>
             {right && (
-                <View>{right}</View>
+                <View style={[sharedStyles.row, {gap: spacing[1]}]}>{right}</View>
             )}
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-    },
-    left: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: spacing[1],
-    },
-});
 
 export default SectionLabel;

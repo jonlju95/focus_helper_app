@@ -3,6 +3,9 @@ import {ArrowRightIcon, BellIcon, ClockIcon, DotOutlineIcon, StarIcon} from "pho
 import colors from "@/constants/colors";
 import {Task} from "@/types/reminder";
 import ProgressBar from "@/components/ui/ProgressBar";
+import {sharedStyles} from "@/constants/sharedStyles";
+import spacing from "@/constants/spacing";
+import typography from "@/constants/typography";
 
 interface CardProps {
     iconColor: string,
@@ -17,111 +20,71 @@ interface CardProps {
 function ReminderCard({iconColor, iconBg, title, time, priority, tasks, onPress}: CardProps) {
     return (
         <Pressable style={({pressed}) => [
-            styles.container,
+            sharedStyles.card,
+            sharedStyles.row,
             priority && styles.priorityCard,
             pressed && styles.pressed,
-        ]}
-                   onPress={onPress}>
-            <View style={[styles.iconContainer, {backgroundColor: iconBg}]}>
+            {gap: spacing[3]}
+        ]} onPress={onPress}>
+            <View style={[styles.cardIcon, {backgroundColor: iconBg}]}>
                 <BellIcon color={iconColor} size={18} weight={'fill'}/>
             </View>
             <View style={styles.cardLabel}>
-                <Text style={styles.cardTitle}>{title}</Text>
-                <View style={styles.cardLabelTime}>
+                <Text style={[typography.styles.cardTitle, {marginBottom: 2}]}>{title}</Text>
+                <View style={[sharedStyles.row, styles.cardLabelTime]}>
                     <ClockIcon color={colors.textMuted} size={11} weight={'fill'}/>
-                    <Text style={styles.cardLabelText}>{time}</Text>
+                    <Text style={typography.styles.metaText}>{time}</Text>
                     {priority && (
                         <>
                             <DotOutlineIcon size={11} color={colors.primary} weight={'fill'}/>
                             <StarIcon color={colors.primary} size={11} weight={'fill'}/>
-                            <Text style={[styles.cardLabelText, styles.cardLabelPriority]}>Priority</Text>
+                            <Text style={[typography.styles.metaText, {color: colors.primary}]}>Priority</Text>
                         </>
                     )}
                 </View>
 
                 <View>
                     <ProgressBar progress={tasks.filter(t => t.completed).length / tasks.length} height={4}/>
-                    <Text style={styles.cardTasks}>{tasks.filter(t => t.completed).length}/{tasks.length} tasks
-                        done</Text>
+                    <Text style={[typography.styles.metaText, styles.cardTasks]}>
+                        {tasks.filter(t => t.completed).length}/{tasks.length} tasks done</Text>
                 </View>
             </View>
-            <View>
-                <ArrowRightIcon size={14} color={colors.textMuted} weight={'bold'}/>
-            </View>
+            <ArrowRightIcon size={14} color={colors.textMuted} weight={'bold'}/>
         </Pressable>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 12,
-        padding: 16,
-        backgroundColor: colors.bgCard,
-        borderRadius: 16,
-        elevation: 1,
-        shadowColor:   '#000',
-        shadowOffset:  { width: 0, height: 2 },
-        shadowOpacity: 0.05,
-        shadowRadius:  10,
-    },
     pressed: {
         opacity: 0.85,
     },
+
     priorityCard: {
         backgroundColor: '#FFFBF7',
         borderWidth: 1,
         borderStyle: 'solid',
         borderColor: colors.borderWarm,
     },
-    iconContainer: {
-        padding: 12,
-        borderRadius: 12,
+
+    cardIcon: {
+        padding: spacing[3],
+        borderRadius: spacing[3],
         alignItems: 'center',
         justifyContent: 'center',
     },
+
     cardLabel: {
         flex: 1
     },
-    cardTitle: {
-        fontSize: 15,
-        fontFamily: "Nunito_800",
-        color: colors.textPrimary,
-        marginBottom: 2
-    },
+
     cardLabelTime: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 4,
-        marginBottom: 8
+        gap: spacing[1],
+        marginBottom: spacing[2]
     },
-    cardLabelText: {
-        fontSize: 12,
-        fontFamily: "Nunito_600",
-        color: colors.textMuted
-    },
-    cardLabelPriority: {
-        color: colors.primary,
-    },
-    progressTrack: {
-        height: 4,
-        backgroundColor: '#f0ebe4',
-        borderRadius: 4,
-        overflow: 'hidden',
-        marginTop: 8,
-        marginBottom: 4,
-    },
-    progressFill: {
-        height: '100%',
-        backgroundColor: colors.primary,
-        borderRadius: 4,
-    },
+
     cardTasks: {
         fontSize: 11,
-        fontFamily: "Nunito_600",
-        color: colors.textMuted,
-        marginTop: 4
+        marginTop: spacing[1],
     }
 })
 

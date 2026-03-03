@@ -1,8 +1,7 @@
-import {ScrollView, StyleSheet, Text, View} from "react-native";
+import {ScrollView, StyleSheet, View} from "react-native";
 import TopBar from "@/components/ui/TopBar";
 import colors from "@/constants/colors";
 import spacing from "@/constants/spacing";
-import typography from "@/constants/typography";
 import ReminderTabs from "@/screens/reminders/components/ReminderTabs";
 import {ReminderType} from "@/types/reminder";
 import React, {useState} from "react";
@@ -72,10 +71,9 @@ export default function ReminderListScreen() {
                 {/* Map over filtered - only shows reminders matching active tab */}
                 <View style={styles.dailyReminders}>
                     {/* Section label */}
-                    <View style={styles.sectionLabel}>
-                        <CalendarBlankIcon size={13} color={colors.textMuted} weight="fill"/>
-                        <Text style={typography.styles.sectionLabel}>Upcoming</Text>
-                    </View>
+                    <SectionLabel icon={<CalendarBlankIcon size={13} color={colors.textMuted} weight="fill"/>}
+                                  label={'Upcoming'}/>
+
                     {filtered.map(reminder => (
                         <ReminderCard
                             key={reminder.id}
@@ -92,7 +90,7 @@ export default function ReminderListScreen() {
                         />
                     ))}
                 </View>
-                <View style={styles.buttonContainer}>
+                <View style={sharedStyles.buttonContainer}>
                     <SharedButton icon={<PlusIcon size={12} color={'white'} weight={'bold'}/>}
                                   label={'Add new reminder'}
                                   customStyle={{alignSelf: 'stretch'}} onPress={() => router.push('/reminders/new')}/>
@@ -106,14 +104,4 @@ const styles = StyleSheet.create({
     dailyReminders: {
         gap: spacing[3]
     },
-    sectionLabel: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: spacing[1],
-    },
-    buttonContainer: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginHorizontal: spacing[15]
-    }
 });

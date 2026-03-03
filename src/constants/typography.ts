@@ -98,6 +98,11 @@ const typography = {
             fontSize: 14,
             fontFamily: 'Nunito_800',
             color: 'white',
+        },
+        tableHeader: {
+            fontSize: 13,
+            fontFamily: 'Nunito_700',
+            color: 'white',
         }
     },
 } as const;

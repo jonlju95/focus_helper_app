@@ -5,7 +5,6 @@ import {router, useLocalSearchParams} from "expo-router";
 import {MOCK_REMINDERS} from "@/screens/reminders/data/reminders";
 import {Reminder} from "@/types/reminder";
 import SharedInput from "@/components/ui/sharedInputs/SharedInput";
-import colors from "@/constants/colors";
 import ReminderTable from "@/screens/reminders/components/ReminderTable";
 import ToggleButton from "@/components/ui/sharedInputs/ToggleButton";
 import SharedButton from "@/components/ui/SharedButton";
@@ -14,6 +13,7 @@ import SharedDatePicker from "@/components/ui/sharedInputs/SharedDatePicker";
 import spacing from "@/constants/spacing";
 import typography from "@/constants/typography";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
+import {sharedStyles} from "@/constants/sharedStyles";
 
 function ReminderFormScreen() {
     const {id} = useLocalSearchParams<{ id?: string }>();
@@ -91,16 +91,15 @@ function ReminderFormScreen() {
     };
 
     return (
-        <View style={styles.container}>
+        <View style={sharedStyles.container}>
             <TopBar title={isEditing ? 'Edit reminder' : 'New reminder'} showBack={true} onBack={() => router.back()}/>
             <KeyboardAwareScrollView
                 showsVerticalScrollIndicator={false}
-                enableOnAndroid={true}
-            >
-                <View style={styles.wrapper}>
+                enableOnAndroid={true}>
+                <View style={[sharedStyles.card, {gap: spacing[3]}]}>
                     <SharedInput label={'Title'} value={reminder.title} required={true} placeholder={'Title'}
                                  onChangeText={text => updateField('title', text)}/>
-                    <View style={styles.secondRow}>
+                    <View style={[sharedStyles.row, styles.dateTypeRow]}>
                         <View style={{flex: 1}}>
                             <SharedDatePicker label={'Date'} value={selectedDate} onChange={changeSelectedDate}/>
                         </View>
@@ -110,14 +109,13 @@ function ReminderFormScreen() {
                         </View>
                     </View>
 
-
                 </View>
                 <View style={{marginHorizontal: 0, marginVertical: 16}}>
                     <ReminderTable tasks={reminder.tasks} isEditing={true} onAddTask={addTask}
                                    onDeleteTask={deleteTask}/>
                 </View>
-                <View style={styles.buttonContainer}>
-                    <View style={styles.priorityContainer}>
+                <View style={[sharedStyles.row, {justifyContent: 'space-between'}]}>
+                    <View style={[sharedStyles.row, {gap: spacing[3]}]}>
                         <Text style={typography.styles.cardTitle}>Prioritized</Text>
                         <ToggleButton value={reminder.prioritized} onChange={togglePriority}/>
                     </View>
@@ -129,34 +127,9 @@ function ReminderFormScreen() {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: colors.bgApp,
-        paddingHorizontal: spacing[4],
-        gap: spacing[3]
-    },
-    wrapper: {
-        padding: spacing[4],
-        backgroundColor: colors.bgCard,
-        borderRadius: spacing[4],
-        flexDirection: 'column',
-        gap: spacing[3]
-    },
-    secondRow: {
-        flexDirection: 'row',
+    dateTypeRow: {
         alignSelf: 'stretch',
         justifyContent: 'space-between',
-        flex: 1,
-        gap: spacing[3]
-    },
-    buttonContainer: {
-        flexDirection: "row",
-        alignItems: "flex-start",
-        justifyContent: "space-between",
-    },
-    priorityContainer: {
-        flexDirection: "row",
-        alignItems: "center",
         gap: spacing[3]
     },
 })

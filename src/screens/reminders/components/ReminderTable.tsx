@@ -5,6 +5,8 @@ import colors from '@/constants/colors';
 import SharedInput from "@/components/ui/sharedInputs/SharedInput";
 import {useState} from "react";
 import spacing from "@/constants/spacing";
+import {sharedStyles} from "@/constants/sharedStyles";
+import typography from "@/constants/typography";
 
 interface ReminderTableProps {
     tasks?: Task[];
@@ -18,22 +20,22 @@ function ReminderTable({tasks, onToggle, isEditing = false, onAddTask, onDeleteT
     const [newTaskLabel, setNewTaskLabel] = useState('');
 
     const handleAdd = () => {
-        if (!newTaskLabel.trim()) return;  // don't add empty tasks
+        if (!newTaskLabel.trim()) return;
         onAddTask?.(newTaskLabel.trim());
-        setNewTaskLabel('');               // clear input after adding
+        setNewTaskLabel('');
     };
 
     return (
-        <View style={styles.container}>
+        <View style={[sharedStyles.card, styles.tableSection]}>
 
             {/* Header */}
-            <View style={styles.tableHeader}>
-                <View style={styles.tableHeaderLeft}>
+            <View style={[sharedStyles.row, styles.tableHeader]}>
+                <View style={[sharedStyles.row, styles.tableHeaderLeft]}>
                     <ListChecksIcon size={14} color="#FFF" weight="bold"/>
-                    <Text style={styles.tableHeaderText}>Task / Description</Text>
+                    <Text style={typography.styles.tableHeader}>Task / Description</Text>
                 </View>
                 {!isEditing && (
-                    <Text style={styles.tableHeaderText}>Done</Text>
+                    <Text style={typography.styles.tableHeader}>Done</Text>
                 )}
             </View>
 
@@ -42,31 +44,31 @@ function ReminderTable({tasks, onToggle, isEditing = false, onAddTask, onDeleteT
                 <View
                     key={task.id}
                     style={[
+                        sharedStyles.row,
                         styles.tableRow,
                         !isEditing && index === tasks.length - 1 && styles.tableRowLast,
                         task.completed && styles.tableRowCompleted,
                     ]}>
                     <Text style={[
-                        styles.taskLabel,
+                        typography.styles.bodyText,
                         task.completed && styles.taskLabelCompleted]}>
                         {task.label}
                     </Text>
 
                     <Pressable
                         onPress={() => isEditing ? onDeleteTask?.(task.id) : onToggle?.(task.id)}
-                        hitSlop={8}
-                    >
+                        hitSlop={8}>
                         {isEditing
                             ? <TrashIcon size={20} color={colors.urgent} weight="bold"/>
                             : task.completed
-                                ? <CheckSquareIcon size={20} color={colors.primary} weight="fill" />
+                                ? <CheckSquareIcon size={20} color={colors.primary} weight="fill"/>
                                 : <SquareIcon size={20} color={colors.textMuted} weight="regular"/>}
                     </Pressable>
                 </View>
             ))}
 
             {isEditing && (
-                <View style={[styles.tableRow, styles.tableRowLast, {paddingHorizontal: 12}]}>
+                <View style={[sharedStyles.row, styles.tableRow, styles.tableRowLast]}>
                     <View style={{flex: 1, marginRight: 8}}>
                         <SharedInput
                             value={newTaskLabel}
@@ -85,38 +87,25 @@ function ReminderTable({tasks, onToggle, isEditing = false, onAddTask, onDeleteT
 }
 
 const styles = StyleSheet.create({
-    container: {
-        borderRadius: spacing[4],
+    tableSection: {
+        padding: 0,
         overflow: 'hidden',
     },
 
     tableHeader: {
-        flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center',
         backgroundColor: colors.textPrimary,
         paddingHorizontal: spacing[4],
         paddingVertical: spacing[3],
-        borderTopLeftRadius: spacing[4],
-        borderTopRightRadius: spacing[4],
     },
+
     tableHeaderLeft: {
         flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 10,
-    },
-    tableHeaderText: {
-        fontSize: 13,
-        fontFamily: 'Nunito_700',
-        color: '#ffffff',
+        gap: spacing[2],
     },
 
     tableRow: {
-        flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center',
-        backgroundColor: '#ffffff',
         paddingHorizontal: spacing[4],
         paddingVertical: spacing[3],
         borderBottomWidth: 1,
@@ -127,17 +116,11 @@ const styles = StyleSheet.create({
         borderBottomWidth: 0,
         borderBottomLeftRadius: spacing[4],
         borderBottomRightRadius: spacing[4],
+        paddingHorizontal: spacing[3],
     },
 
     tableRowCompleted: {
         backgroundColor: '#fafaf8',
-    },
-
-    taskLabel: {
-        flex: 1,
-        fontSize: 14,
-        fontFamily: 'Nunito_600',
-        color: colors.textPrimary,
     },
 
     // Strikethrough for completed tasks
@@ -145,6 +128,7 @@ const styles = StyleSheet.create({
         textDecorationLine: 'line-through',
         color: colors.textMuted,
     },
+
     addButton: {
         backgroundColor: colors.primary,
         padding: spacing[3],

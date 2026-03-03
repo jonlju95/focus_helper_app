@@ -35,7 +35,8 @@ function SharedBadge({
                 {capitalise(title)}
             </Text>
             {deletable && (
-                <Pressable style={[styles.deleteBadgeBtn, {backgroundColor: deleteBtnBg}]} onPress={onDelete}>
+                <Pressable style={[styles.deleteBadgeBtn, {backgroundColor: deleteBtnBg, marginRight: -6}]}
+                           onPress={onDelete} hitSlop={8}>
                     <XIcon size={9} color={color} weight={'bold'}/>
                 </Pressable>
             )}
@@ -45,12 +46,12 @@ function SharedBadge({
 
 const styles = StyleSheet.create({
     badge: {
-        paddingLeft: spacing[2],
-        paddingRight: 2,
+        paddingHorizontal: spacing[2],
         paddingVertical: 2,
         borderRadius: spacing[4],
         backgroundColor: colors.primaryLight,
         gap: spacing[1],
+        alignSelf: 'flex-start'
     },
 
     deleteBadgeBtn: {

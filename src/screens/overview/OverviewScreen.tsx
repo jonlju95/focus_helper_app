@@ -2,15 +2,17 @@ import {Pressable, ScrollView, StyleSheet, Text, View} from "react-native";
 import TopBar from "@/components/ui/TopBar";
 import AlertStrip from "@/components/ui/AlertStrip";
 import colors from "@/constants/colors";
-import DailyRemindersSection from "@/screens/overview/components/DailyRemindersSection";
 import spacing from "@/constants/spacing";
 import {sharedStyles} from "@/constants/sharedStyles";
 import {
     ArrowRightIcon,
+    BasketIcon,
     BellIcon,
     CalendarBlankIcon,
     LightningIcon,
     ListChecksIcon,
+    PhoneIcon,
+    PillIcon,
     ShoppingCartIcon,
     WarningIcon
 } from "phosphor-react-native";
@@ -19,6 +21,8 @@ import {LinearGradient} from "expo-linear-gradient";
 import SectionLabel from "@/components/ui/SectionLabel";
 import StatCard from "@/components/ui/StatCard";
 import QuickAddButton from "@/screens/overview/components/QuickAddButton";
+import React from "react";
+import DailyCards from "@/screens/overview/components/DailyCards";
 
 
 export default function OverviewScreen() {
@@ -104,6 +108,7 @@ export default function OverviewScreen() {
                     </View>
                 </View>
 
+                {/* Quick add section */}
                 <View style={sharedStyles.section}>
                     <View style={sharedStyles.card}>
                         <Text style={typography.styles.cardTitle}>Quick add</Text>
@@ -126,7 +131,30 @@ export default function OverviewScreen() {
                         </View>
                     </View>
                 </View>
-                <DailyRemindersSection/>
+
+                {/* Daily reminders */}
+                <View style={sharedStyles.section}>
+
+                    {/* Badge */}
+                    <SectionLabel icon={<BellIcon size={16} color={colors.textMuted} weight="fill"/>}
+                                  label={'Reminders today'}
+                                  right={<>
+                                      <Text style={typography.styles.label}>See all</Text>
+                                      <ArrowRightIcon size={12} color={colors.primary} weight="bold"/>
+                                  </>}/>
+
+                    <View style={{ gap: spacing[3] }}>
+                        <DailyCards icon={<PillIcon size={18} color={colors.primary} weight={"fill"}/>}
+                                    iconBg={colors.primaryLight}
+                                    title={'Take medication'} time={'8:00 AM'} urgent={true}/>
+                        <DailyCards icon={<PhoneIcon size={18} color={colors.info} weight={"fill"}/>}
+                                    iconBg={colors.infoLight}
+                                    title={'Call the dentist'} time={'10:30 AM'}/>
+                        <DailyCards icon={<BasketIcon size={18} color={colors.success} weight={"fill"}/>}
+                                    iconBg={colors.successLight}
+                                    title={'Grocery run'} time={'3:00 PM'}/>
+                    </View>
+                </View>
             </ScrollView>
         </View>
 
