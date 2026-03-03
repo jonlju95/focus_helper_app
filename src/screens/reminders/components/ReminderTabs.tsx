@@ -4,30 +4,27 @@ import colors from "@/constants/colors";
 import {ReminderType} from "@/types/reminder";
 import spacing from "@/constants/spacing";
 import {sharedStyles} from "@/constants/sharedStyles";
+import {useReminderTabs} from "@/screens/reminders/hooks/useReminderTabs";
 
 interface ReminderTabsProps {
     activeTab: ReminderType;
     onChange: (tab: ReminderType) => void;
 }
 
-const TABS: { label: string; type: ReminderType }[] = [
-    {label: 'Reminders', type: 'reminder'},
-    {label: 'Shopping', type: 'shopping'},
-    {label: 'Notes', type: 'note'},
-];
-
 function ReminderTabs({activeTab, onChange}: ReminderTabsProps) {
+    const {reminderTabs} = useReminderTabs();
+
     return (
         <View style={[sharedStyles.row, sharedStyles.card, {padding: spacing[1]}]}>
-            {TABS.map(tab => {
-                const isActive = activeTab === tab.type;
+            {reminderTabs.map(tab => {
+                const isActive = activeTab.id === tab.id;
                 return (
                     <Pressable
-                        key={tab.type}
-                        onPress={() => onChange(tab.type)}
+                        key={tab.id}
+                        onPress={() => onChange(tab)}
                         style={[styles.tabButton, isActive && styles.activeTab]}>
                         <Text style={[styles.tabButtonText, isActive && styles.activeTabText]}>
-                            {tab.label}
+                            {tab.name}
                         </Text>
                     </Pressable>
                 );

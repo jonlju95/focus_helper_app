@@ -9,15 +9,29 @@ import ReminderCard from "@/screens/reminders/components/ReminderCard";
 import {router} from "expo-router";
 import {CalendarBlankIcon, ClockIcon, PlusIcon} from "phosphor-react-native";
 import AlertStrip from "@/components/ui/AlertStrip";
-import {MOCK_REMINDERS} from "@/screens/reminders/data/reminders";
 import SharedButton from "@/components/ui/SharedButton";
 import SectionLabel from "@/components/ui/SectionLabel";
 import {sharedStyles} from "@/constants/sharedStyles";
+import {useReminders} from "@/screens/reminders/hooks/useReminders";
 
 export default function ReminderListScreen() {
-    const [activeTab, setActiveTab] = useState<ReminderType>('reminder');
+    const {reminders} = useReminders();
+    const [activeTab, setActiveTab] = useState<ReminderType>({
+        id: '22a9b3b6-ea54-4cd9-8497-69726fb07159',
+        name: 'REMINDERS',
+    });
 
-    const filtered = MOCK_REMINDERS.filter(r => r.type === activeTab);
+    const today = new Date().toISOString().split('T')[0]; // "2026-03-03"
+
+    const todayReminders = reminders.filter(r =>
+        r.typeId === activeTab.id &&
+        r.date === today
+    );
+
+    const upcomingReminders = reminders.filter(r =>
+        r.typeId === activeTab.id &&
+        r.date > today
+    );
 
     return (
         <View style={sharedStyles.container}>
@@ -51,7 +65,7 @@ export default function ReminderListScreen() {
                 <View style={styles.dailyReminders}>
                     {/* Section label */}
                     <SectionLabel icon={<ClockIcon size={13} color={colors.textMuted} weight="fill"/>} label={'Today'}/>
-                    {filtered.map(reminder => (
+                    {todayReminders.map(reminder => (
                         <ReminderCard
                             key={reminder.id}
                             title={reminder.title}
@@ -74,7 +88,7 @@ export default function ReminderListScreen() {
                     <SectionLabel icon={<CalendarBlankIcon size={13} color={colors.textMuted} weight="fill"/>}
                                   label={'Upcoming'}/>
 
-                    {filtered.map(reminder => (
+                    {upcomingReminders.map(reminder => (
                         <ReminderCard
                             key={reminder.id}
                             title={reminder.title}

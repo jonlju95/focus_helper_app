@@ -2,10 +2,9 @@ import {router, useLocalSearchParams} from "expo-router";
 import {LayoutAnimation, Pressable, ScrollView, StyleSheet, Text, View} from "react-native";
 import TopBar from "@/components/ui/TopBar";
 import colors from "@/constants/colors";
-import {MOCK_REMINDERS} from "@/screens/reminders/data/reminders";
 import {ClockIcon, PenIcon} from "phosphor-react-native";
 import ReminderTable from "@/screens/reminders/components/ReminderTable";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import ProgressBar from "@/components/ui/ProgressBar";
 import ToggleButton from "@/components/ui/sharedInputs/ToggleButton";
 import SharedButton from "@/components/ui/SharedButton";
@@ -13,16 +12,21 @@ import spacing from "@/constants/spacing";
 import typography from "@/constants/typography";
 import {sharedStyles} from "@/constants/sharedStyles";
 import SharedBadge from "@/components/ui/SharedBadge";
+import {useReminders} from "@/screens/reminders/hooks/useReminders";
 
 function ReminderDetailScreen() {
     const {id} = useLocalSearchParams<{ id: string }>();
-
-    const foundReminder = MOCK_REMINDERS.find(r => r.id === id);
-    const [reminder, setReminder] = useState(foundReminder);
+    const {reminders, getReminder} = useReminders();
+    const [reminder, setReminder] = useState<Awaited<ReturnType<typeof getReminder>>>();
 
     const progress = reminder && reminder.tasks.length > 0
         ? reminder.tasks.filter(t => t.completed).length / reminder.tasks.length
         : 0;
+
+    useEffect(() => {
+        if (!id) return;
+        getReminder(id).then(reminder => setReminder(reminder))
+    }, []);
 
     if (!reminder) return <View><Text>Reminder not found</Text></View>;
 
@@ -96,7 +100,7 @@ function ReminderDetailScreen() {
                 <View style={[sharedStyles.row, {justifyContent: 'space-between'}]}>
                     <View style={[sharedStyles.row, {gap: spacing[3]}]}>
                         <Text style={typography.styles.cardTitle}>Prioritized</Text>
-                        <ToggleButton value={reminder.prioritized} onChange={togglePriority}/>
+                        <ToggleButton value={reminder.prioritized ?? false} onChange={togglePriority}/>
                     </View>
                     <SharedButton label={'Save'}/>
                 </View>

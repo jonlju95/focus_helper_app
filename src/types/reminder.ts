@@ -1,4 +1,7 @@
-export type ReminderType = 'reminder' | 'shopping' | 'note';
+export interface ReminderType {
+    id: string;
+    name: string;
+}
 
 export interface Task {
     id: string;
@@ -11,7 +14,7 @@ export interface Reminder {
     title: string;
     date: string;
     time?: string;
-    type: ReminderType;
+    typeId?: string;
     prioritized: boolean;
     tasks: Task[];
 }

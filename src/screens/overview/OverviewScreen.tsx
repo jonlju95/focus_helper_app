@@ -23,9 +23,14 @@ import StatCard from "@/components/ui/StatCard";
 import QuickAddButton from "@/screens/overview/components/QuickAddButton";
 import React from "react";
 import DailyCards from "@/screens/overview/components/DailyCards";
-
+import {useSQLiteContext} from "expo-sqlite";
+import {useDrizzleStudio} from "expo-drizzle-studio-plugin";
 
 export default function OverviewScreen() {
+    const testDB = useSQLiteContext();
+
+    useDrizzleStudio(testDB);
+
     return (
         <View style={sharedStyles.container}>
             <TopBar title={'Good morning, Wednesday'} date={'Feb 24, 2026'} showDate={true}/>
@@ -143,7 +148,7 @@ export default function OverviewScreen() {
                                       <ArrowRightIcon size={12} color={colors.primary} weight="bold"/>
                                   </>}/>
 
-                    <View style={{ gap: spacing[3] }}>
+                    <View style={{gap: spacing[3]}}>
                         <DailyCards icon={<PillIcon size={18} color={colors.primary} weight={"fill"}/>}
                                     iconBg={colors.primaryLight}
                                     title={'Take medication'} time={'8:00 AM'} urgent={true}/>

@@ -25,7 +25,7 @@ function ReminderFormScreen() {
         title: '',
         date: new Date().toISOString(),
         time: '',
-        type: 'reminder',
+        typeId: '22a9b3b6-ea54-4cd9-8497-69726fb07159',
         prioritized: false,
         tasks: [],
     });
@@ -38,7 +38,7 @@ function ReminderFormScreen() {
         {label: 'Notes', value: 'notes'},
     ]
 
-    const [selectedOption, setSelectedOption] = useState<Option>(options.filter(o => o.value === reminder.type)[0]);
+    const [selectedOption, setSelectedOption] = useState<Option>(options.filter(o => o.value === reminder.typeId)[0]);
     const [selectedDate, setSelectedDate] = useState<Date>(existing ? new Date(reminder.date) : new Date(Date.now()));
 
     const addTask = (label: string) => {
