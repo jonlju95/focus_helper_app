@@ -13,19 +13,27 @@ import typography from "@/constants/typography";
 import {sharedStyles} from "@/constants/sharedStyles";
 import SharedBadge from "@/components/ui/SharedBadge";
 import {useRemindersDB} from "@/screens/reminders/hooks/useRemindersDB";
+import {Reminder} from "@/types/reminder";
 
 function ReminderDetailScreen() {
     const {id} = useLocalSearchParams<{ id: string }>();
-    const {reminders, getReminder} = useRemindersDB();
-    const [reminder, setReminder] = useState<Awaited<ReturnType<typeof getReminder>>>();
+    const {getReminder} = useRemindersDB();
+    const [reminder, setReminder] = useState<Reminder>();
 
     const progress = reminder && reminder.tasks.length > 0
         ? reminder.tasks.filter(t => t.completed).length / reminder.tasks.length
         : 0;
 
     useEffect(() => {
-        if (!id) return;
-        getReminder(id).then(reminder => setReminder(reminder))
+        if (!id) {
+            return;
+        }
+        getReminder(id).then(reminder => {
+            if (!reminder) {
+                return;
+            }
+            setReminder(reminder)
+        })
     }, []);
 
     if (!reminder) return <View><Text>Reminder not found</Text></View>;

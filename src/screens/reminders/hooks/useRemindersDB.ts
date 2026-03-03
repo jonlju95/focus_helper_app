@@ -4,12 +4,32 @@ import {openDatabaseSync} from "expo-sqlite";
 import {drizzle} from "drizzle-orm/expo-sqlite/driver";
 import {DATABASE_NAME} from "@/app/(tabs)/_layout";
 import * as schema from '../../../db/schema';
+import {reminder_types} from '../../../db/schema';
 import * as relations from '../../../db/relations';
 import {reminders, tasks} from '@/db/schema';
 
 const expoDb = openDatabaseSync(DATABASE_NAME);
 const db = drizzle(expoDb, {
     schema: {...schema, ...relations}
+});
+
+const mapReminder = (r: typeof reminders.$inferSelect & {
+    tasks: typeof tasks.$inferSelect[];
+    type: typeof reminder_types.$inferSelect | null;
+}): Reminder => ({
+    id: r.id,
+    title: r.title,
+    date: r.date,
+    time: r.time ?? undefined,
+    prioritized: r.prioritized ?? false,
+    typeId: r.type_id ?? '',
+    // type: r.type,
+    tasks: r.tasks.map(t => ({
+        id: t.id,
+        label: t.label ?? '',
+        completed: t.completed ?? false,
+        sort_order: t.sort_order ?? 0,
+    })),
 });
 
 export function useRemindersDB() {
@@ -25,19 +45,7 @@ export function useRemindersDB() {
             },
             orderBy: (reminders, {asc}) => [asc(reminders.date), asc(reminders.time), asc(reminders.prioritized)],
         }).then(result => {
-            reminders = result.map(r => ({
-                id: r.id,
-                title: r.title,
-                date: r.date,
-                time: r.time ?? undefined,
-                prioritized: r.prioritized,
-                typeId: r.type?.id,
-                tasks: r.tasks.map(t => ({
-                    id: t.id,
-                    label: t.label,
-                    completed: t.completed,
-                })),
-            }));
+            reminders = result.map(r => (mapReminder(r)));
         })
         return reminders;
     }
@@ -49,7 +57,9 @@ export function useRemindersDB() {
                 type: true,
             },
             where: (reminders, {eq}) => eq(reminders.id, id)
-        });
+        }).then(r => {
+            return r ? mapReminder(r) : null;
+        })
     }
 
     // ── Add ───────────────────────────────────────────────────
