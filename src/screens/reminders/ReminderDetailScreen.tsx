@@ -143,7 +143,6 @@ function ReminderDetailScreen() {
                             title="Delete reminder?"
                             message="This cannot be undone"
                             confirmLabel="Delete"
-                            destructive
                             onCancel={() => setDeleteVisible(false)}
                             onConfirm={onDelete}
                         />

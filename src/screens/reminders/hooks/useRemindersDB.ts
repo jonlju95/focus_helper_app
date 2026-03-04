@@ -1,20 +1,10 @@
 import {useState} from 'react';
 import {Reminder} from '@/types/reminder';
-import {openDatabaseSync} from "expo-sqlite";
-import {drizzle} from "drizzle-orm/expo-sqlite/driver";
-import {DATABASE_NAME} from "@/app/(tabs)/_layout";
-import * as schema from '../../../db/schema';
-import {reminder_types} from '@/db/schema';
-import * as relations from '../../../db/relations';
-import {reminders, tasks} from '@/db/schema';
+import {reminder_types, reminders, tasks} from '@/db/schema';
 import {useMigrations} from "drizzle-orm/expo-sqlite/migrator";
 import migrations from "../../../../drizzle/migrations";
 import {eq} from "drizzle-orm";
-
-const expoDb = openDatabaseSync(DATABASE_NAME);
-const db = drizzle(expoDb, {
-    schema: {...schema, ...relations}
-});
+import {db} from "@/db/database";
 
 const mapReminder = (r: typeof reminders.$inferSelect & {
     tasks: typeof tasks.$inferSelect[];

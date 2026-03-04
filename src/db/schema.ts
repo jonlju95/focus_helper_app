@@ -3,9 +3,9 @@ import {sqliteTable, text, integer, real} from "drizzle-orm/sqlite-core";
 export const categories = sqliteTable('categories', {
     id: text('id').primaryKey(),
     name: text('name').notNull(),
-    color_bg: text('color_bg').notNull(),
-    color_text: text('color_text').notNull(),
-    entity_type: text('entity_type').notNull().default('expense'),
+    colorBg: text('color_bg').notNull(),
+    colorText: text('color_text').notNull(),
+    entityType: text('entity_type').notNull().default('EXPENSE'),
 });
 
 export const reminder_types = sqliteTable('reminder_types', {
@@ -34,7 +34,7 @@ export const activities = sqliteTable('activities', {
     id: text('id').primaryKey(),
     title: text('title').notNull(),
     date: text('date').notNull(),
-    time: text('time'),
+    time: text('time').notNull(),
     prioritized: integer({ mode: 'boolean' }).default(false),
     description: text('description'),
     category_id: text('category_id').references(() => categories.id, { onDelete: "set null" }),

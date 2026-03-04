@@ -7,18 +7,19 @@ import typography from "@/constants/typography";
 import {ACTIVITY_COLORS} from "@/types/categoryColors";
 import {sharedStyles} from "@/constants/sharedStyles";
 import SharedBadge from "@/components/ui/SharedBadge";
+import {Category} from "@/types/category";
+import {useActivityCategory} from "@/screens/activities/hooks/useActivityCategory";
+import {useEffect, useState} from "react";
 
 interface ActivityCardProps {
     title: string;
     time: string;
     priority?: boolean;
-    type: ActivityTypes;
+    category?: Category;
     onPress?: () => void;
 }
 
-function ActivityCard({title, time, priority = false, type = 'appointment', onPress}: ActivityCardProps) {
-    const typeColor = ACTIVITY_COLORS[type];
-
+function ActivityCard({title, time, priority = false, category, onPress}: ActivityCardProps) {
     return (
         <Pressable style={({pressed}) => [
             sharedStyles.card,
@@ -27,15 +28,15 @@ function ActivityCard({title, time, priority = false, type = 'appointment', onPr
             priority && styles.priority,
             {gap: spacing[3]}
         ]} onPress={onPress}>
-            <View style={[styles.cardIcon, {backgroundColor: typeColor.bg}]}>
-                <CalendarBlankIcon size={20} color={typeColor.icon} weight={'fill'}/>
+            <View style={[styles.cardIcon, {backgroundColor: category?.colorBg}]}>
+                <CalendarBlankIcon size={20} color={category?.colorText} weight={'fill'}/>
             </View>
             <View style={styles.cardBody}>
                 <Text style={typography.styles.cardTitle}>{title}</Text>
                 <View style={[sharedStyles.row, {gap: spacing[1]}]}>
                     <ClockIcon size={11} color={colors.textMuted} weight={'fill'}/>
                     <Text style={typography.styles.metaText}>{time}</Text>
-                    <SharedBadge title={type} color={typeColor.text} bgColor={typeColor.bg}/>
+                    <SharedBadge title={category?.name ?? ''} color={category?.colorText} bgColor={category?.colorBg}/>
                     {priority && (
                         <StarIcon size={12} color={colors.primary} weight={'fill'}/>
                     )}
