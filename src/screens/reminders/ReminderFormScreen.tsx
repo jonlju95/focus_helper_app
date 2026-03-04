@@ -19,7 +19,7 @@ const FIELD_WIDTH = (Dimensions.get('window').width - 78) / 2;
 
 function ReminderFormScreen() {
     const {
-        control, handleSubmit, fields, errors,
+        control, handleSubmit, fields,
         isDisabled, isEditing, addTask, deleteTask, onSubmit
     } = useReminderForm();
 
@@ -47,7 +47,8 @@ function ReminderFormScreen() {
                 style={sharedStyles.scroll}
                 contentContainerStyle={sharedStyles.scrollContent}
                 showsVerticalScrollIndicator={false}
-                enableOnAndroid={true}>
+                enableOnAndroid={true}
+                extraScrollHeight={96}>
                 <View style={[sharedStyles.card, {gap: spacing[3]}]}>
                     <Controller control={control} name={'title'} rules={{required: 'Title is required '}}
                                 render={({field: {value, onChange}}) => (

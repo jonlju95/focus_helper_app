@@ -11,7 +11,7 @@ export const tabBarConfig = {
 
     tabBarHideOnKeyboard: true,
 
-    sceneStyle: { backgroundColor: colors.bgScreen },
+    sceneStyle: { backgroundColor: colors.bgApp },
 
     tabBarStyle: {
         backgroundColor: '#ffffff',

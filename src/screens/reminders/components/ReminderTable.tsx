@@ -7,8 +7,6 @@ import {useState} from "react";
 import spacing from "@/constants/spacing";
 import {sharedStyles} from "@/constants/sharedStyles";
 import typography from "@/constants/typography";
-import {useFieldArray} from "react-hook-form";
-import control from "phosphor-react-native/src/defs/Control";
 
 interface ReminderTableProps {
     tasks?: Task[];
@@ -77,6 +75,7 @@ function ReminderTable({tasks, onToggle, isEditing = false, onAddTask, onDeleteT
                         <SharedInput
                             value={newTaskLabel}
                             onChangeText={setNewTaskLabel}
+                            onSubmitEditing={handleAdd}
                             showLabel={false} placeholder="Add a task"/>
                     </View>
                     <Pressable

@@ -11,13 +11,15 @@ interface CardProps {
     iconColor: string,
     iconBg: string,
     title: string,
+    date: string,
     time: string,
     priority?: boolean,
     tasks: Task[],
-    onPress?: () => void
+    onPress?: () => void,
+    complete: boolean
 }
 
-function ReminderCard({iconColor, iconBg, title, time, priority, tasks, onPress}: CardProps) {
+function ReminderCard({iconColor, iconBg, title, date, time, priority, tasks, onPress, complete}: CardProps) {
     return (
         <Pressable style={({pressed}) => [
             sharedStyles.card,
@@ -30,10 +32,11 @@ function ReminderCard({iconColor, iconBg, title, time, priority, tasks, onPress}
                 <BellIcon color={iconColor} size={18} weight={'fill'}/>
             </View>
             <View style={styles.cardLabel}>
-                <Text style={[typography.styles.cardTitle, {marginBottom: 2}]}>{title}</Text>
+                <Text style={[typography.styles.cardTitle, {marginBottom: 2}, complete && styles.complete]}>{title}</Text>
                 <View style={[sharedStyles.row, styles.cardLabelTime]}>
                     <ClockIcon color={colors.textMuted} size={11} weight={'fill'}/>
-                    <Text style={typography.styles.metaText}>{time}</Text>
+                    <Text style={[typography.styles.metaText, complete && styles.complete]}>{date}</Text>
+                    <Text style={[typography.styles.metaText, complete && styles.complete]}>{time}</Text>
                     {priority && (
                         <>
                             <DotOutlineIcon size={11} color={colors.primary} weight={'fill'}/>
@@ -45,7 +48,7 @@ function ReminderCard({iconColor, iconBg, title, time, priority, tasks, onPress}
 
                 <View>
                     <ProgressBar progress={tasks.filter(t => t.completed).length / tasks.length} height={4}/>
-                    <Text style={[typography.styles.metaText, styles.cardTasks]}>
+                    <Text style={[typography.styles.metaText, styles.cardTasks, complete && styles.complete]}>
                         {tasks.filter(t => t.completed).length}/{tasks.length} tasks done</Text>
                 </View>
             </View>
@@ -85,6 +88,10 @@ const styles = StyleSheet.create({
     cardTasks: {
         fontSize: 11,
         marginTop: spacing[1],
+    },
+
+    complete: {
+        textDecorationLine: 'line-through',
     }
 })
 

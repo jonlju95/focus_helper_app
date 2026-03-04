@@ -13,11 +13,13 @@ interface ButtonProps {
     onPress?: () => void,
     customStyle?: ViewStyle;
     disabled?: boolean;
+    variant?: 'primary' | 'secondary';
 }
 
 function SharedButton({
     icon = <CheckIcon size={16} color={'#FFF'} weight={'bold'}/>,
     showIcon = true, label, onPress, customStyle, disabled = false,
+    variant = 'primary',
 }: ButtonProps) {
     return (
         <Pressable style={({pressed}) => [
@@ -26,9 +28,12 @@ function SharedButton({
             pressed && styles.pressed,
             customStyle,
             disabled && styles.disabled,
+            variant === 'secondary' && styles.secondary
         ]} onPress={onPress} disabled={disabled}>
             {showIcon && (icon)}
-            <Text style={[typography.styles.btnText, disabled && styles.buttonLabelDisabled]}>{label}</Text>
+            <Text style={[typography.styles.btnText,
+                disabled && styles.buttonLabelDisabled,
+                variant === 'secondary' && styles.secondaryText]}>{label}</Text>
         </Pressable>
     );
 }
@@ -42,6 +47,8 @@ const styles = StyleSheet.create({
         borderRadius: spacing[4],
         paddingHorizontal: spacing[6],
         paddingVertical: spacing[3],
+        borderWidth: 1.5,
+        borderColor: 'transparent',
 
         elevation: spacing[1],
         shadowColor: '#C4622D',
@@ -61,6 +68,17 @@ const styles = StyleSheet.create({
     buttonLabelDisabled: {
         color: colors.textMuted,
     },
+    secondary: {
+        backgroundColor: 'transparent',
+        borderColor: colors.primary,
+        borderWidth: 1.5,
+
+        elevation: 0,
+        shadowOpacity: 0,
+    },
+    secondaryText: {
+        color: colors.textPrimary,
+    }
 })
 
 export default SharedButton;

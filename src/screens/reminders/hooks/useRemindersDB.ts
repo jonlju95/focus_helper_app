@@ -1,15 +1,15 @@
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import {Reminder} from '@/types/reminder';
 import {openDatabaseSync} from "expo-sqlite";
 import {drizzle} from "drizzle-orm/expo-sqlite/driver";
 import {DATABASE_NAME} from "@/app/(tabs)/_layout";
 import * as schema from '../../../db/schema';
-import {reminder_types} from '../../../db/schema';
+import {reminder_types} from '@/db/schema';
 import * as relations from '../../../db/relations';
 import {reminders, tasks} from '@/db/schema';
 import {useMigrations} from "drizzle-orm/expo-sqlite/migrator";
 import migrations from "../../../../drizzle/migrations";
-import { eq } from "drizzle-orm";
+import {eq} from "drizzle-orm";
 
 const expoDb = openDatabaseSync(DATABASE_NAME);
 const db = drizzle(expoDb, {
@@ -35,15 +35,13 @@ const mapReminder = (r: typeof reminders.$inferSelect & {
 });
 
 export function useRemindersDB() {
-    const [loading, setLoading] = useState(true);
-    // const [error, setError] = useState<Error | null>(null);
-
-    const {success, error} = useMigrations(db, migrations);
+    const [loading] = useState(true);
+    const {error} = useMigrations(db, migrations);
 
     const getReminders = async () => {
         const result = await db.query.reminders.findMany({
-            with: { tasks: true, type: true },
-            orderBy: (reminders, { asc }) => [
+            with: {tasks: true, type: true},
+            orderBy: (reminders, {asc}) => [
                 asc(reminders.date),
                 asc(reminders.time),
                 asc(reminders.prioritized)
@@ -64,7 +62,6 @@ export function useRemindersDB() {
         })
     }
 
-    // ── Add ───────────────────────────────────────────────────
     const addReminder = async (reminder: Reminder) => {
         await db.transaction(async (tx) => {
             await tx.insert(reminders).values({
@@ -82,17 +79,15 @@ export function useRemindersDB() {
         return reminder;
     };
 
-    // ── Update ────────────────────────────────────────────────
     const updateReminder = async (reminder: Reminder) => {
         await db.transaction(async (tx) => {
-            // Update reminder row
             await tx.update(reminders)
                 .set({
-                    title:       reminder.title,
-                    date:        reminder.date,
-                    time:        reminder.time ?? null,
+                    title: reminder.title,
+                    date: reminder.date,
+                    time: reminder.time ?? null,
                     prioritized: reminder.prioritized,
-                    type_id:     reminder.typeId ?? null,
+                    type_id: reminder.typeId ?? null,
                 })
                 .where(eq(reminders.id, reminder.id));
 
@@ -103,10 +98,10 @@ export function useRemindersDB() {
             if (reminder.tasks.length > 0) {
                 await tx.insert(tasks).values(
                     reminder.tasks.map((task, index) => ({
-                        id:          task.id,
-                        label:       task.label,
-                        completed:   task.completed,
-                        sort_order:  index,
+                        id: task.id,
+                        label: task.label,
+                        completed: task.completed,
+                        sort_order: index,
                         reminder_id: reminder.id,
                     }))
                 );
@@ -116,32 +111,30 @@ export function useRemindersDB() {
         return reminder;
     };
 
-    // ── Delete ────────────────────────────────────────────────
     const deleteReminder = async (id: string) => {
         await db.delete(reminders).where(eq(reminders.id, id));
     };
 
-    // ── Toggle a single task ──────────────────────────────────
     const toggleTask = async (reminderId: string, taskId: string) => {
         const task = await db.query.tasks.findFirst({
-            where: (tasks, { eq }) => eq(tasks.id, taskId),
+            where: (tasks, {eq}) => eq(tasks.id, taskId),
         });
 
         if (!task) return;
 
         await db.update(tasks)
-            .set({ completed: !task.completed })
+            .set({completed: !task.completed})
             .where(eq(tasks.id, taskId));
 
-        return { reminderId, taskId, completed: !task.completed };
+        return {reminderId, taskId, completed: !task.completed};
     };
 
     const togglePriority = async (reminderId: string, prioritized: boolean) => {
         await db.update(reminders)
-            .set({ prioritized: prioritized })
+            .set({prioritized: prioritized})
             .where(eq(reminders.id, reminderId))
 
-        return { reminderId, prioritized };
+        return {reminderId, prioritized};
     }
 
     return {

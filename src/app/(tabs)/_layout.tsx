@@ -18,7 +18,7 @@ import {tabBarConfig} from '@/components/navigation/tabBarConfig';
 import colors from '@/constants/colors';
 import {SidebarProvider} from "@/context/SidebarContext";
 import Sidebar from "@/components/sidebar/Sidebar";
-import {ActivityIndicator, View, Text} from "react-native";
+import {ActivityIndicator, Text, View} from "react-native";
 import {openDatabaseSync, SQLiteProvider} from "expo-sqlite";
 import {useMigrations} from "drizzle-orm/expo-sqlite/migrator";
 import migrations from "../../../drizzle/migrations";
@@ -56,9 +56,7 @@ export default function RootLayout() {
     const {success, error} = useMigrations(db, migrations);
 
     useEffect(() => {
-        if (success) {
-        }
-        if (fontsLoaded || fontError) {
+        if (fontsLoaded || fontError || success) {
             SplashScreen.hideAsync();
         }
     }, [fontsLoaded, fontError, success]);
@@ -68,7 +66,7 @@ export default function RootLayout() {
 
     if (error) {
         return (
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
                 <Text>Database error: {error.message}</Text>
             </View>
         );

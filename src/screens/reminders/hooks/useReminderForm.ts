@@ -18,7 +18,7 @@ interface ReminderFormData {
 
 export function useReminderForm() {
     const {id} = useLocalSearchParams<{ id?: string }>();
-    const {getReminder, addReminder, updateReminder, deleteReminder} = useRemindersDB();
+    const {getReminder, addReminder, updateReminder} = useRemindersDB();
 
     const [reminder, setReminder] = useState<Reminder>();
 
@@ -70,8 +70,8 @@ export function useReminderForm() {
         const reminderToSave: Reminder = {
             id: reminder?.id ?? Crypto.randomUUID(),
             title: data.title,
-            date: data.date.toISOString().split('T')[0],
-            time: data.time.toISOString().split('T')[1].substring(0, 5),
+            date: data.date.toLocaleDateString(),
+            time: data.time.toLocaleTimeString().substring(0, 5),
             typeId: data.typeId,
             prioritized: data.prioritized,
             tasks: data.tasks,

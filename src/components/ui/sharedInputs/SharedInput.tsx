@@ -10,6 +10,7 @@ interface InputProps {
     showLabel?: boolean,
     value: string | undefined,
     onChangeText?: (value: string) => void,
+    onSubmitEditing?: () => void,
     placeholder?: string,
     required?: boolean,
     multiline?: boolean,
@@ -21,6 +22,7 @@ function SharedInput({
     showLabel = true,
     value,
     onChangeText,
+    onSubmitEditing,
     placeholder,
     required = false,
     multiline = false,
@@ -42,7 +44,7 @@ function SharedInput({
                        onChangeText={onChangeText}
                        onFocus={() => setFocused(true)}
                        onBlur={() => setFocused(false)}
-                       onSubmitEditing={() => console.log('onSubmitEditing')}
+                       onSubmitEditing={onSubmitEditing}
                        style={[typography.styles.inputText, sharedStyles.row, sharedStyles.border,
                            styles.inputField, focused && styles.inputFocused, customStyle]}
                        placeholderTextColor={'#C8C0B4'}

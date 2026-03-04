@@ -14,6 +14,7 @@ import {sharedStyles} from "@/constants/sharedStyles";
 import SharedBadge from "@/components/ui/SharedBadge";
 import {useRemindersDB} from "@/screens/reminders/hooks/useRemindersDB";
 import {Reminder} from "@/types/reminder";
+import ConfirmDialog from "@/components/ui/modals/ConfirmDialog";
 
 const FIELD_WIDTH = (Dimensions.get('window').width - 78) / 2;
 
@@ -21,6 +22,7 @@ function ReminderDetailScreen() {
     const {id} = useLocalSearchParams<{ id: string }>();
     const {getReminder, deleteReminder, toggleTask, togglePriority} = useRemindersDB();
     const [reminder, setReminder] = useState<Reminder>();
+    const [deleteVisible, setDeleteVisible] = useState(false);
 
     const progress = reminder && reminder.tasks.length > 0
         ? reminder.tasks.filter(t => t.completed).length / reminder.tasks.length
@@ -76,11 +78,10 @@ function ReminderDetailScreen() {
     }
 
     const onDelete = async () => {
-        if (reminder?.id) {
-            await deleteReminder(reminder.id);
-            router.dismissAll();
-            router.replace('/reminders');
-        }
+        setDeleteVisible(false);
+        await deleteReminder(reminder.id);
+        router.dismissAll();
+        router.replace('/reminders');
     }
 
     return (
@@ -135,7 +136,17 @@ function ReminderDetailScreen() {
                     </View>
                     <View style={{justifyContent: 'flex-end'}}>
                         <SharedButton icon={<TrashIcon size={16} color={'#FFF'} weight={'bold'}/>}
-                                      label={'Delete'} onPress={onDelete}/>
+                                      label={'Delete'} onPress={() => setDeleteVisible(true)}/>
+
+                        <ConfirmDialog
+                            visible={deleteVisible}
+                            title="Delete reminder?"
+                            message="This cannot be undone"
+                            confirmLabel="Delete"
+                            destructive
+                            onCancel={() => setDeleteVisible(false)}
+                            onConfirm={onDelete}
+                        />
                     </View>
                 </View>
             </ScrollView>
