@@ -11,14 +11,6 @@ const db = drizzle(expoDb, {
 });
 
 export function useReminderTabs() {
-
-    // useEffect(() => {
-    //     db.query.reminder_types.findMany().then((reminder_types: ReminderType[]) => {
-    //         setReminderTabs(reminder_types);
-    //     })
-    // }, [])
-    // return {reminderTabs};
-
     const getReminderTabs = async () => {
         let tabs: ReminderType[] = [];
         await db.query.reminder_types.findMany().then(

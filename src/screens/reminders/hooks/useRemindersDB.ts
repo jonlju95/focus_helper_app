@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Reminder} from '@/types/reminder';
 import {openDatabaseSync} from "expo-sqlite";
 import {drizzle} from "drizzle-orm/expo-sqlite/driver";
@@ -7,6 +7,9 @@ import * as schema from '../../../db/schema';
 import {reminder_types} from '../../../db/schema';
 import * as relations from '../../../db/relations';
 import {reminders, tasks} from '@/db/schema';
+import {useMigrations} from "drizzle-orm/expo-sqlite/migrator";
+import migrations from "../../../../drizzle/migrations";
+import { eq } from "drizzle-orm";
 
 const expoDb = openDatabaseSync(DATABASE_NAME);
 const db = drizzle(expoDb, {
@@ -23,7 +26,6 @@ const mapReminder = (r: typeof reminders.$inferSelect & {
     time: r.time ?? undefined,
     prioritized: r.prioritized ?? false,
     typeId: r.type_id ?? '',
-    // type: r.type,
     tasks: r.tasks.map(t => ({
         id: t.id,
         label: t.label ?? '',
@@ -34,20 +36,20 @@ const mapReminder = (r: typeof reminders.$inferSelect & {
 
 export function useRemindersDB() {
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<Error | null>(null);
+    // const [error, setError] = useState<Error | null>(null);
+
+    const {success, error} = useMigrations(db, migrations);
 
     const getReminders = async () => {
-        let reminders: Reminder[] = [];
-        await db.query.reminders.findMany({
-            with: {
-                tasks: true,
-                type: true,
-            },
-            orderBy: (reminders, {asc}) => [asc(reminders.date), asc(reminders.time), asc(reminders.prioritized)],
-        }).then(result => {
-            reminders = result.map(r => (mapReminder(r)));
-        })
-        return reminders;
+        const result = await db.query.reminders.findMany({
+            with: { tasks: true, type: true },
+            orderBy: (reminders, { asc }) => [
+                asc(reminders.date),
+                asc(reminders.time),
+                asc(reminders.prioritized)
+            ],
+        });
+        return result.map(mapReminder);
     }
 
     const getReminder = async (id: string) => {
@@ -65,7 +67,10 @@ export function useRemindersDB() {
     // ── Add ───────────────────────────────────────────────────
     const addReminder = async (reminder: Reminder) => {
         await db.transaction(async (tx) => {
-            await tx.insert(reminders).values(reminder);
+            await tx.insert(reminders).values({
+                ...reminder,
+                type_id: reminder.typeId
+            });
             await tx.insert(tasks).values(
                 reminder.tasks.map((task, index) => ({
                     ...task,
@@ -79,25 +84,65 @@ export function useRemindersDB() {
 
     // ── Update ────────────────────────────────────────────────
     const updateReminder = async (reminder: Reminder) => {
-        // TODO: update reminders row
-        // TODO: delete existing tasks and re-insert
-        //       (simpler than diffing)
-        // TODO: update local state
+        await db.transaction(async (tx) => {
+            // Update reminder row
+            await tx.update(reminders)
+                .set({
+                    title:       reminder.title,
+                    date:        reminder.date,
+                    time:        reminder.time ?? null,
+                    prioritized: reminder.prioritized,
+                    type_id:     reminder.typeId ?? null,
+                })
+                .where(eq(reminders.id, reminder.id));
+
+            // Delete existing tasks and re-insert
+            await tx.delete(tasks)
+                .where(eq(tasks.reminder_id, reminder.id));
+
+            if (reminder.tasks.length > 0) {
+                await tx.insert(tasks).values(
+                    reminder.tasks.map((task, index) => ({
+                        id:          task.id,
+                        label:       task.label,
+                        completed:   task.completed,
+                        sort_order:  index,
+                        reminder_id: reminder.id,
+                    }))
+                );
+            }
+        });
+
+        return reminder;
     };
 
     // ── Delete ────────────────────────────────────────────────
     const deleteReminder = async (id: string) => {
-        // TODO: delete from reminders
-        //       (tasks delete automatically via CASCADE)
-        // TODO: update local state — filter out the deleted id
+        await db.delete(reminders).where(eq(reminders.id, id));
     };
 
     // ── Toggle a single task ──────────────────────────────────
     const toggleTask = async (reminderId: string, taskId: string) => {
-        // TODO: flip completed on the task in db
-        // TODO: update local state immutably
-        // Hint: same spread pattern you already know from the UI work
+        const task = await db.query.tasks.findFirst({
+            where: (tasks, { eq }) => eq(tasks.id, taskId),
+        });
+
+        if (!task) return;
+
+        await db.update(tasks)
+            .set({ completed: !task.completed })
+            .where(eq(tasks.id, taskId));
+
+        return { reminderId, taskId, completed: !task.completed };
     };
+
+    const togglePriority = async (reminderId: string, prioritized: boolean) => {
+        await db.update(reminders)
+            .set({ prioritized: prioritized })
+            .where(eq(reminders.id, reminderId))
+
+        return { reminderId, prioritized };
+    }
 
     return {
         loading,
@@ -108,5 +153,6 @@ export function useRemindersDB() {
         updateReminder,
         deleteReminder,
         toggleTask,
+        togglePriority
     };
 }

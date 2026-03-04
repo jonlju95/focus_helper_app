@@ -1,8 +1,8 @@
 import {router, useLocalSearchParams} from "expo-router";
-import {LayoutAnimation, Pressable, ScrollView, StyleSheet, Text, View} from "react-native";
+import {Dimensions, LayoutAnimation, Pressable, ScrollView, StyleSheet, Text, View} from "react-native";
 import TopBar from "@/components/ui/TopBar";
 import colors from "@/constants/colors";
-import {ClockIcon, PenIcon} from "phosphor-react-native";
+import {ClockIcon, PenIcon, TrashIcon} from "phosphor-react-native";
 import ReminderTable from "@/screens/reminders/components/ReminderTable";
 import {useEffect, useState} from "react";
 import ProgressBar from "@/components/ui/ProgressBar";
@@ -15,9 +15,11 @@ import SharedBadge from "@/components/ui/SharedBadge";
 import {useRemindersDB} from "@/screens/reminders/hooks/useRemindersDB";
 import {Reminder} from "@/types/reminder";
 
+const FIELD_WIDTH = (Dimensions.get('window').width - 78) / 2;
+
 function ReminderDetailScreen() {
     const {id} = useLocalSearchParams<{ id: string }>();
-    const {getReminder} = useRemindersDB();
+    const {getReminder, deleteReminder, toggleTask, togglePriority} = useRemindersDB();
     const [reminder, setReminder] = useState<Reminder>();
 
     const progress = reminder && reminder.tasks.length > 0
@@ -38,29 +40,47 @@ function ReminderDetailScreen() {
 
     if (!reminder) return <View><Text>Reminder not found</Text></View>;
 
-    const toggleTask = (taskId: string) => {
+    const onTaskToggle = async (taskId: string) => {
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        const result = await toggleTask(reminder.id, taskId);
+        if (!result) {
+            return;
+        }
+
         setReminder(prev => {
             if (!prev) return prev;
             return {
                 ...prev,
-                tasks: prev.tasks.map(task =>
-                    task.id === taskId
-                        ? {...task, completed: !task.completed}
-                        : task
+                tasks: prev.tasks.map(t =>
+                    t.id === result.taskId
+                        ? {...t, completed: result.completed}
+                        : t
                 ),
             };
         });
     };
 
-    const togglePriority = (priority: boolean) => {
+    const onPriorityToggle = async (priority: boolean) => {
+        const result = await togglePriority(reminder.id, priority);
+        if (!result) {
+            return;
+        }
+
         setReminder(prev => {
             if (!prev) return prev;
             return {
                 ...prev,
-                prioritized: priority
+                prioritized: result.prioritized,
             };
         });
+    }
+
+    const onDelete = async () => {
+        if (reminder?.id) {
+            await deleteReminder(reminder.id);
+            router.dismissAll();
+            router.replace('/reminders');
+        }
     }
 
     return (
@@ -83,10 +103,12 @@ function ReminderDetailScreen() {
                             <Text style={styles.editButtonText}>Edit</Text>
                         </Pressable>
                     </View>
-                    <View style={[sharedStyles.row, styles.cardMeta]}>
-                        <ClockIcon size={12} color={colors.textMuted} weight={'fill'}/>
-                        <Text style={typography.styles.metaText}>{reminder.time}</Text>
-                    </View>
+                    {reminder.time && (
+                        <View style={[sharedStyles.row, styles.cardMeta]}>
+                            <ClockIcon size={12} color={colors.textMuted} weight={'fill'}/>
+                            <Text style={typography.styles.metaText}>{reminder.time}</Text>
+                        </View>
+                    )}
                     {reminder.prioritized && (
                         <SharedBadge title={'Prioritized'} prioritized={true}/>
                     )}
@@ -103,14 +125,18 @@ function ReminderDetailScreen() {
                     </View>
                 </View>
                 <View>
-                    <ReminderTable tasks={reminder.tasks} onToggle={(id) => toggleTask(id)}/>
+                    <ReminderTable tasks={reminder.tasks} onToggle={(id) => onTaskToggle(id)}/>
                 </View>
                 <View style={[sharedStyles.row, {justifyContent: 'space-between'}]}>
-                    <View style={[sharedStyles.row, {gap: spacing[3]}]}>
-                        <Text style={typography.styles.cardTitle}>Prioritized</Text>
-                        <ToggleButton value={reminder.prioritized ?? false} onChange={togglePriority}/>
+                    <View style={[sharedStyles.row, {gap: spacing[3], width: FIELD_WIDTH}]}>
+                        <Text style={[typography.styles.cardTitle]}>Prioritized</Text>
+                        <ToggleButton showLabel={false} value={reminder.prioritized ?? false}
+                                      onChange={onPriorityToggle}/>
                     </View>
-                    <SharedButton label={'Save'}/>
+                    <View style={{justifyContent: 'flex-end'}}>
+                        <SharedButton icon={<TrashIcon size={16} color={'#FFF'} weight={'bold'}/>}
+                                      label={'Delete'} onPress={onDelete}/>
+                    </View>
                 </View>
             </ScrollView>
         </View>

@@ -18,7 +18,7 @@ import {tabBarConfig} from '@/components/navigation/tabBarConfig';
 import colors from '@/constants/colors';
 import {SidebarProvider} from "@/context/SidebarContext";
 import Sidebar from "@/components/sidebar/Sidebar";
-import {ActivityIndicator} from "react-native";
+import {ActivityIndicator, View, Text} from "react-native";
 import {openDatabaseSync, SQLiteProvider} from "expo-sqlite";
 import {useMigrations} from "drizzle-orm/expo-sqlite/migrator";
 import migrations from "../../../drizzle/migrations";
@@ -36,6 +36,11 @@ const AppTheme = {
 };
 
 export const DATABASE_NAME = 'focus_helper'
+const expoDb = openDatabaseSync(DATABASE_NAME);
+expoDb.execSync('PRAGMA foreign_keys = ON;');
+const db = drizzle(expoDb);
+
+export {db};
 
 export default function RootLayout() {
     const [fontsLoaded, fontError] = useFonts({
@@ -48,9 +53,7 @@ export default function RootLayout() {
         NunitoSans_600: NunitoSans_600SemiBold,
     });
 
-    const expoDb = openDatabaseSync(DATABASE_NAME);
-    const db = drizzle(expoDb);
-    const {success, error} = useMigrations(db, migrations)
+    const {success, error} = useMigrations(db, migrations);
 
     useEffect(() => {
         if (success) {
@@ -61,7 +64,15 @@ export default function RootLayout() {
     }, [fontsLoaded, fontError, success]);
 
     if (!fontsLoaded && !fontError) return null;
+    if (!success) return null;
 
+    if (error) {
+        return (
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                <Text>Database error: {error.message}</Text>
+            </View>
+        );
+    }
 
     return (
         <Suspense fallback={<ActivityIndicator size={'large'}/>}>

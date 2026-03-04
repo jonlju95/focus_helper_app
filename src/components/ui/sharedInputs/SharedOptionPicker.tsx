@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
         borderRadius: spacing[3],
         paddingHorizontal: spacing[2],
         paddingVertical: spacing[3],
-        gap: spacing[2]
+        gap: spacing[2],
     },
 
     triggerOpen: {

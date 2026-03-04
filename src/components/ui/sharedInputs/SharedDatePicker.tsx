@@ -1,7 +1,7 @@
 import DateTimePicker, {DateTimePickerEvent} from '@react-native-community/datetimepicker';
 import {useState} from 'react';
 import {Platform, Pressable, StyleSheet, Text, View} from 'react-native';
-import {CalendarBlankIcon} from 'phosphor-react-native';
+import {CalendarBlankIcon, ClockIcon} from 'phosphor-react-native';
 import colors from '@/constants/colors';
 import {sharedStyles} from "@/constants/sharedStyles";
 import typography from "@/constants/typography";
@@ -48,7 +48,9 @@ export default function SharedDatePicker({
                 <Text style={typography.styles.inputText}>
                     {displayValue}
                 </Text>
-                <CalendarBlankIcon size={16} color={colors.textMuted} weight="fill"/>
+                {mode === 'date'
+                    ? <CalendarBlankIcon size={16} color={colors.textMuted} weight="fill"/>
+                    : <ClockIcon size={16} color={colors.textMuted} weight="fill"/>}
             </Pressable>
 
             {/* Picker — only shown when show is true */}

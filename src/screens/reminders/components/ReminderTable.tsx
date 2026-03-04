@@ -7,16 +7,20 @@ import {useState} from "react";
 import spacing from "@/constants/spacing";
 import {sharedStyles} from "@/constants/sharedStyles";
 import typography from "@/constants/typography";
+import {useFieldArray} from "react-hook-form";
+import control from "phosphor-react-native/src/defs/Control";
 
 interface ReminderTableProps {
     tasks?: Task[];
     onToggle?: (id: string) => void;
     onAddTask?: (label: string) => void;
-    onDeleteTask?: (id: string) => void;
+    onDeleteTask?: (index: number) => void;
     isEditing?: boolean;
 }
 
 function ReminderTable({tasks, onToggle, isEditing = false, onAddTask, onDeleteTask}: ReminderTableProps) {
+
+
     const [newTaskLabel, setNewTaskLabel] = useState('');
 
     const handleAdd = () => {
@@ -56,7 +60,7 @@ function ReminderTable({tasks, onToggle, isEditing = false, onAddTask, onDeleteT
                     </Text>
 
                     <Pressable
-                        onPress={() => isEditing ? onDeleteTask?.(task.id) : onToggle?.(task.id)}
+                        onPress={() => isEditing ? onDeleteTask?.(index) : onToggle?.(task.id)}
                         hitSlop={8}>
                         {isEditing
                             ? <TrashIcon size={20} color={colors.urgent} weight="bold"/>

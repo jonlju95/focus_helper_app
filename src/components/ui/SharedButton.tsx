@@ -12,21 +12,23 @@ interface ButtonProps {
     label: string;
     onPress?: () => void,
     customStyle?: ViewStyle;
+    disabled?: boolean;
 }
 
 function SharedButton({
     icon = <CheckIcon size={16} color={'#FFF'} weight={'bold'}/>,
-    showIcon = true, label, onPress, customStyle
+    showIcon = true, label, onPress, customStyle, disabled = false,
 }: ButtonProps) {
     return (
         <Pressable style={({pressed}) => [
             styles.btnBody,
             sharedStyles.row,
             pressed && styles.pressed,
-            customStyle
-        ]} onPress={onPress}>
+            customStyle,
+            disabled && styles.disabled,
+        ]} onPress={onPress} disabled={disabled}>
             {showIcon && (icon)}
-            <Text style={typography.styles.btnText}>{label}</Text>
+            <Text style={[typography.styles.btnText, disabled && styles.buttonLabelDisabled]}>{label}</Text>
         </Pressable>
     );
 }
@@ -49,6 +51,15 @@ const styles = StyleSheet.create({
     },
     pressed: {
         opacity: 0.85,
+    },
+    disabled: {
+        backgroundColor: colors.border,
+        opacity: 0.6,
+        elevation: 0,
+        shadowOpacity: 0,
+    },
+    buttonLabelDisabled: {
+        color: colors.textMuted,
     },
 })
 

@@ -9,7 +9,7 @@ import {router} from "expo-router";
 import {MOCK_ACTIVITIES} from "@/screens/activities/data/activities";
 import ActivityCard from "@/screens/activities/components/ActivityCard";
 import SharedButton from "@/components/ui/SharedButton";
-import {formatSelectedDate} from "@/utils/formatDate";
+import {formatSelectedDate} from "@/utils/dateTimeUtils";
 import {sharedStyles} from "@/constants/sharedStyles";
 import SectionLabel from "@/components/ui/SectionLabel";
 

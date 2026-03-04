@@ -4,9 +4,9 @@ import colors from "@/constants/colors";
 import spacing from "@/constants/spacing";
 import ReminderTabs from "@/screens/reminders/components/ReminderTabs";
 import {Reminder, ReminderType} from "@/types/reminder";
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import ReminderCard from "@/screens/reminders/components/ReminderCard";
-import {router} from "expo-router";
+import {router, useFocusEffect} from "expo-router";
 import {CalendarBlankIcon, ClockIcon, PlusIcon} from "phosphor-react-native";
 import AlertStrip from "@/components/ui/AlertStrip";
 import SharedButton from "@/components/ui/SharedButton";
@@ -22,9 +22,9 @@ export default function ReminderListScreen() {
     const [todayReminders, setTodayReminders] = useState<Reminder[]>([]);
     const [upcomingReminders, setUpcomingReminders] = useState<Reminder[]>([]);
     const [activeTab, setActiveTab] = useState<ReminderType>();
+    const today = new Date().toISOString().split('T')[0]; // "2026-03-03"
 
     useEffect(() => {
-        const today = new Date().toISOString().split('T')[0]; // "2026-03-03"
         getReminderTabs().then(tabs => {
             setActiveTab(activeTab ?? tabs[0]);
         })
@@ -40,6 +40,22 @@ export default function ReminderListScreen() {
             ));
         })
     }, [activeTab]);
+
+
+    useFocusEffect(
+        useCallback(() => {
+            getReminders().then(reminders => {
+                setTodayReminders(reminders.filter(r =>
+                    r.typeId === activeTab?.id &&
+                    r.date === today
+                ));
+                setUpcomingReminders(reminders.filter(r =>
+                    r.typeId === activeTab?.id &&
+                    r.date > today
+                ));
+            })
+        }, [])
+    );
 
     return (
         <View style={sharedStyles.container}>

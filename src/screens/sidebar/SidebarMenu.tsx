@@ -3,7 +3,7 @@ import {SidebarPanel} from '@/types/sidebar';
 import spacing from "@/constants/spacing";
 import colors from "@/constants/colors";
 import typography from "@/constants/typography";
-import {getMonthName} from "@/utils/formatDate";
+import {getMonthName} from "@/utils/dateTimeUtils";
 import ProgressBar from "@/components/ui/ProgressBar";
 import SidebarLink from "@/components/sidebar/SidebarLink";
 

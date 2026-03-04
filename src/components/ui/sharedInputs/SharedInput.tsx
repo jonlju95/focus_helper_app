@@ -12,6 +12,7 @@ interface InputProps {
     onChangeText?: (value: string) => void,
     placeholder?: string,
     required?: boolean,
+    multiline?: boolean,
     customStyle?: any,
 }
 
@@ -22,6 +23,7 @@ function SharedInput({
     onChangeText,
     placeholder,
     required = false,
+    multiline = false,
     customStyle,
 }: InputProps) {
     const [focused, setFocused] = useState(false);
@@ -40,10 +42,11 @@ function SharedInput({
                        onChangeText={onChangeText}
                        onFocus={() => setFocused(true)}
                        onBlur={() => setFocused(false)}
+                       onSubmitEditing={() => console.log('onSubmitEditing')}
                        style={[typography.styles.inputText, sharedStyles.row, sharedStyles.border,
                            styles.inputField, focused && styles.inputFocused, customStyle]}
                        placeholderTextColor={'#C8C0B4'}
-                       multiline={true}/>
+                       multiline={multiline}/>
         </View>
     );
 }
