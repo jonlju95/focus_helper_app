@@ -1,94 +1,45 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View} from "react-native";
+import {Dimensions, StyleSheet, View} from "react-native";
 import TopBar from "@/components/ui/TopBar";
-import {router, useLocalSearchParams} from "expo-router";
+import {router} from "expo-router";
 import spacing from "@/constants/spacing";
-import {MOCK_ACTIVITIES} from "@/screens/activities/data/activities";
-import {Activity} from "@/types/activity";
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
+import {sharedStyles} from "@/constants/sharedStyles";
+import {useActivityCategory} from "@/screens/activities/hooks/useActivityCategory";
+import {useActivitiesForm} from "@/screens/activities/hooks/useActivityForm";
+import SharedOptionPicker, {Option} from "@/components/ui/sharedInputs/SharedOptionPicker";
+import {Controller} from "react-hook-form";
 import SharedInput from "@/components/ui/sharedInputs/SharedInput";
 import SharedDatePicker from "@/components/ui/sharedInputs/SharedDatePicker";
-import SharedOptionPicker, {Option} from "@/components/ui/sharedInputs/SharedOptionPicker";
-import typography from "@/constants/typography";
 import ToggleButton from "@/components/ui/sharedInputs/ToggleButton";
 import SharedButton from "@/components/ui/SharedButton";
-import {ACTIVITY_COLORS} from "@/types/categoryColors";
-import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
-import {ActivityTypes} from "@/types/activityTypes";
-import {sharedStyles} from "@/constants/sharedStyles";
-import SharedBadge from "@/components/ui/SharedBadge";
-import {useActivityCategory} from "@/screens/activities/hooks/useActivityCategory";
-import {Category} from "@/types/category";
+
+const FIELD_WIDTH = (Dimensions.get('window').width - 78) / 2;
 
 function ActivitiesFormScreen() {
-    const {id} = useLocalSearchParams<{ id: string }>();
-    const {date} = useLocalSearchParams<{ date: string }>();
-
-    const existing = id ? MOCK_ACTIVITIES.find(a => a.id === id) : undefined;
+    const {
+        control,
+        handleSubmit,
+        isDisabled,
+        isEditing,
+        onSubmit
+    } = useActivitiesForm();
 
     const {getActivityCategories} = useActivityCategory();
-
-    const [activityCategory, setActivityCategory] = useState<Category[]>([]);
+    const [options, setOptions] = useState<Option[]>([]);
 
     useEffect(() => {
         getActivityCategories().then(categories => {
-            setActivityCategory(categories)
+            let options: Option[] = [];
+            categories.forEach((category) => {
+                options.push({
+                    label: category.name,
+                    value: category.id
+                });
+            })
+            setOptions(options);
         })
-    })
-
-    const [activity, setActivity] = React.useState<Activity>(existing ?? {
-        id: crypto.randomUUID(),
-        title: '',
-        date: new Date(date).toISOString() ?? new Date().toISOString(),
-        time: '',
-        type: activityCategory[0],
-        prioritized: false,
-        description: '',
-    });
-
-
-
-    // const typeColor = ACTIVITY_COLORS[activity.type.name];
-
-    const isEditing = !!existing;
-
-    const options: Option[] = [
-        {label: 'Appointment', value: 'appointment'},
-        {label: 'Meeting', value: 'meeting'},
-        {label: 'Personal', value: 'personal'},
-        {label: 'Errand', value: 'errand'},
-        {label: 'Work', value: 'work'},
-        {label: 'Note', value: 'note'},
-    ]
-
-    const togglePriority = (priority: boolean) => {
-        setActivity(prev => {
-            if (!prev) return prev;
-            return {
-                ...prev,
-                prioritized: priority
-            };
-        });
-    }
-
-    const changeSelectedOption = (optionValue: string) => {
-        const option = options.find(option => option.value === optionValue);
-        if (option) {
-            // setSelectedOption(option);
-            // setActivity(prev => ({...prev, type: option.value as ActivityTypes}))
-        }
-    }
-
-    const changeSelectedDate = (date: Date) => {
-        setSelectedDate(date);
-        // setActivity(prev => ({...prev, date: new Date(date).toISOString()}));
-    }
-
-    const updateField = <K extends keyof Activity>(key: K, value: Activity[K]) => {
-        setActivity(prev => ({...prev, [key]: value}));
-    };
-
-    // const [selectedOption, setSelectedOption] = useState<Option>(options.filter(o => o.value === activity.type)[0]);
-    const [selectedDate, setSelectedDate] = useState<Date>(new Date(activity.date));
+    }, [])
 
     return (
         <View style={sharedStyles.container}>
@@ -99,32 +50,48 @@ function ActivitiesFormScreen() {
                 showsVerticalScrollIndicator={false}
                 enableOnAndroid={true}>
                 <View style={[sharedStyles.card, {gap: spacing[3]}]}>
-                    {/*<SharedInput label={'Title'} value={activity.title} required={true}*/}
-                    {/*             placeholder={'e.g. Morning routine'}*/}
-                    {/*             onChangeText={text => updateField('title', text)}/>*/}
+                    <Controller control={control} name={'title'} render={({field: {value, onChange}}) => (
+                        <SharedInput label={'Title'} value={value} required={true} placeholder={'e.g. Morning routine'}
+                                     onChangeText={onChange}/>
+                    )}/>
+
                     <View style={[sharedStyles.row, styles.dateTypeRow]}>
                         <View style={{flex: 1}}>
-                            {/*<SharedDatePicker label={'Date'} value={selectedDate} onChange={changeSelectedDate}/>*/}
+                            <Controller control={control} name={'date'} render={({field: {value, onChange}}) => (
+                                <SharedDatePicker label={'Date'} value={value} onChange={onChange}/>
+                            )}/>
                         </View>
                         <View style={{flex: 1}}>
-                            {/*<SharedOptionPicker label={'Type'} options={options} value={selectedOption?.value}*/}
-                            {/*                    onChange={changeSelectedOption}/>*/}
+                            <Controller control={control} name={'time'} render={({field: {value, onChange}}) => (
+                                <SharedDatePicker mode={'time'} label={'Time'} value={value || new Date()}
+                                                  onChange={onChange}/>
+                            )}/>
                         </View>
                     </View>
-                    <SharedBadge title={activity.type.name ?? 'Activities'} color={activity.type.colorText} bgColor={activity.type.colorBg}/>
+                    <View style={[sharedStyles.row, styles.dateTypeRow]}>
+                        <View style={{width: FIELD_WIDTH}}>
+                            <Controller control={control} name={'categoryId'} render={({field: {value, onChange}}) => (
+                                <SharedOptionPicker label={'Category'} options={options} value={value}
+                                                    onChange={onChange}/>
+                            )}/>
+                        </View>
+                        <View style={{width: FIELD_WIDTH}}>
+                            <Controller control={control} name={'prioritized'} render={({field: {value, onChange}}) => (
+                                <ToggleButton value={value} onChange={onChange} showLabel={true} label={'Prioritized'}/>
+                            )}/>
+                        </View>
+                    </View>
                     <View>
-                        {/*<SharedInput label={'Description'} value={activity.description} required={true}*/}
-                        {/*             placeholder={'What do you need to remember about this activity?'}*/}
-                        {/*             customStyle={{minHeight: 160}}*/}
-                        {/*             onChangeText={text => updateField('description', text)}/>*/}
+                        <Controller control={control} name={'description'} render={({field: {value, onChange}}) => (
+                            <SharedInput label={'Description'} value={value}
+                                         placeholder={'What do you need to remember about this activity?'}
+                                         customStyle={{minHeight: 160}}
+                                         onChangeText={onChange}/>
+                        )}/>
                     </View>
                 </View>
-                <View style={[sharedStyles.row, {justifyContent: 'space-between'}]}>
-                    {/*<View style={[sharedStyles.row, {gap: spacing[3]}]}>*/}
-                    {/*    <Text style={typography.styles.cardTitle}>Prioritized</Text>*/}
-                    {/*    <ToggleButton value={activity.prioritized} onChange={togglePriority}/>*/}
-                    {/*</View>*/}
-                    <SharedButton label={'Save'}/>
+                <View style={[sharedStyles.row, {justifyContent: 'flex-end'}]}>
+                    <SharedButton label={'Save'} onPress={handleSubmit(onSubmit)} disabled={isDisabled}/>
                 </View>
             </KeyboardAwareScrollView>
         </View>

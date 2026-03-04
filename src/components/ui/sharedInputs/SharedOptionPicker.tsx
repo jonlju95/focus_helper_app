@@ -13,7 +13,7 @@ export interface Option {
 
 interface OptionPickerProps {
     options: Option[];
-    value: string;
+    value?: string;
     onChange: (value: string) => void;
     label?: string;
     showLabel?: boolean;

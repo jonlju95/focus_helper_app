@@ -34,7 +34,7 @@ export const activities = sqliteTable('activities', {
     id: text('id').primaryKey(),
     title: text('title').notNull(),
     date: text('date').notNull(),
-    time: text('time').notNull(),
+    time: text('time'),
     prioritized: integer({ mode: 'boolean' }).default(false),
     description: text('description'),
     category_id: text('category_id').references(() => categories.id, { onDelete: "set null" }),

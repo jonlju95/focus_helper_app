@@ -1,37 +1,63 @@
-import React, {useState} from 'react';
-import {Pressable, ScrollView, StyleSheet, Text, View} from "react-native";
+import React, {useEffect, useState} from 'react';
+import {Dimensions, Pressable, ScrollView, StyleSheet, Text, View} from "react-native";
 import {router, useLocalSearchParams} from "expo-router";
-import {MOCK_ACTIVITIES} from "@/screens/activities/data/activities";
 import TopBar from "@/components/ui/TopBar";
 import colors from "@/constants/colors";
 import spacing from "@/constants/spacing";
 import typography from "@/constants/typography";
 import ToggleButton from "@/components/ui/sharedInputs/ToggleButton";
 import SharedButton from "@/components/ui/SharedButton";
-import {ClockIcon, FileTextIcon, PenIcon} from "phosphor-react-native";
-import {ACTIVITY_COLORS} from "@/types/categoryColors";
+import {ClockIcon, FileTextIcon, PenIcon, TrashIcon} from "phosphor-react-native";
 import {sharedStyles} from "@/constants/sharedStyles";
 import SharedBadge from "@/components/ui/SharedBadge";
+import {useActivitiesDB} from "@/screens/activities/hooks/useActivitiesDB";
+import {Activity} from "@/types/activity";
+import ConfirmDialog from "@/components/ui/modals/ConfirmDialog";
+
+const FIELD_WIDTH = (Dimensions.get('window').width - 78) / 2;
 
 function ActivitiesDetailScreen() {
     const {id} = useLocalSearchParams<{ id: string }>();
+    const {getActivity, deleteActivity, togglePriority} = useActivitiesDB();
+    const [activity, setActivity] = useState<Activity>();
+    const [deleteVisible, setDeleteVisible] = useState(false);
 
-    const foundActivity = MOCK_ACTIVITIES.find(a => a.id === id);
-    const [activity, setActivity] = useState(foundActivity);
+    useEffect(() => {
+        if (!id) {
+            return;
+        }
+        getActivity(id).then((activity) => {
+            if (!activity) {
+                return;
+            }
+            setActivity(activity);
+        })
+    }, []);
 
     if (!activity) return <View><Text>Activity not found</Text></View>
 
-    const typeColor = ACTIVITY_COLORS[activity.type];
+    const onPriorityToggle = async (priority: boolean) => {
+        const result = await togglePriority(activity.id, priority);
+        if (!result) {
+            return;
+        }
 
-    const togglePriority = (priority: boolean) => {
         setActivity(prev => {
             if (!prev) return prev;
             return {
                 ...prev,
-                prioritized: priority
+                prioritized: result.prioritized,
             };
         });
     }
+
+    const onDelete = async () => {
+        setDeleteVisible(false);
+        await deleteActivity(activity.id);
+        router.dismissAll();
+        router.replace('/activities');
+    }
+
 
     return (
         <View style={sharedStyles.container}>
@@ -56,7 +82,9 @@ function ActivitiesDetailScreen() {
                     <View style={[sharedStyles.row, styles.cardMeta]}>
                         <ClockIcon size={11} color={colors.textMuted} weight={'fill'}/>
                         <Text style={typography.styles.metaText}>{activity.time ?? activity.date}</Text>
-                        <SharedBadge title={activity.type} color={typeColor.text} bgColor={typeColor.bg}/>
+                        <SharedBadge title={activity.category?.name || ''}
+                                     color={activity.category?.colorText}
+                                     bgColor={activity.category?.colorBg}/>
                         {activity.prioritized && (
                             <SharedBadge title={'Prioritized'} prioritized={true}/>
                         )}
@@ -73,11 +101,23 @@ function ActivitiesDetailScreen() {
                     )}
                 </View>
                 <View style={[sharedStyles.row, {justifyContent: 'space-between'}]}>
-                    <View style={[sharedStyles.row, {gap: spacing[3]}]}>
-                        <Text style={typography.styles.cardTitle}>Prioritized</Text>
-                        <ToggleButton value={activity.prioritized} onChange={togglePriority}/>
+                    <View style={[sharedStyles.row, {gap: spacing[3], width: FIELD_WIDTH}]}>
+                        <Text style={[typography.styles.cardTitle]}>Prioritized</Text>
+                        <ToggleButton showLabel={false} value={activity.prioritized ?? false}
+                                      onChange={onPriorityToggle}/>
                     </View>
-                    <SharedButton label={'Confirm'}/>
+                    <View style={{justifyContent: 'flex-end'}}>
+                        <SharedButton icon={<TrashIcon size={16} color={'#FFF'} weight={'bold'}/>}
+                                      label={'Delete'} onPress={() => setDeleteVisible(true)}/>
+                        <ConfirmDialog
+                            visible={deleteVisible}
+                            title="Delete activity?"
+                            message="This cannot be undone"
+                            confirmLabel="Delete"
+                            onCancel={() => setDeleteVisible(false)}
+                            onConfirm={onDelete}
+                        />
+                    </View>
                 </View>
             </ScrollView>
         </View>

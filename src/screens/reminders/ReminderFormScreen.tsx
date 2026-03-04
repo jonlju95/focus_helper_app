@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Dimensions, StyleSheet, View} from "react-native";
 import TopBar from "@/components/ui/TopBar";
 import {router} from "expo-router";

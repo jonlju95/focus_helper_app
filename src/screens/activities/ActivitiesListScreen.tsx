@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import {useCallback, useState} from 'react';
 import {ScrollView, View} from "react-native";
 import TopBar from "@/components/ui/TopBar";
 import colors from "@/constants/colors";
@@ -15,12 +15,12 @@ import {useActivitiesDB} from "@/screens/activities/hooks/useActivitiesDB";
 import {Activity} from "@/types/activity";
 
 function ActivitiesListScreen() {
-    const {getActivities} = useActivitiesDB();
+    const {getActivities, getFutureActivities} = useActivitiesDB();
 
     const [allActivities, setAllActivities] = useState<Activity[]>([]);
     const [selectedDay, setSelectedDay] = useState<string>(new Date().toISOString().split('T')[0])
     const [markedDates, setMarkedDates] = useState<string[]>([]);
-
+    const [futureActivities, setFutureActivities] = useState<number>(0);
 
     const onChangeSelectedDay = (date: Date) => {
         setSelectedDay(date.toISOString().split('T')[0])
@@ -31,6 +31,9 @@ function ActivitiesListScreen() {
             getActivities().then((activities) => {
                 setAllActivities(activities.filter(a => a.date === selectedDay));
                 setMarkedDates(activities.map(a => a.date));
+            })
+            getFutureActivities(new Date()).then((count) => {
+                setFutureActivities(count);
             })
         }, [selectedDay])
     )
@@ -61,7 +64,7 @@ function ActivitiesListScreen() {
                     iconColor: colors.warning,
                     iconBg: colors.warningLight,
                     label: 'Upcoming activities',
-                    value: allActivities.length.toString(),
+                    value: futureActivities.toString(),
                 }}/>
 
                 <ActivityCalendar markedDates={markedDates} onDaySelect={onChangeSelectedDay}/>
