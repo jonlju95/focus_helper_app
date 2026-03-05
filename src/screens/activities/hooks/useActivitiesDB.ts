@@ -1,7 +1,7 @@
 import {Activity} from "@/types/activity";
 import {activities, categories} from "@/db/schema";
 import {db} from "@/db/database";
-import {count, eq, gt} from "drizzle-orm";
+import {and, count, eq, gt, lte} from "drizzle-orm";
 
 const mapActivity = (a: typeof activities.$inferSelect & {
     category: typeof categories.$inferSelect | null;
@@ -43,14 +43,21 @@ export function useActivitiesDB() {
     }
 
     const getFutureActivities = async (date: Date) => {
-        const dateStr = date.toISOString().split('T')[0];  // "2026-03-15"
+        const dateStr = date.toISOString().split('T')[0];
+        const monthEnd = new Date(date.getFullYear(), date.getMonth() + 1, 0)
+            .toISOString().split('T')[0];
 
         const result = await db.select({count: count()})
             .from(activities)
-            .where(gt(activities.date, dateStr));
+            .where(
+                and(
+                    gt(activities.date, dateStr),
+                    lte(activities.date, monthEnd)
+                )
+            );
 
         return result[0].count;
-    }
+    };
 
     const addActivity = async (activity: Activity) => {
         await db.insert(activities).values({

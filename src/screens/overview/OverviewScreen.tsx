@@ -26,7 +26,7 @@ import {RelativePathString, router} from "expo-router";
 export default function OverviewScreen() {
     const {
         totalSpent, remainingBudget, budgetProgress,
-        reminders, heroReminder, heroLabel,
+        reminders, heroReminder, heroLabel, futureReminders, futureActivities
     } = useOverview();
 
     const onQuickAddPress = (route: string) => {
@@ -44,14 +44,14 @@ export default function OverviewScreen() {
                     icon: 'warning',
                     iconColor: colors.urgent,
                     iconBg: colors.urgentLight,
-                    label: 'Upcoming invoices',
-                    value: '6',
+                    label: 'Upcoming reminders',
+                    value: futureReminders.toString(),
                 }} right={{
                     icon: 'bell',
                     iconColor: colors.warning,
                     iconBg: colors.warningLight,
-                    label: 'Upcoming reminders',
-                    value: '2',
+                    label: 'Upcoming activities',
+                    value: futureActivities.toString(),
                 }}/>
 
                 {/* Hero card */}

@@ -23,6 +23,7 @@ function ReminderDetailScreen() {
     const {getReminder, deleteReminder, toggleTask, togglePriority} = useRemindersDB();
     const [reminder, setReminder] = useState<Reminder>();
     const [deleteVisible, setDeleteVisible] = useState(false);
+    const [deleteContext, setDeleteContext] = useState<'delete' | 'complete'>('delete');
 
     const progress = reminder && reminder.tasks.length > 0
         ? reminder.tasks.filter(t => t.completed).length / reminder.tasks.length
@@ -44,22 +45,28 @@ function ReminderDetailScreen() {
 
     const onTaskToggle = async (taskId: string) => {
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+
         const result = await toggleTask(reminder.id, taskId);
-        if (!result) {
-            return;
-        }
+        if (!result || !reminder) return;
+
+        // Calculate new tasks before setting state
+        const updatedTasks = reminder.tasks.map(t =>
+            t.id === result.taskId
+                ? {...t, completed: result.completed}
+                : t
+        );
+
+        const allComplete = updatedTasks.every(t => t.completed);
 
         setReminder(prev => {
             if (!prev) return prev;
-            return {
-                ...prev,
-                tasks: prev.tasks.map(t =>
-                    t.id === result.taskId
-                        ? {...t, completed: result.completed}
-                        : t
-                ),
-            };
+            return {...prev, tasks: updatedTasks};
         });
+
+        if (allComplete) {
+            setDeleteContext('complete');
+            setDeleteVisible(true);
+        }
     };
 
     const onPriorityToggle = async (priority: boolean) => {
@@ -83,6 +90,11 @@ function ReminderDetailScreen() {
         router.dismissAll();
         router.replace('/reminders');
     }
+
+    const handleDeletePress = () => {
+        setDeleteContext('delete');
+        setDeleteVisible(true);
+    };
 
     return (
         <View style={sharedStyles.container}>
@@ -136,19 +148,24 @@ function ReminderDetailScreen() {
                     </View>
                     <View style={{justifyContent: 'flex-end'}}>
                         <SharedButton icon={<TrashIcon size={16} color={'#FFF'} weight={'bold'}/>}
-                                      label={'Delete'} onPress={() => setDeleteVisible(true)}/>
-
-                        <ConfirmDialog
-                            visible={deleteVisible}
-                            title="Delete reminder?"
-                            message="This cannot be undone"
-                            confirmLabel="Delete"
-                            onCancel={() => setDeleteVisible(false)}
-                            onConfirm={onDelete}
-                        />
+                                      label={'Delete'} onPress={handleDeletePress}/>
                     </View>
                 </View>
             </ScrollView>
+            <ConfirmDialog
+                visible={deleteVisible}
+                title={deleteContext === 'complete'
+                    ? 'All tasks complete!'
+                    : 'Delete reminder'
+                }
+                message={deleteContext === 'complete'
+                    ? 'Do you want to delete this reminder?'
+                    : 'This cannot be undone.'
+                }
+                confirmLabel="Delete"
+                onCancel={() => setDeleteVisible(false)}
+                onConfirm={onDelete}
+            />
         </View>
     );
 }

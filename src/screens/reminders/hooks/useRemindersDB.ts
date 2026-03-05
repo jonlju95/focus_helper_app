@@ -3,7 +3,7 @@ import {Reminder} from '@/types/reminder';
 import {reminder_types, reminders, tasks} from '@/db/schema';
 import {useMigrations} from "drizzle-orm/expo-sqlite/migrator";
 import migrations from "../../../../drizzle/migrations";
-import {eq} from "drizzle-orm";
+import {and, count, eq, gt, lte} from "drizzle-orm";
 import {db} from "@/db/database";
 
 const mapReminder = (r: typeof reminders.$inferSelect & {
@@ -139,6 +139,23 @@ export function useRemindersDB() {
         return result.map(mapReminder);
     }
 
+    const getFutureReminders = async (date: Date) => {
+        const dateStr = date.toISOString().split('T')[0];
+        const monthEnd = new Date(date.getFullYear(), date.getMonth() + 1, 0)
+            .toISOString().split('T')[0];
+
+        const result = await db.select({count: count()})
+            .from(reminders)
+            .where(
+                and(
+                    gt(reminders.date, dateStr),
+                    lte(reminders.date, monthEnd)
+                )
+            );
+
+        return result[0].count;
+    };
+
     return {
         loading,
         error,
@@ -150,5 +167,6 @@ export function useRemindersDB() {
         toggleTask,
         togglePriority,
         getTopThreeReminders,
+        getFutureReminders
     };
 }

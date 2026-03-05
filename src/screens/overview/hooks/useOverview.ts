@@ -4,16 +4,21 @@ import {useExpensesDB} from '@/screens/expenses/hooks/useExpensesDB';
 import {useBudgetSettings} from '@/hooks/useBudgetSettings';
 import {useRemindersDB} from '@/screens/reminders/hooks/useRemindersDB';
 import {Reminder} from '@/types/reminder';
+import {useActivitiesDB} from "@/screens/activities/hooks/useActivitiesDB";
 
 export const useOverview = () => {
+    const {getTopThreeReminders, getFutureReminders} = useRemindersDB();
+    const {getFutureActivities} = useActivitiesDB();
     const {getRemainingBudget} = useExpensesDB();
     const {getBudgetSettings} = useBudgetSettings();
-    const {getTopThreeReminders} = useRemindersDB();
 
     const [monthlyIncome, setMonthlyIncome] = useState(0);
     const [fixedExpenses, setFixedExpenses] = useState(0);
     const [totalSpent, setTotalSpent] = useState(0);
     const [reminders, setReminders] = useState<Reminder[]>([]);
+
+    const [futureReminders, setFutureReminders] = useState<number>(0);
+    const [futureActivities, setFutureActivities] = useState<number>(0);
 
     useFocusEffect(
         useCallback(() => {
@@ -23,6 +28,12 @@ export const useOverview = () => {
                 setFixedExpenses(r.fixed_expenses);
             });
             getTopThreeReminders().then(setReminders);
+            getFutureReminders(new Date()).then(count => {
+                setFutureReminders(count);
+            })
+            getFutureActivities(new Date()).then(count => {
+                setFutureActivities(count);
+            })
         }, [])
     );
 
@@ -57,5 +68,7 @@ export const useOverview = () => {
         reminders,
         heroReminder,
         heroLabel,
+        futureReminders,
+        futureActivities,
     };
 };
