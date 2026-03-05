@@ -127,6 +127,18 @@ export function useRemindersDB() {
         return {reminderId, prioritized};
     }
 
+    const getTopThreeReminders = async () => {
+        const result = await db.query.reminders.findMany({
+            with: {tasks: true, type: true},
+            orderBy: (reminders, {asc}) => [
+                asc(reminders.date),
+                asc(reminders.time)
+            ],
+            limit: 3,
+        });
+        return result.map(mapReminder);
+    }
+
     return {
         loading,
         error,
@@ -136,6 +148,7 @@ export function useRemindersDB() {
         updateReminder,
         deleteReminder,
         toggleTask,
-        togglePriority
+        togglePriority,
+        getTopThreeReminders,
     };
 }

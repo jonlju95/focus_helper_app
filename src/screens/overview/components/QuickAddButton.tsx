@@ -9,16 +9,18 @@ interface ButtonProps {
     icon: ReactNode,
     iconBg: string,
     label: string,
+    onPress: () => void,
 }
 
-function QuickAddButton({icon, iconBg, label}: ButtonProps) {
+function QuickAddButton({icon, iconBg, label, onPress}: ButtonProps) {
     return (
         <Pressable
             style={({pressed}) => [
                 sharedStyles.border,
                 styles.btnBody,
                 pressed && styles.btnBodyPressed
-            ]}>
+            ]}
+            onPress={onPress}>
             <View style={[styles.iconWrapper, {backgroundColor: iconBg}]}>
                 {icon}
             </View>

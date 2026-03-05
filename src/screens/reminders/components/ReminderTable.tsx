@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
 
     tableRow: {
         justifyContent: 'space-between',
-        paddingHorizontal: spacing[4],
+        paddingHorizontal: spacing[3],
         paddingVertical: spacing[3],
         borderBottomWidth: 1,
         borderBottomColor: '#f5f0ea',

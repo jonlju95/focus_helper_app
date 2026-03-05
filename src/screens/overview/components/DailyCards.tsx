@@ -1,24 +1,24 @@
-import React, {ReactNode} from 'react';
-import {StyleSheet, Text, View} from "react-native";
-import {ClockIcon} from "phosphor-react-native";
+import {Pressable, StyleSheet, Text, View} from "react-native";
+import {BellIcon, ClockIcon} from "phosphor-react-native";
 import colors from "@/constants/colors";
 import spacing from "@/constants/spacing";
 import typography from "@/constants/typography";
 import {sharedStyles} from "@/constants/sharedStyles";
 
 interface CardProps {
-    icon: ReactNode,
+    iconColor: string,
     iconBg: string,
     title: string,
     time: string,
     urgent?: boolean,
+    onPress?: () => void,
 }
 
-function DailyCards({icon, iconBg, title, time, urgent}: CardProps) {
+function DailyCards({iconColor, iconBg, title, time, urgent, onPress}: CardProps) {
     return (
-        <View style={[sharedStyles.card, sharedStyles.row, {gap: spacing[3]}]}>
+        <Pressable style={[sharedStyles.card, sharedStyles.row, {gap: spacing[3]}]} onPress={onPress}>
             <View style={[styles.cardIcon, {backgroundColor: iconBg}]}>
-                {icon}
+                <BellIcon color={iconColor} size={18} weight={'fill'}/>
             </View>
             <View style={styles.cardLabel}>
                 <Text style={[typography.styles.cardTitle, {fontSize: 14}]}>{title}</Text>
@@ -36,7 +36,7 @@ function DailyCards({icon, iconBg, title, time, urgent}: CardProps) {
                     <Text style={[typography.styles.label, styles.cardTagLabel]}>Today</Text>
                 </View>
             )}
-        </View>
+        </Pressable>
     )
 }
 

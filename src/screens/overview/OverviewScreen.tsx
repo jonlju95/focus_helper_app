@@ -6,13 +6,9 @@ import spacing from "@/constants/spacing";
 import {sharedStyles} from "@/constants/sharedStyles";
 import {
     ArrowRightIcon,
-    BasketIcon,
     BellIcon,
     CalendarBlankIcon,
-    LightningIcon,
     ListChecksIcon,
-    PhoneIcon,
-    PillIcon,
     ShoppingCartIcon,
     WarningIcon
 } from "phosphor-react-native";
@@ -23,8 +19,21 @@ import StatCard from "@/components/ui/StatCard";
 import QuickAddButton from "@/screens/overview/components/QuickAddButton";
 import React from "react";
 import DailyCards from "@/screens/overview/components/DailyCards";
+import {useOverview} from "@/screens/overview/hooks/useOverview";
+import {formatCurrency} from "@/utils/formatNumber";
+import {RelativePathString, router} from "expo-router";
 
 export default function OverviewScreen() {
+    const {
+        totalSpent, remainingBudget, budgetProgress,
+        reminders, heroReminder, heroLabel,
+    } = useOverview();
+
+    const onQuickAddPress = (route: string) => {
+        const url: RelativePathString = `/${route}/new` as RelativePathString;
+        router.push(url);
+    }
+
     return (
         <View style={sharedStyles.container}>
             <TopBar title={'Good morning, Wednesday'} date={'Feb 24, 2026'} showDate={true}/>
@@ -45,42 +54,40 @@ export default function OverviewScreen() {
                     value: '2',
                 }}/>
 
-                {/* Hero card section */}
-                <View style={sharedStyles.section}>
-                    {/* Label */}
-                    <SectionLabel icon={<LightningIcon size={13} color={colors.textMuted} weight="fill"/>
-                    } label={'Most urgent today'}/>
-
-                    {/* Card */}
+                {/* Hero card */}
+                {heroReminder ? (
                     <LinearGradient
                         colors={[colors.primary, colors.primaryDark]}
                         start={{x: 0.2, y: 1}}
                         end={{x: 0.8, y: 0}}
-                        style={sharedStyles.card}>
+                        style={sharedStyles.card}
+                    >
                         <View style={styles.heroCardCircle}/>
-
-                        {/*/!* Type badge *!/*/}
                         <View style={[sharedStyles.row, styles.heroCardLabel]}>
                             <WarningIcon size={13} color="rgba(255,255,255,0.7)" weight="fill"/>
                             <Text style={[typography.styles.sectionLabel, {color: 'rgba(255,255,255,0.7)'}]}>
-                                Invoice due soon</Text>
+                                {heroLabel}
+                            </Text>
                         </View>
-
-                        {/*/!* Title *!/*/}
-                        <Text style={[typography.styles.pageTitle, {color: 'white', marginBottom: spacing[1]}]}>Electricity
-                            bill</Text>
-
-                        {/*/!* Subtitle *!/*/}
-                        <Text style={[typography.styles.metaText, styles.heroCardMeta]}>Due in 2 days · 1 340 kr</Text>
-
-                        {/*/!* Action button *!/*/}
+                        <Text style={[typography.styles.pageTitle, {color: 'white', marginBottom: spacing[1]}]}>
+                            {heroReminder.title}
+                        </Text>
+                        <Text style={[typography.styles.metaText, styles.heroCardMeta]}>
+                            {heroReminder.date}{heroReminder.time ? ` · ${heroReminder.time}` : ''}
+                        </Text>
                         <Pressable
-                            style={({pressed}) => [sharedStyles.row, styles.heroCardBtn, pressed && styles.pressed]}>
-                            <Text style={typography.styles.btnText}>Mark as paid</Text>
+                            style={({pressed}) => [sharedStyles.row, styles.heroCardBtn, pressed && styles.pressed]}
+                            onPress={() => router.push({pathname: '/reminders/[id]', params: {id: heroReminder.id}})}
+                        >
+                            <Text style={typography.styles.btnText}>View reminder</Text>
                             <ArrowRightIcon size={14} color={colors.bgCard} weight="bold"/>
                         </Pressable>
                     </LinearGradient>
-                </View>
+                ) : (
+                    <View style={[sharedStyles.card, {alignItems: 'center', padding: spacing[5]}]}>
+                        <Text style={typography.styles.cardTitle}>All clear for today 🎉</Text>
+                    </View>
+                )}
 
                 {/* Budget card section */}
                 <View style={sharedStyles.section}>
@@ -93,16 +100,16 @@ export default function OverviewScreen() {
                             variant="dark"
                             icon={<ShoppingCartIcon size={13} color="rgba(255,255,255,0.5)" weight="fill"/>}
                             label="Spent this month"
-                            amount="8 830"
+                            amount={formatCurrency(totalSpent)}
                             currency="kr"
                         />
                         <StatCard
                             variant="light"
                             icon={<ListChecksIcon size={13} color={colors.textMuted} weight="bold"/>}
                             label="Budget remaining"
-                            amount="5 436"
+                            amount={formatCurrency(remainingBudget)}
                             currency="kr"
-                            progress={0.62}
+                            progress={budgetProgress}
                         />
                     </View>
                 </View>
@@ -116,16 +123,19 @@ export default function OverviewScreen() {
                                 icon={<BellIcon size={20} color={colors.primary} weight={'fill'}/>}
                                 iconBg={colors.primaryLight}
                                 label={'Reminder'}
+                                onPress={() => onQuickAddPress('reminders')}
                             />
                             <QuickAddButton
                                 icon={<CalendarBlankIcon size={20} color={colors.info} weight={'fill'}/>}
                                 iconBg={colors.infoLight}
                                 label={'Activity'}
+                                onPress={() => onQuickAddPress('activities')}
                             />
                             <QuickAddButton
                                 icon={<ShoppingCartIcon size={20} color={colors.success} weight={'fill'}/>}
                                 iconBg={colors.successLight}
                                 label={'Expense'}
+                                onPress={() => onQuickAddPress('expenses')}
                             />
                         </View>
                     </View>
@@ -137,21 +147,25 @@ export default function OverviewScreen() {
                     {/* Badge */}
                     <SectionLabel icon={<BellIcon size={16} color={colors.textMuted} weight="fill"/>}
                                   label={'Reminders today'}
-                                  right={<>
+                                  right={<Pressable onPress={() => router.push({
+                                      pathname: '/reminders',
+                                  })} style={[sharedStyles.row, {gap: spacing[1]}]} hitSlop={8}>
                                       <Text style={typography.styles.label}>See all</Text>
                                       <ArrowRightIcon size={12} color={colors.primary} weight="bold"/>
-                                  </>}/>
+                                  </Pressable>}/>
 
                     <View style={{gap: spacing[3]}}>
-                        <DailyCards icon={<PillIcon size={18} color={colors.primary} weight={"fill"}/>}
-                                    iconBg={colors.primaryLight}
-                                    title={'Take medication'} time={'8:00 AM'} urgent={true}/>
-                        <DailyCards icon={<PhoneIcon size={18} color={colors.info} weight={"fill"}/>}
-                                    iconBg={colors.infoLight}
-                                    title={'Call the dentist'} time={'10:30 AM'}/>
-                        <DailyCards icon={<BasketIcon size={18} color={colors.success} weight={"fill"}/>}
-                                    iconBg={colors.successLight}
-                                    title={'Grocery run'} time={'3:00 PM'}/>
+                        {reminders.map((reminder, index) => (
+                            <DailyCards key={reminder.id}
+                                        iconColor={reminder.prioritized ? colors.primary : colors.info}
+                                        iconBg={reminder.prioritized ? colors.primaryLight : colors.infoLight}
+                                        title={reminder.title} time={reminder.time ?? ''}
+                                        urgent={index === 0}
+                                        onPress={() => router.push({
+                                            pathname: '/reminders/[id]',
+                                            params: {id: reminder.id},
+                                        })}/>
+                        ))}
                     </View>
                 </View>
             </ScrollView>

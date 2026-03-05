@@ -133,7 +133,7 @@ export function useExpensesDB() {
         addExpense,
         updateExpense,
         deleteExpense,
-        getMonthlySpending: getMonthlySpending,
+        getMonthlySpending,
         getRemainingBudget
     }
 }
