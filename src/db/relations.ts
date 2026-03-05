@@ -1,5 +1,5 @@
 import {relations} from 'drizzle-orm';
-import {activities, categories, reminder_types, reminders, tasks} from './schema';
+import {activities, categories, expenses, reminder_types, reminders, tasks} from './schema';
 
 export const remindersRelations = relations(reminders, ({one, many}) => ({
     // A reminder belongs to one type
@@ -26,3 +26,9 @@ export const activitiesRelations = relations(activities, ({one}) => ({
     })
 }));
 
+export const expensesRelations = relations(expenses, ({one}) => ({
+    category: one(categories, {
+        fields: [expenses.category_id],
+        references: [categories.id],
+    })
+}));

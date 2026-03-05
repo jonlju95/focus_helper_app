@@ -1,19 +1,31 @@
-import {ScrollView, StyleSheet, Text, View} from "react-native";
+import {Pressable, ScrollView, StyleSheet, Text, View} from "react-native";
 import TopBar from "@/components/ui/TopBar";
-import React from "react";
+import React, {useCallback, useState} from "react";
 import colors from "@/constants/colors";
 import spacing from "@/constants/spacing";
 import AlertStrip from "@/components/ui/AlertStrip";
-import {CalendarBlankIcon, CircleIcon, CoinsIcon, PlusIcon, ReceiptIcon, TrendDownIcon} from "phosphor-react-native";
+import {
+    CalendarBlankIcon,
+    CircleIcon,
+    CoinsIcon,
+    FunnelIcon,
+    PlusIcon,
+    ReceiptIcon,
+    TrendDownIcon
+} from "phosphor-react-native";
 import typography from "@/constants/typography";
 import StatCard from "@/components/ui/StatCard";
 import ProgressBar from "@/components/ui/ProgressBar";
-import ExpenseCard from "@/screens/expenses/components/ExpenseCard";
-import {MOCK_EXPENSES} from "@/screens/expenses/data/expenses";
-import {router} from "expo-router";
+import {router, useFocusEffect} from "expo-router";
 import SharedButton from "@/components/ui/SharedButton";
 import {sharedStyles} from "@/constants/sharedStyles";
 import SectionLabel from "@/components/ui/SectionLabel";
+import {useExpensesDB} from "@/screens/expenses/hooks/useExpensesDB";
+import {Expense} from "@/types/expense";
+import {getRangeStart} from "@/utils/dateTimeUtils";
+import ExpenseCard from "@/screens/expenses/components/ExpenseCard";
+import RangeFilterModal from "@/components/ui/modals/RangeFilterModal";
+import EmptyState from "@/components/ui/EmptyState";
 
 interface CategoryCardItemProps {
     color: string;
@@ -39,6 +51,42 @@ function CategoryCardItem({color, title, amount}: CategoryCardItemProps) {
 }
 
 function ExpensesListScreen() {
+    const {getExpenses} = useExpensesDB();
+
+    const [allExpenses, setAllExpenses] = useState<Expense[]>([]);
+    const [filterVisible, setFilterVisible] = useState(false);
+    const [filterRange, setFilterRange] = useState<'week' | 'month' | 'all'>('month');
+
+    const today = new Date().toISOString().split('T')[0];
+    const rangeStart = getRangeStart(filterRange);
+
+    useFocusEffect(
+        useCallback(() => {
+            getExpenses().then(setAllExpenses)
+        }, [])
+    )
+
+    const pastExpenses = allExpenses.filter(e =>
+        e.date < today &&
+        (rangeStart === null || e.date >= rangeStart)
+    );
+
+    const todayExpenses = allExpenses.filter(e => e.date === today);
+
+    const renderCard = (expense: Expense) => (
+        <ExpenseCard
+            key={expense.id}
+            title={expense.title}
+            date={expense.date}
+            amount={expense.amount}
+            category={expense.category}
+            onPress={() => router.push({
+                pathname: "/expenses/[id]",
+                params: {id: expense.id}
+            })}/>
+
+    )
+
     return (
         <View style={sharedStyles.container}>
             <TopBar title="Activities"/>
@@ -93,25 +141,46 @@ function ExpensesListScreen() {
                     </View>
                 </View>
 
-                {/*    Expense list */}
+                {/* Expense list */}
                 <View style={sharedStyles.section}>
                     {/* Label */}
-                    <SectionLabel icon={<CalendarBlankIcon size={13} color={colors.textMuted} weight="fill"/>}
-                                  label={'This month'}/>
-
-                    <View style={{gap: spacing[3]}}>
-                        {MOCK_EXPENSES.map(expense => (
-                            <ExpenseCard key={expense.id}
-                                         title={expense.title}
-                                         date={expense.date}
-                                         amount={expense.amount}
-                                         type={expense.type}
-                                         onPress={() => router.push({
-                                             pathname: "/expenses/[id]",
-                                             params: {id: expense.id}
-                                         })}/>
-                        ))}
+                    <View style={[sharedStyles.row, styles.sectionHeader]}>
+                        <SectionLabel icon={<CalendarBlankIcon size={13} color={colors.textMuted} weight="fill"/>}
+                                      label={'Past expenses'}/>
+                        <Pressable
+                            style={styles.filterButton}
+                            onPress={() => setFilterVisible(true)}
+                        >
+                            <FunnelIcon size={14} color={colors.textMuted} weight="fill"/>
+                            <Text style={styles.filterButtonText}>
+                                {filterRange === 'week' ? 'This week' :
+                                    filterRange === 'month' ? 'This month' : 'All'}
+                            </Text>
+                        </Pressable>
                     </View>
+
+
+                    {pastExpenses.length === 0
+                        ? <EmptyState message="No past expenses"/>
+                        : pastExpenses.map(renderCard)
+                    }
+                </View>
+
+                <RangeFilterModal
+                    visible={filterVisible}
+                    value={filterRange}
+                    onChange={setFilterRange}
+                    onClose={() => setFilterVisible(false)}
+                />
+
+                {/* Today */}
+                <View style={sharedStyles.section}>
+                    <SectionLabel icon={<CalendarBlankIcon size={13} color={colors.textMuted} weight="fill"/>}
+                                  label={'Today'}/>
+                    {todayExpenses.length === 0
+                        ? <EmptyState message="No expenses today"/>
+                        : todayExpenses.map(renderCard)
+                    }
                 </View>
 
                 {/* New expense button */}
@@ -144,6 +213,20 @@ const styles = StyleSheet.create({
         minWidth: 64,
         textAlign: 'right',
         fontSize: 13,
+    },
+
+    sectionHeader: {
+        justifyContent: 'space-between',
+    },
+    filterButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: spacing[1],
+    },
+    filterButtonText: {
+        fontSize: 12,
+        fontFamily: `${typography.fonts.heading}_600`,
+        color: colors.textMuted,
     },
 
 })

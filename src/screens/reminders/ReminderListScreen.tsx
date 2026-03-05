@@ -106,7 +106,7 @@ export default function ReminderListScreen() {
                     <View style={[sharedStyles.row, styles.sectionHeader]}>
                         <SectionLabel
                             icon={<ClockIcon size={13} color={colors.textMuted} weight="fill"/>}
-                            label="Past"
+                            label="Past reminders"
                         />
                         <Pressable
                             style={styles.filterButton}
@@ -137,7 +137,7 @@ export default function ReminderListScreen() {
                 <View style={styles.section}>
                     <SectionLabel
                         icon={<ClockIcon size={13} color={colors.textMuted} weight="fill"/>}
-                        label="Today"
+                        label="Reminders today"
                     />
                     {todayReminders.length === 0
                         ? <EmptyState message="Nothing due today"/>
@@ -149,7 +149,7 @@ export default function ReminderListScreen() {
                 <View style={styles.section}>
                     <SectionLabel
                         icon={<CalendarBlankIcon size={13} color={colors.textMuted} weight="fill"/>}
-                        label="Upcoming"
+                        label="Upcoming reminders"
                     />
                     {upcomingReminders.length === 0
                         ? <EmptyState message="Nothing upcoming"/>

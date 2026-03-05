@@ -7,18 +7,17 @@ import spacing from "@/constants/spacing";
 import typography from "@/constants/typography";
 import {sharedStyles} from "@/constants/sharedStyles";
 import SharedBadge from "@/components/ui/SharedBadge";
+import {Category} from "@/types/category";
 
 interface ExpenseCardProps {
     title: string;
     date: string;
-    amount: string;
-    type: ExpenseTypes;
+    amount: string | number;
+    category?: Category;
     onPress?: () => void;
 }
 
-function ExpenseCard({title, date, amount, type = 'groceries', onPress}: ExpenseCardProps) {
-    const typeColor = CATEGORY_COLORS[type];
-
+function ExpenseCard({title, date, amount, category, onPress}: ExpenseCardProps) {
     return (
         <Pressable style={({pressed}) => [
             sharedStyles.card,
@@ -27,15 +26,15 @@ function ExpenseCard({title, date, amount, type = 'groceries', onPress}: Expense
             {gap: spacing[3]}
         ]} onPress={onPress}>
 
-            <View style={[styles.cardIcon, {backgroundColor: typeColor.bg}]}>
-                <ShoppingCartIcon size={20} color={typeColor.icon} weight={'fill'}/>
+            <View style={[styles.cardIcon, {backgroundColor: category?.colorBg}]}>
+                <ShoppingCartIcon size={20} color={category?.colorText} weight={'fill'}/>
             </View>
             <View style={styles.cardBody}>
                 <Text style={typography.styles.cardTitle}>{title}</Text>
                 <View style={[sharedStyles.row, {gap: spacing[1]}]}>
                     <ClockIcon size={11} color={colors.textMuted} weight={'fill'}/>
                     <Text style={typography.styles.metaText}>{date}</Text>
-                    <SharedBadge title={type} color={typeColor.text} bgColor={typeColor.bg}/>
+                    <SharedBadge title={category?.name ?? ''} color={category?.colorText} bgColor={category?.colorBg}/>
                 </View>
             </View>
             <Text style={styles.cardAmount}>{amount} kr</Text>
