@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {StyleSheet, Text, TextInput, View} from "react-native";
+import {KeyboardType, StyleSheet, Text, TextInput, View} from "react-native";
 import colors from "@/constants/colors";
 import typography from "@/constants/typography";
 import {sharedStyles} from "@/constants/sharedStyles";
@@ -8,13 +8,14 @@ import spacing from "@/constants/spacing";
 interface InputProps {
     label?: string,
     showLabel?: boolean,
-    value: string | undefined,
+    value: string | number | undefined,
     onChangeText?: (value: string) => void,
     onSubmitEditing?: () => void,
     placeholder?: string,
     required?: boolean,
     multiline?: boolean,
     customStyle?: any,
+    keyboardType?: KeyboardType,
 }
 
 function SharedInput({
@@ -27,6 +28,7 @@ function SharedInput({
     required = false,
     multiline = false,
     customStyle,
+    keyboardType = "default",
 }: InputProps) {
     const [focused, setFocused] = useState(false);
 
@@ -40,7 +42,7 @@ function SharedInput({
                     <Text style={typography.styles.label}>*</Text>
                 )}
             </View>
-            <TextInput value={value} placeholder={placeholder}
+            <TextInput value={value as string} placeholder={placeholder}
                        onChangeText={onChangeText}
                        onFocus={() => setFocused(true)}
                        onBlur={() => setFocused(false)}
@@ -48,7 +50,8 @@ function SharedInput({
                        style={[typography.styles.inputText, sharedStyles.row, sharedStyles.border,
                            styles.inputField, focused && styles.inputFocused, customStyle]}
                        placeholderTextColor={'#C8C0B4'}
-                       multiline={multiline}/>
+                       multiline={multiline}
+                       keyboardType={keyboardType}/>
         </View>
     );
 }

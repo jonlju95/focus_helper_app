@@ -52,11 +52,21 @@ export function useExpensesDB() {
 
     }
 
+    const getMonthlySpending = async () => {
+
+    }
+
+    const getRemainingBudget = async () => {
+
+    }
+
     return {
         getExpenses,
         getExpense,
         addExpense,
         updateExpense,
         deleteExpense,
+        getMonthlySpending,
+        getRemainingBudget
     }
 }

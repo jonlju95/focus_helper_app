@@ -86,7 +86,8 @@ function ActivitiesFormScreen() {
                             <SharedInput label={'Description'} value={value}
                                          placeholder={'What do you need to remember about this activity?'}
                                          customStyle={{minHeight: 160}}
-                                         onChangeText={onChange}/>
+                                         onChangeText={onChange}
+                                         multiline={true}/>
                         )}/>
                     </View>
                 </View>

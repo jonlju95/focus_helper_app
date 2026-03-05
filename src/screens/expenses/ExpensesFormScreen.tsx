@@ -1,119 +1,108 @@
-import {StyleSheet, Text, View} from "react-native";
-import {router, useLocalSearchParams} from "expo-router";
-import {MOCK_EXPENSES} from "@/screens/expenses/data/expenses";
-import {Expense} from "@/types/expense";
-import React, {useState} from "react";
-import {CATEGORY_COLORS} from "@/types/categoryColors";
+import {StyleSheet, View} from "react-native";
+import {router} from "expo-router";
+import React, {useEffect, useState} from "react";
 import SharedOptionPicker, {Option} from "@/components/ui/sharedInputs/SharedOptionPicker";
 import TopBar from "@/components/ui/TopBar";
 import spacing from "@/constants/spacing";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import SharedInput from "@/components/ui/sharedInputs/SharedInput";
 import SharedDatePicker from "@/components/ui/sharedInputs/SharedDatePicker";
-import {capitalise} from "@/utils/formatLabel";
 import typography from "@/constants/typography";
 import SharedButton from "@/components/ui/SharedButton";
 import colors from "@/constants/colors";
-import {ExpenseTypes} from "@/types/expenseTypes";
+import {useExpenseForm} from "@/screens/expenses/hooks/useExpenseForm";
+import {useExpenseCategory} from "@/screens/expenses/hooks/useExpenseCategory";
+import {sharedStyles} from "@/constants/sharedStyles";
+import {Controller} from "react-hook-form";
 
 function ExpensesFormScreen() {
-    const {id} = useLocalSearchParams<{ id: string }>();
-    const {date} = useLocalSearchParams<{ date: string }>();
+    const {
+        control,
+        handleSubmit,
+        isDisabled,
+        isEditing,
+        onSubmit,
+    } = useExpenseForm();
 
-    const existing = id ? MOCK_EXPENSES.find(e => e.id === id) : undefined;
+    const {getExpenseCategories} = useExpenseCategory();
+    const [options, setOptions] = useState<Option[]>([]);
 
-    const [expense, setExpense] = useState<Expense>(existing ?? {
-        id: Date.now().toString(),
-        title: '',
-        date: new Date(date).toISOString() ?? new Date().toISOString(),
-        type: 'groceries',
-        amount: '0',
-        location: '',
-        description: '',
-    });
-
-    const typeColor = CATEGORY_COLORS[expense.type];
-
-    const isEditing = !!existing;
-
-    const options: Option[] = [
-        {label: 'Groceries', value: 'groceries'},
-        {label: 'Food&Drink', value: 'food&drink'},
-        {label: 'Transport', value: 'transport'},
-        {label: 'Health', value: 'health'},
-        {label: 'Subscriptions', value: 'subscriptions'},
-        {label: 'Home', value: 'home'},
-        {label: 'Other', value: 'other'},
-    ]
-
-    const changeSelectedOption = (optionValue: string) => {
-        const option = options.find(option => option.value === optionValue);
-        if (option) {
-            setSelectedOption(option);
-            setExpense(prev => ({...prev, type: option.value as ExpenseTypes}))
-        }
-    }
-
-    const changeSelectedDate = (date: Date) => {
-        setSelectedDate(date);
-        setExpense(prev => ({...prev, date: new Date(date).toISOString()}))
-    }
-
-    const updateField = <K extends keyof Expense>(key: K, value: Expense[K]) => {
-        setExpense(prev => ({...prev, [key]: value}));
-    };
-
-    const [selectedOption, setSelectedOption] = useState<Option>(options.filter(o => o.value === expense.type)[0]);
-    const [selectedDate, setSelectedDate] = useState<Date>(new Date(expense.date));
+    useEffect(() => {
+        getExpenseCategories().then(categories => {
+            let options: Option[] = [];
+            categories.forEach(category => {
+                options.push({
+                    label: category.name,
+                    value: category.id,
+                });
+            })
+            setOptions(options);
+        });
+    }, [])
 
     return (
-        <View style={styles.container}>
+        <View style={sharedStyles.container}>
             <TopBar title={isEditing ? 'Edit expense' : 'New expense'} showBack={true} onBack={() => router.back()}/>
 
             <KeyboardAwareScrollView
+                style={sharedStyles.scroll}
+                contentContainerStyle={sharedStyles.scrollContent}
                 showsVerticalScrollIndicator={false}
-                enableOnAndroid={true}
-                extraScrollHeight={0}
-            >
-                <View style={styles.wrapper}>
-                    <SharedInput label={'Title'} value={expense.title} required={true}
-                                 placeholder={'e.g. Morning routine'}
-                                 onChangeText={text => updateField('title', text)}/>
+                enableOnAndroid={true}>
+                <View style={[sharedStyles.card, {gap: spacing[3]}]}>
+                    <Controller control={control} name={'title'} rules={{required: 'Title is required '}}
+                                render={({field: {value, onChange}}) => (
+                                    <SharedInput label={'Title'} value={value} required={true}
+                                                 placeholder={'e.g. Morning routine'}
+                                                 onChangeText={onChange}/>
+                                )}/>
                     <View style={styles.secondRow}>
                         <View style={{flex: 1}}>
-                            <SharedDatePicker label={'Date'} value={selectedDate} onChange={changeSelectedDate}/>
+                            <Controller control={control} name={'date'} render={({field: {value, onChange}}) => (
+                                <SharedDatePicker label={'Date'} value={value} onChange={onChange}/>
+                            )}/>
                         </View>
                         <View style={{flex: 1}}>
-                            <SharedOptionPicker label={'Type'} options={options} value={selectedOption?.value}
-                                                onChange={changeSelectedOption}/>
+                            <Controller control={control} name={'amount'} rules={{
+                                required: 'Amount is required',
+                                validate: v => Number(v) > 0 || 'Amount must be greater than 0'
+                            }}
+                                        render={({field: {value, onChange}}) => (
+                                            <SharedInput label={'Amount (kr)'} value={value} required={true}
+                                                         placeholder={'0'}
+                                                         onChangeText={onChange}
+                                                         keyboardType={'numeric'}
+                                            />
+                                        )}/>
                         </View>
-                    </View>
-                    <View style={[styles.typeTag, {backgroundColor: typeColor.bg}]}>
-                        <Text style={[styles.typeTagText, {color: typeColor.text}]}>
-                            {capitalise(expense.type)}
-                        </Text>
                     </View>
                     <View style={styles.secondRow}>
                         <View style={{flex: 1}}>
-                            <SharedInput label={'Amount (kr)'} value={expense.amount.toString()} required={true}
-                                         placeholder={'0'}
-                                         onChangeText={text => updateField('amount', text)}/>
+                            <Controller control={control} name={'categoryId'} render={({field: {value, onChange}}) => (
+                                <SharedOptionPicker label={'Category'} options={options} value={value}
+                                                    onChange={onChange}/>
+                            )}/>
                         </View>
                         <View style={{flex: 1}}>
-                            <SharedInput label={'Location'} value={expense.location}
-                                         placeholder={'e.g. Store'}
-                                         onChangeText={text => updateField('location', text)}/>
+                            <Controller control={control} name={'location'} render={({field: {value, onChange}}) => (
+                                <SharedInput label={'Location'} value={value}
+                                             placeholder={'e.g. Store'}
+                                             onChangeText={onChange}/>
+                            )}/>
                         </View>
                     </View>
                     <View>
-                        <SharedInput label={'Description'} value={expense.description}
-                                     placeholder={'Any notes about this expense?'}
-                                     customStyle={{minHeight: 160}}
-                                     onChangeText={text => updateField('description', text)}/>
+                        <Controller control={control} name={'description'} render={({field: {value, onChange}}) => (
+                            <SharedInput label={'Description'} value={value}
+                                         placeholder={'Any notes about this expense?'}
+                                         customStyle={{minHeight: 160}}
+                                         multiline={true}
+                                         onChangeText={onChange}/>
+                        )}/>
                     </View>
                 </View>
-                <View style={styles.buttonContainer}>
-                    <SharedButton label={'Save'}/>
+                <View style={[sharedStyles.row, {justifyContent: 'flex-end'}]}>
+                    <SharedButton label={'Save'} onPress={handleSubmit(onSubmit)} disabled={isDisabled}/>
                 </View>
             </KeyboardAwareScrollView>
         </View>

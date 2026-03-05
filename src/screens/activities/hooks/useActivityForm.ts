@@ -2,7 +2,7 @@ import {router, useLocalSearchParams} from "expo-router";
 import {useActivitiesDB} from "@/screens/activities/hooks/useActivitiesDB";
 import {useEffect, useState} from "react";
 import {Activity} from "@/types/activity";
-import {useForm} from "react-hook-form";
+import {useForm, useWatch} from "react-hook-form";
 import {parseTime} from "@/utils/dateTimeUtils";
 import * as Crypto from 'expo-crypto';
 
@@ -32,6 +32,8 @@ export function useActivitiesForm() {
                 categoryId: '613ba763-81ae-4e96-bd6c-4fdc7d299e77' // Default to appointment
             }
         });
+
+    const titleValue = useWatch({control, name: 'title'});
 
     useEffect(() => {
         if (!id) return;
@@ -76,7 +78,9 @@ export function useActivitiesForm() {
         });
     }
 
-    const isDisabled = !!errors.title || isSubmitting;
+    const isDisabled =
+        !titleValue?.trim() ||
+        isSubmitting;
 
     return {
         control,

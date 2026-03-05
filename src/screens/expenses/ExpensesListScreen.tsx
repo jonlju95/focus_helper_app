@@ -89,7 +89,7 @@ function ExpensesListScreen() {
 
     return (
         <View style={sharedStyles.container}>
-            <TopBar title="Activities"/>
+            <TopBar title="Expenses"/>
             <ScrollView style={sharedStyles.scroll}
                         contentContainerStyle={sharedStyles.scrollContent}
                         showsVerticalScrollIndicator={false}>
