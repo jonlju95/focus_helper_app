@@ -24,8 +24,7 @@ function ExpensesDetailScreen() {
 
     return (
         <View style={styles.container}>
-            <TopBar title={expense.title} showBack={true} onBack={() => router.back()} onMenu={() => {
-            }}/>
+            <TopBar title={expense.title} showBack={true} onBack={() => router.back()}/>
 
             <ScrollView contentContainerStyle={styles.scrollContent}
                         showsVerticalScrollIndicator={false}>

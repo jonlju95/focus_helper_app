@@ -17,7 +17,6 @@ const mapActivity = (a: typeof activities.$inferSelect & {
 });
 
 export function useActivitiesDB() {
-
     const getActivities = async () => {
         const result = await db.query.activities.findMany({
             with: {
@@ -46,7 +45,7 @@ export function useActivitiesDB() {
     const getFutureActivities = async (date: Date) => {
         const dateStr = date.toISOString().split('T')[0];  // "2026-03-15"
 
-        const result = await db.select({ count: count() })
+        const result = await db.select({count: count()})
             .from(activities)
             .where(gt(activities.date, dateStr));
 
