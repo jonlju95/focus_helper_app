@@ -10,3 +10,11 @@ export interface Expense {
     categoryId?: string;
     category?: Category;
 }
+
+export type MonthlySpending = {
+    categoryId:   string;
+    categoryName: string;
+    colorBg:      string;
+    colorText:    string;
+    total:        number;
+};

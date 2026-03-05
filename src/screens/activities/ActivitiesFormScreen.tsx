@@ -5,7 +5,7 @@ import {router} from "expo-router";
 import spacing from "@/constants/spacing";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import {sharedStyles} from "@/constants/sharedStyles";
-import {useActivityCategory} from "@/screens/activities/hooks/useActivityCategory";
+import {useCategory} from "@/hooks/useCategory";
 import {useActivitiesForm} from "@/screens/activities/hooks/useActivityForm";
 import SharedOptionPicker, {Option} from "@/components/ui/sharedInputs/SharedOptionPicker";
 import {Controller} from "react-hook-form";
@@ -25,7 +25,7 @@ function ActivitiesFormScreen() {
         onSubmit
     } = useActivitiesForm();
 
-    const {getActivityCategories} = useActivityCategory();
+    const {getActivityCategories} = useCategory();
     const [options, setOptions] = useState<Option[]>([]);
 
     useEffect(() => {

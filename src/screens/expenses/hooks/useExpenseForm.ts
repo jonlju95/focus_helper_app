@@ -45,7 +45,7 @@ export function useExpenseForm() {
             reset({
                 title: e.title,
                 date: new Date(e.date),
-                amount: e.amount.toString(),
+                amount: (e.amount*-1).toString(),
                 location: e.location,
                 description: e.description,
                 categoryId: e.categoryId
@@ -58,7 +58,7 @@ export function useExpenseForm() {
             id: expense?.id ?? Crypto.randomUUID(),
             title: data.title,
             date: data.date.toLocaleDateString(),
-            amount: Number(data.amount),
+            amount: Number(data.amount)*-1,
             location: data.location,
             description: data.description,
             categoryId: data.categoryId
@@ -78,13 +78,18 @@ export function useExpenseForm() {
         });
     }
 
+    const normalizeAmount = (value: string): string => {
+        return value
+            .replace(',', '.')   // comma → period for parseFloat
+            .replace(/[^0-9.]/g, '');  // strip anything that's not digit or period
+    };
+
     const isDisabled =
         !titleValue?.trim() ||
         !amountValue?.trim() ||
-        Number(amountValue) === 0 ||
-        isNaN(Number(amountValue)) ||
+        parseFloat(amountValue.replace(',', '.')) <= 0 ||
+        isNaN(parseFloat(amountValue.replace(',', '.'))) ||
         isSubmitting;
-
 
     return {
         control,
@@ -92,6 +97,7 @@ export function useExpenseForm() {
         errors,
         isDisabled,
         isEditing: !!expense?.id,
-        onSubmit
+        onSubmit,
+        normalizeAmount
     }
 }

@@ -1,4 +1,4 @@
-import {Dimensions, Pressable, ScrollView, StyleSheet, Text, View} from "react-native";
+import {Pressable, ScrollView, StyleSheet, Text, View} from "react-native";
 import TopBar from "@/components/ui/TopBar";
 import {router, useLocalSearchParams} from "expo-router";
 import colors from "@/constants/colors";
@@ -14,8 +14,6 @@ import {useExpensesDB} from "@/screens/expenses/hooks/useExpensesDB";
 import ConfirmDialog from "@/components/ui/modals/ConfirmDialog";
 import {sharedStyles} from "@/constants/sharedStyles";
 import SharedBadge from "@/components/ui/SharedBadge";
-
-const FIELD_WIDTH = (Dimensions.get('window').width - 78) / 2;
 
 function ExpensesDetailScreen() {
     const {id} = useLocalSearchParams<{ id: string }>();
@@ -41,7 +39,7 @@ function ExpensesDetailScreen() {
         setDeleteVisible(false);
         await deleteExpense(expense.id);
         router.dismissAll();
-        router.replace('/activities');
+        router.replace('/expenses');
     }
 
     return (

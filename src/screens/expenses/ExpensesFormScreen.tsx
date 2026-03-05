@@ -11,7 +11,7 @@ import typography from "@/constants/typography";
 import SharedButton from "@/components/ui/SharedButton";
 import colors from "@/constants/colors";
 import {useExpenseForm} from "@/screens/expenses/hooks/useExpenseForm";
-import {useExpenseCategory} from "@/screens/expenses/hooks/useExpenseCategory";
+import {useCategory} from "@/hooks/useCategory";
 import {sharedStyles} from "@/constants/sharedStyles";
 import {Controller} from "react-hook-form";
 
@@ -22,9 +22,10 @@ function ExpensesFormScreen() {
         isDisabled,
         isEditing,
         onSubmit,
+        normalizeAmount
     } = useExpenseForm();
 
-    const {getExpenseCategories} = useExpenseCategory();
+    const {getExpenseCategories} = useCategory();
     const [options, setOptions] = useState<Option[]>([]);
 
     useEffect(() => {
@@ -65,13 +66,18 @@ function ExpensesFormScreen() {
                         <View style={{flex: 1}}>
                             <Controller control={control} name={'amount'} rules={{
                                 required: 'Amount is required',
-                                validate: v => Number(v) > 0 || 'Amount must be greater than 0'
+                                validate: v => {
+                                    const num = parseFloat(v.replace(',', '.'));
+                                    if (isNaN(num)) return 'Enter a valid amount';
+                                    if (num <= 0) return 'Amount must be greater than 0';
+                                    return true;
+                                }
                             }}
                                         render={({field: {value, onChange}}) => (
                                             <SharedInput label={'Amount (kr)'} value={value} required={true}
                                                          placeholder={'0'}
-                                                         onChangeText={onChange}
-                                                         keyboardType={'numeric'}
+                                                         onChangeText={text => onChange(normalizeAmount(text))}
+                                                         keyboardType={'decimal-pad'}
                                             />
                                         )}/>
                         </View>

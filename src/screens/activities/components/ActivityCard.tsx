@@ -1,15 +1,11 @@
 import {Pressable, StyleSheet, Text, View} from "react-native";
-import {ActivityTypes} from "@/types/activityTypes";
 import {ArrowRightIcon, CalendarBlankIcon, ClockIcon, StarIcon} from "phosphor-react-native";
 import colors from "@/constants/colors";
 import spacing from "@/constants/spacing";
 import typography from "@/constants/typography";
-import {ACTIVITY_COLORS} from "@/types/categoryColors";
 import {sharedStyles} from "@/constants/sharedStyles";
 import SharedBadge from "@/components/ui/SharedBadge";
 import {Category} from "@/types/category";
-import {useActivityCategory} from "@/screens/activities/hooks/useActivityCategory";
-import {useEffect, useState} from "react";
 
 interface ActivityCardProps {
     title: string;

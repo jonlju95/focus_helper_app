@@ -11,7 +11,7 @@ type Variant = 'dark' | 'light';
 interface CardData {
     icon: ReactNode;
     label: string;
-    amount: string;
+    amount: string | number;
     currency: string;
     progress?: number;
 }

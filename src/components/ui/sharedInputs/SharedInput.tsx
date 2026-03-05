@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {KeyboardType, StyleSheet, Text, TextInput, View} from "react-native";
+import {KeyboardTypeOptions, StyleSheet, Text, TextInput, View} from "react-native";
 import colors from "@/constants/colors";
 import typography from "@/constants/typography";
 import {sharedStyles} from "@/constants/sharedStyles";
@@ -15,7 +15,7 @@ interface InputProps {
     required?: boolean,
     multiline?: boolean,
     customStyle?: any,
-    keyboardType?: KeyboardType,
+    keyboardType?: KeyboardTypeOptions,
 }
 
 function SharedInput({
