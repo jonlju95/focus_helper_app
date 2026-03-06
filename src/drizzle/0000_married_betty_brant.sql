@@ -1,19 +1,22 @@
-CREATE TABLE IF NOT EXISTS `reminder_types`
+CREATE TABLE `greetings`
+(
+    `id`     text PRIMARY KEY NOT NULL,
+    `phrase` text             NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE `reminder_types`
 (
     `id`   text PRIMARY KEY NOT NULL,
     `name` text             NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS `categories`
+CREATE TABLE `user_settings`
 (
-    `id`          text PRIMARY KEY       NOT NULL,
-    `name`        text                   NOT NULL,
-    `color_bg`    text                   NOT NULL,
-    `color_text`  text                   NOT NULL,
-    `entity_type` text DEFAULT 'EXPENSE' NOT NULL
+    `key`   text PRIMARY KEY NOT NULL,
+    `value` text             NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS `activities`
+CREATE TABLE `activities`
 (
     `id`          text PRIMARY KEY NOT NULL,
     `title`       text             NOT NULL,
@@ -25,15 +28,17 @@ CREATE TABLE IF NOT EXISTS `activities`
     FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON UPDATE no action ON DELETE set null
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS `budget_settings`
+CREATE TABLE `categories`
 (
-    `id`             text PRIMARY KEY NOT NULL,
-    `monthly_income` real DEFAULT 0   NOT NULL,
-    `fixed_expenses` real DEFAULT 0   NOT NULL
+    `id`          text PRIMARY KEY          NOT NULL,
+    `name`        text                      NOT NULL,
+    `color_bg`    text                      NOT NULL,
+    `color_text`  text                      NOT NULL,
+    `entity_type` text    DEFAULT 'EXPENSE' NOT NULL,
+    `is_custom`   integer DEFAULT false     NOT NULL
 );
-
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS `expenses`
+CREATE TABLE `expenses`
 (
     `id`          text PRIMARY KEY  NOT NULL,
     `title`       text              NOT NULL,
@@ -46,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `expenses`
     FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON UPDATE no action ON DELETE set null
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS `reminders`
+CREATE TABLE `reminders`
 (
     `id`          text PRIMARY KEY      NOT NULL,
     `title`       text                  NOT NULL,
@@ -57,7 +62,7 @@ CREATE TABLE IF NOT EXISTS `reminders`
     FOREIGN KEY (`type_id`) REFERENCES `reminder_types` (`id`) ON UPDATE no action ON DELETE set null
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS `tasks`
+CREATE TABLE `tasks`
 (
     `id`          text PRIMARY KEY      NOT NULL,
     `label`       text                  NOT NULL,
@@ -66,3 +71,4 @@ CREATE TABLE IF NOT EXISTS `tasks`
     `reminder_id` text,
     FOREIGN KEY (`reminder_id`) REFERENCES `reminders` (`id`) ON UPDATE no action ON DELETE cascade
 );
+

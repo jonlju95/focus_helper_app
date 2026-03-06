@@ -4,6 +4,7 @@ import {ArrowRightIcon, InfoIcon} from "phosphor-react-native";
 import spacing from "@/constants/spacing";
 import colors from "@/constants/colors";
 import typography from "@/constants/typography";
+import {useSidebarAbout} from "@/screens/sidebar/hooks/useSidebarAbout";
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SIDEBAR_WIDTH = SCREEN_WIDTH * 0.85;
@@ -27,6 +28,8 @@ function AboutLink({title, subtitle, lastObject = false}: AboutProps) {
 }
 
 function SidebarAbout() {
+   const {username} = useSidebarAbout();
+
     return (
         <View style={styles.container}>
             <View style={styles.headerContent}>

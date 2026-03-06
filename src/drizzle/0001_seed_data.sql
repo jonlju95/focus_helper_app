@@ -17,3 +17,19 @@ INSERT OR IGNORE INTO `reminder_types` (id, name)
 VALUES ('22a9b3b6-ea54-4cd9-8497-69726fb07159', 'Reminders'),
        ('4924a4df-053c-40c7-bfb1-af9f866f9aa6', 'Shopping'),
        ('836c5c46-e46e-42e5-88bc-2c6bb605cb07', 'Notes');
+--> statement-breakpoint
+INSERT OR IGNORE INTO `greetings` (id, phrase)
+VALUES ('499ed04d-bd73-433b-98a1-aabfdd39a6c7', 'Good morning'),
+       ('9af125a1-5cbd-4bd8-94ea-a5df2d080fc6', 'Hey'),
+       ('89863fce-9760-4766-8581-5285b15b465e', 'Hello');
+--> statement-breakpoint
+INSERT OR IGNORE INTO `user_settings` (key, value)
+VALUES ('USER_NAME', 'User'),
+       ('USER_GREETING', '499ed04d-bd73-433b-98a1-aabfdd39a6c7'),
+       ('MONTHLY_INCOME', '0'),
+       ('FIXED_EXPENSES', '0'),
+       ('NOTIF_REMINDERS', 'true'),
+       ('NOTIF_UPCOMING', 'true'),
+       ('NOTIF_SOON_DUE', 'true'),
+       ('NOTIF_BUDGET', 'true'),
+       ('NOTIF_WEEKLY', 'true');

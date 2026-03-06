@@ -6,6 +6,7 @@ export const categories = sqliteTable('categories', {
     colorBg: text('color_bg').notNull(),
     colorText: text('color_text').notNull(),
     entityType: text('entity_type').notNull().default('EXPENSE'),
+    is_custom: integer({ mode: 'boolean' }).notNull().default(false),
 });
 
 export const reminder_types = sqliteTable('reminder_types', {
@@ -56,3 +57,13 @@ export const budget_settings = sqliteTable('budget_settings', {
     monthly_income: real('monthly_income').notNull().default(0),
     fixed_expenses: real('fixed_expenses').notNull().default(0),
 });
+
+export const greetings = sqliteTable('greetings', {
+    id: text('id').primaryKey(),
+    phrase: text('phrase').notNull(),
+})
+
+export const user_settings = sqliteTable('user_settings', {
+    key: text('key').primaryKey(),
+    value: text('value').notNull(),
+})

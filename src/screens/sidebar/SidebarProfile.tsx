@@ -6,19 +6,14 @@ import {CheckIcon, PenIcon, UserIcon} from "phosphor-react-native";
 import SharedInput from "@/components/ui/sharedInputs/SharedInput";
 import SharedOptionPicker, {Option} from "@/components/ui/sharedInputs/SharedOptionPicker";
 import SharedButton from "@/components/ui/SharedButton";
+import {useSidebarProfile} from "@/screens/sidebar/hooks/useSidebarProfile";
 
 interface SidebarProfileProps {
     onBack?: () => void
 }
 
-const options: Option[] = [
-    {label: "Good morning", value: "goodMorning"},
-    {label: "Hey", value: "hey"},
-    {label: "Hello", value: "hello"},
-    {label: "What's up", value: "whatsUp"}
-]
-
 function SidebarProfile({onBack}: SidebarProfileProps) {
+    const {username, greetings} = useSidebarProfile();
     const [greeting, setGreeting] = useState<string>('goodMorning');
 
     const changeGreeting = (value: string) => {
@@ -35,10 +30,10 @@ function SidebarProfile({onBack}: SidebarProfileProps) {
             </View>
             <View style={styles.settingsCard}>
                 <View style={[styles.settingsCardArea, {borderBottomWidth: 1, borderBottomColor: '#F5F0EA'}]}>
-                    <SharedInput value={'Sunday'} label={'Your name'}/>
+                    <SharedInput value={username} label={'Your name'}/>
                 </View>
                 <View style={styles.settingsCardArea}>
-                    <SharedOptionPicker options={options} value={greeting} label={'Greeting style'}
+                    <SharedOptionPicker options={greetings} value={'499ed04d-bd73-433b-98a1-aabfdd39a6c7'} label={'Greeting style'}
                                         onChange={changeGreeting}/>
                 </View>
             </View>

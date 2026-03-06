@@ -19,10 +19,11 @@ import {tabBarConfig} from '@/components/navigation/tabBarConfig';
 import colors from '@/constants/colors';
 import {SidebarProvider} from '@/context/SidebarContext';
 import Sidebar from '@/components/sidebar/Sidebar';
-import {db, migrations} from '@/db/database';
+import {db, expoDb, migrations} from '@/db/database';
 import {backupDatabase} from "@/utils/backupDatabase";
 import {setBackgroundColorAsync} from "expo-system-ui";
 import {migrate} from 'drizzle-orm/expo-sqlite/migrator';
+import {useDrizzleStudio} from "expo-drizzle-studio-plugin";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -48,14 +49,19 @@ export default function RootLayout() {
     const [migrationsReady, setMigrationsReady] = useState(false);
     const [migrationError, setMigrationError] = useState<Error | null>(null);
 
+    useDrizzleStudio(expoDb)
+
 // Run migrations once on mount only
     useEffect(() => {
         migrate(db, migrations)
             .then(() => {
+                expoDb.execSync('PRAGMA foreign_keys = ON;');
                 setMigrationsReady(true);
             })
             .catch((e) => {
-                console.error('Migration failed:', e);
+                console.error('Migration failed:', JSON.stringify(e));
+                console.error('Message:', e.message);
+                console.error('Cause:', e.cause);
                 setMigrationError(e);
             });
     }, []); // <-- empty deps, runs once
