@@ -2,5 +2,6 @@
 <project version="4">
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/drizzle/0000_common_squadron_sinister.sql" dialect="SQLite" />
+    <file url="file://$PROJECT_DIR$/drizzle/0001_seed_database.sql" dialect="SQLite" />
   </component>
 </project>

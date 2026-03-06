@@ -36,7 +36,7 @@ export default function OverviewScreen() {
 
     return (
         <View style={sharedStyles.container}>
-            <TopBar title={'Good morning, Wednesday'} date={'Feb 24, 2026'} showDate={true}/>
+            <TopBar title={'Good morning, Wednesday'} date={new Date().toLocaleDateString()} showDate={true}/>
             <ScrollView style={sharedStyles.scroll}
                         contentContainerStyle={sharedStyles.scrollContent}
                         showsVerticalScrollIndicator={false}>

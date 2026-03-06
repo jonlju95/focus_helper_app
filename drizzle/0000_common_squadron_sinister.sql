@@ -53,3 +53,4 @@ CREATE TABLE `tasks` (
 	`reminder_id` text,
 	FOREIGN KEY (`reminder_id`) REFERENCES `reminders`(`id`) ON UPDATE no action ON DELETE cascade
 );
+

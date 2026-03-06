@@ -8,6 +8,13 @@
       "when": 1772550253935,
       "tag": "0000_common_squadron_sinister",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1772550253936,
+      "tag": "0001_seed_database",
+      "breakpoints": true
     }
   ]
 }

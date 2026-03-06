@@ -14,7 +14,6 @@ import {NunitoSans_400Regular, NunitoSans_600SemiBold,} from '@expo-google-fonts
 import {DefaultTheme, ThemeProvider} from '@react-navigation/native';
 import {Text, View} from 'react-native';
 import {useMigrations} from 'drizzle-orm/expo-sqlite/migrator';
-import migrations from '../../../drizzle/migrations';
 
 import {TabBarIcon} from '@/components/navigation/TabBarIcon';
 import {tabBarConfig} from '@/components/navigation/tabBarConfig';
@@ -22,7 +21,9 @@ import colors from '@/constants/colors';
 import {SidebarProvider} from '@/context/SidebarContext';
 import Sidebar from '@/components/sidebar/Sidebar';
 import {useDrizzleStudio} from 'expo-drizzle-studio-plugin';
-import {db, expoDb} from '@/db/database';
+import {db, expoDb, migrations} from '@/db/database';
+import {backupDatabase} from "@/utils/backupDatabase";
+import {setBackgroundColorAsync} from "expo-system-ui";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -35,7 +36,6 @@ const AppTheme = {
     },
 };
 
-// ──────────────────────────────────────────────────────────
 export default function RootLayout() {
     const [fontsLoaded, fontError] = useFonts({
         Nunito_400: Nunito_400Regular,
@@ -53,10 +53,22 @@ export default function RootLayout() {
 
     // Hide splash only when both fonts and migrations are ready
     useEffect(() => {
+        if (error) {
+            console.error(error);
+        }
+
+        if (success) {
+            console.log(success);
+        }
+
         if ((fontsLoaded || fontError) && success) {
             SplashScreen.hideAsync();
+            setBackgroundColorAsync('#fff');
         }
-    }, [fontsLoaded, fontError, success]);
+        backupDatabase()
+            .then()
+            .catch(err => console.warn('Backup failed:', err));
+    }, [fontsLoaded, fontError, success, error]);
 
     // Block rendering until fonts and migrations are ready
     if (!fontsLoaded && !fontError) return null;

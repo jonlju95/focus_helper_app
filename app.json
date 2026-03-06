@@ -1,10 +1,15 @@
 {
   "expo": {
-    "name": "focus_helper_app",
+    "name": "Focus helper",
     "slug": "focus_helper_app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "backgroundColor": "#F5EFE6",
+      "resizeMode": "cover"
+    },
     "scheme": "focushelperapp",
     "userInterfaceStyle": "automatic",
     "ios": {
