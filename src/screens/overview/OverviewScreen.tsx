@@ -22,6 +22,7 @@ import DailyCards from "@/screens/overview/components/DailyCards";
 import {useOverview} from "@/screens/overview/hooks/useOverview";
 import {formatCurrency} from "@/utils/formatNumber";
 import {RelativePathString, router} from "expo-router";
+import EmptyState from "@/components/ui/EmptyState";
 
 export default function OverviewScreen() {
     const {
@@ -85,7 +86,7 @@ export default function OverviewScreen() {
                     </LinearGradient>
                 ) : (
                     <View style={[sharedStyles.card, {alignItems: 'center', padding: spacing[5]}]}>
-                        <Text style={typography.styles.cardTitle}>All clear for today 🎉</Text>
+                        <Text style={typography.styles.cardTitle}>All clear for today!</Text>
                     </View>
                 )}
 
@@ -155,17 +156,21 @@ export default function OverviewScreen() {
                                   </Pressable>}/>
 
                     <View style={{gap: spacing[3]}}>
-                        {reminders.map((reminder, index) => (
-                            <DailyCards key={reminder.id}
-                                        iconColor={reminder.prioritized ? colors.primary : colors.info}
-                                        iconBg={reminder.prioritized ? colors.primaryLight : colors.infoLight}
-                                        title={reminder.title} time={reminder.time ?? ''}
-                                        urgent={index === 0}
-                                        onPress={() => router.push({
-                                            pathname: '/reminders/[id]',
-                                            params: {id: reminder.id},
-                                        })}/>
-                        ))}
+                        {reminders.length === 0 ? (
+                            <EmptyState message="No reminders today"/>
+                        ) : (
+                            reminders.map((reminder, index) => (
+                                <DailyCards key={reminder.id}
+                                            iconColor={reminder.prioritized ? colors.primary : colors.info}
+                                            iconBg={reminder.prioritized ? colors.primaryLight : colors.infoLight}
+                                            title={reminder.title} time={reminder.time ?? ''}
+                                            urgent={index === 0}
+                                            onPress={() => router.push({
+                                                pathname: '/reminders/[id]',
+                                                params: {id: reminder.id},
+                                            })}/>
+                            )))
+                        }
                     </View>
                 </View>
             </ScrollView>

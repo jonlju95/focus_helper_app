@@ -1,8 +1,6 @@
 import {useState} from 'react';
 import {Reminder} from '@/types/reminder';
 import {reminder_types, reminders, tasks} from '@/db/schema';
-import {useMigrations} from "drizzle-orm/expo-sqlite/migrator";
-import migrations from "../../../../drizzle/migrations";
 import {and, count, eq, gt, lte} from "drizzle-orm";
 import {db} from "@/db/database";
 
@@ -26,7 +24,7 @@ const mapReminder = (r: typeof reminders.$inferSelect & {
 
 export function useRemindersDB() {
     const [loading] = useState(true);
-    const {error} = useMigrations(db, migrations);
+    // const {error} = useMigrations(db, migrations);
 
     const getReminders = async () => {
         const result = await db.query.reminders.findMany({
@@ -158,7 +156,6 @@ export function useRemindersDB() {
 
     return {
         loading,
-        error,
         getReminders,
         getReminder,
         addReminder,

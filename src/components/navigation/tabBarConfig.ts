@@ -17,7 +17,7 @@ export const tabBarConfig = {
         backgroundColor: '#ffffff',
         borderTopColor:  colors.border,
         borderTopWidth:  1,
-        height:          TAB_BAR_HEIGHT,
+        height:          TAB_BAR_HEIGHT+16,
         paddingTop:      12,
         paddingBottom: Platform.select({ ios: 24, android: 12 }),
 
