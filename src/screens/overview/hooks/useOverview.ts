@@ -1,12 +1,18 @@
 import {useCallback, useState} from 'react';
-import {useFocusEffect} from 'expo-router';
+import {RelativePathString, router, useFocusEffect} from 'expo-router';
 import {useExpenseDB} from '@/screens/expenses/hooks/useExpenseDB';
 import {useReminderDB} from '@/screens/reminders/hooks/useReminderDB';
 import {Reminder} from '@/screens/reminders/types/reminder';
 import {useActivityDB} from "@/screens/activities/hooks/useActivityDB";
 import {useSetting} from "@/hooks/useSetting";
+import {useUserSettings} from "@/context/UserSettingsContext";
+import {useSidebarDB} from "@/screens/sidebar/hooks/useSidebarDB";
 
 export const useOverview = () => {
+    const {username, greetingId} = useUserSettings();
+
+    const {getGreeting} = useSidebarDB();
+
     const {getTopThreeReminders, getFutureReminders} = useReminderDB();
     const {getFutureActivities} = useActivityDB();
     const {getRemainingBudget} = useExpenseDB();
@@ -15,12 +21,14 @@ export const useOverview = () => {
 
     const [totalSpent, setTotalSpent] = useState(0);
     const [reminders, setReminders] = useState<Reminder[]>([]);
+    const [greeting, setGreeting] = useState<string>('');
 
     const [futureReminders, setFutureReminders] = useState<number>(0);
     const [futureActivities, setFutureActivities] = useState<number>(0);
 
     useFocusEffect(
         useCallback(() => {
+
             getRemainingBudget().then(setTotalSpent);
             getTopThreeReminders().then(setReminders);
             getFutureReminders(new Date()).then(count => {
@@ -29,7 +37,12 @@ export const useOverview = () => {
             getFutureActivities(new Date()).then(count => {
                 setFutureActivities(count);
             })
-        }, [])
+
+            if (!greetingId) return;
+            getGreeting(greetingId).then(g => {
+                setGreeting(g?.phrase ?? '');
+            });
+        }, [getFutureActivities, getFutureReminders, getGreeting, getRemainingBudget, getTopThreeReminders, greetingId])
     );
 
     // Derived values — calculated here so screen doesn't need to
@@ -54,6 +67,10 @@ export const useOverview = () => {
                 heroReminder.date === today ? 'Due today' :
                     'Upcoming';
 
+    const onQuickAddPress = (route: string) => {
+        router.navigate(`/${route}/new?from=overview` as RelativePathString);
+    }
+
     return {
         monthlyIncome,
         fixedExpenses,
@@ -65,5 +82,8 @@ export const useOverview = () => {
         heroLabel,
         futureReminders,
         futureActivities,
+        username,
+        greeting,
+        onQuickAddPress,
     };
 };

@@ -1,9 +1,4 @@
 import {Pressable, ScrollView, StyleSheet, Text, View} from "react-native";
-import TopBar from "@/components/ui/TopBar";
-import AlertStrip from "@/components/ui/AlertStrip";
-import colors from "@/constants/colors";
-import spacing from "@/constants/spacing";
-import {sharedStyles} from "@/constants/sharedStyles";
 import {
     ArrowRightIcon,
     BellIcon,
@@ -12,41 +7,29 @@ import {
     ShoppingCartIcon,
     WarningIcon
 } from "phosphor-react-native";
-import typography from "@/constants/typography";
 import {LinearGradient} from "expo-linear-gradient";
+import {router} from "expo-router";
+
+import colors from "@/constants/colors";
+import spacing from "@/constants/spacing";
+import {sharedStyles} from "@/constants/sharedStyles";
+import typography from "@/constants/typography";
+import TopBar from "@/components/ui/TopBar";
+import AlertStrip from "@/components/ui/AlertStrip";
 import SectionLabel from "@/components/ui/SectionLabel";
 import StatCard from "@/components/ui/StatCard";
-import QuickAddButton from "@/screens/overview/components/QuickAddButton";
-import React, {useEffect, useState} from "react";
+import EmptyState from "@/components/ui/EmptyState";
 import DailyCards from "@/screens/overview/components/DailyCards";
 import {useOverview} from "@/screens/overview/hooks/useOverview";
+import QuickAddButton from "@/screens/overview/components/QuickAddButton";
 import {formatCurrency} from "@/utils/formatNumber";
-import {RelativePathString, router} from "expo-router";
-import EmptyState from "@/components/ui/EmptyState";
-import {useSidebarDB} from "@/screens/sidebar/hooks/useSidebarDB";
-import {useUserSettings} from "@/context/UserSettingsContext"
 
 export default function OverviewScreen() {
     const {
         totalSpent, remainingBudget, budgetProgress,
-        reminders, heroReminder, heroLabel, futureReminders, futureActivities
+        reminders, heroReminder, heroLabel, futureReminders, futureActivities,
+        username, greeting, onQuickAddPress
     } = useOverview();
-    const {username, greetingId} = useUserSettings();
-
-    const {getGreeting} = useSidebarDB();
-
-    const [greeting, setGreeting] = useState<string>('');
-
-    useEffect(() => {
-        if (!greetingId) return;
-        getGreeting(greetingId).then(g => {
-            setGreeting(g?.phrase ?? '');
-        });
-    }, [greetingId, getGreeting]);
-
-    const onQuickAddPress = (route: string) => {
-        router.navigate(`/${route}/new?from=overview` as RelativePathString);
-    }
 
     return (
         <View style={sharedStyles.container}>
@@ -158,7 +141,6 @@ export default function OverviewScreen() {
                 {/* Daily reminders */}
                 <View style={sharedStyles.section}>
 
-                    {/* Badge */}
                     <SectionLabel icon={<BellIcon size={16} color={colors.textMuted} weight="fill"/>}
                                   label={'Reminders today'}
                                   right={<Pressable onPress={() => router.push({
