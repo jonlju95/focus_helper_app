@@ -5,7 +5,7 @@ import colors from "@/constants/colors";
 import AlertStrip from "@/components/ui/AlertStrip";
 import ActivityCalendar from "@/screens/activities/components/ActivityCalendar";
 import {CalendarBlankIcon, PlusIcon} from "phosphor-react-native";
-import {router, useFocusEffect} from "expo-router";
+import {RelativePathString, router, useFocusEffect} from "expo-router";
 import ActivityCard from "@/screens/activities/components/ActivityCard";
 import SharedButton from "@/components/ui/SharedButton";
 import {formatSelectedDate} from "@/utils/dateTimeUtils";
@@ -92,7 +92,7 @@ function ActivitiesListScreen() {
                     <SharedButton icon={<PlusIcon size={12} color={'white'} weight={'bold'}/>}
                                   label={'Add new activity'} customStyle={{alignSelf: 'stretch'}}
                                   onPress={() => router.push({
-                                      pathname: `/activities/new`,
+                                      pathname: `/activities/new?from=activities` as RelativePathString,
                                       params: {date: selectedDay}
                                   })}/>
                 </View>

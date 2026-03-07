@@ -16,7 +16,7 @@ interface ReminderFormData {
 }
 
 export function useReminderForm() {
-    const {id} = useLocalSearchParams<{ id?: string }>();
+    const { id, from } = useLocalSearchParams<{ id?: string, from?: string }>();
     const {getReminder, addReminder, updateReminder} = useRemindersDB();
 
     const [reminder, setReminder] = useState<Reminder>();
@@ -82,12 +82,16 @@ export function useReminderForm() {
             await addReminder(reminderToSave);
         }
 
-        router.dismissAll();
-        router.push('/reminders');
-        router.replace({
-            pathname: '/reminders/[id]',
-            params: {id: reminderToSave.id}
-        });
+        if (from === 'overview') {
+            router.dismissAll();
+        } else {
+            router.dismissAll();
+            router.push('/reminders');
+            router.replace({
+                pathname: '/reminders/[id]',
+                params: {id: reminderToSave.id}
+            });
+        }
     };
 
     const isDisabled = !!errors.title || fields.length === 0 || isSubmitting;

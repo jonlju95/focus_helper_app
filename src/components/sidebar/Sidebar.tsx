@@ -16,13 +16,15 @@ import SidebarFooter from "@/components/sidebar/SidebarFooter";
 import spacing from "@/constants/spacing";
 import SidebarHeader from "@/components/sidebar/SidebarHeader";
 import {capitalise} from "@/utils/formatLabel";
+import {useUserSettings} from "@/context/UserSettingsContext"
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SIDEBAR_WIDTH = SCREEN_WIDTH * 0.85;
 
 export default function Sidebar() {
     const {isOpen, close} = useSidebar();
-    const { addCategory } = useSidebarCategories();
+    const {addCategory} = useSidebarCategories();
+    const {username, refetch} = useUserSettings();
 
     const [activePanel, setActivePanel] = useState<SidebarPanel>('menu');
 
@@ -74,7 +76,7 @@ export default function Sidebar() {
             case 'menu':
                 return <SidebarMenu onNavigate={setActivePanel}/>;
             case 'profile':
-                return <SidebarProfile onBack={() => setActivePanel('menu')}/>;
+                return <SidebarProfile onBack={() => setActivePanel('menu')} onSaved={refetch}/>;
             case 'budget':
                 return <SidebarBudget onBack={() => setActivePanel('menu')}/>;
             case 'notifications':
@@ -108,7 +110,7 @@ export default function Sidebar() {
                 styles.sidebar,
                 {transform: [{translateX}]}
             ]}>
-                <SidebarHeader isMenu={activePanel === 'menu'} title={capitalise(activePanel)}
+                <SidebarHeader isMenu={activePanel === 'menu'} username={username} title={capitalise(activePanel)}
                                onBack={() => setActivePanel('menu')}/>
                 <ScrollView
                     style={styles.scroll}

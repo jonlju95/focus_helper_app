@@ -72,19 +72,24 @@ function NotificationLink({color, bg, title, subtitle, active, lastObject = fals
 
 function SidebarNotifications() {
     return (
-        <View style={styles.container}>
-            <View style={styles.settingsCard}>
-                {notificationObjects.map((n, index) => (
-                    <NotificationLink key={index}
-                                      color={n.color}
-                                      bg={n.bg}
-                                      title={n.title}
-                                      subtitle={n.subtitle}
-                                      active={n.active}
-                    lastObject={index === notificationObjects.length - 1}/>
-                ))}
+        <>
+            <View style={styles.comingSoon}>
+                <Text style={[typography.styles.pageTitle, {color: colors.textMuted}]}>Coming soon</Text>
             </View>
-        </View>
+            <View style={styles.container}>
+                <View style={styles.settingsCard}>
+                    {notificationObjects.map((n, index) => (
+                        <NotificationLink key={index}
+                                          color={n.color}
+                                          bg={n.bg}
+                                          title={n.title}
+                                          subtitle={n.subtitle}
+                                          active={n.active}
+                                          lastObject={index === notificationObjects.length - 1}/>
+                    ))}
+                </View>
+            </View>
+        </>
     );
 }
 
@@ -126,6 +131,18 @@ const styles = StyleSheet.create({
         fontFamily: `${typography.fonts.heading}_600`,
         color: colors.textMuted
     },
+
+    comingSoon: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(255,255,255,0.85)',
+        zIndex: 999,
+        justifyContent: 'center',
+        alignItems: 'center',
+    }
 })
 
 export default SidebarNotifications;

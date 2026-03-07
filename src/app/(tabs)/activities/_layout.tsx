@@ -7,23 +7,23 @@ function ActivitiesLayout() {
             screenOptions={{
                 headerShown: false,
                 contentStyle: {backgroundColor: colors.bgApp},
-                animation: 'fade'
+                animation: 'fade_from_bottom'
             }}
         >
             <Stack.Screen name={"index"} options={{
                 headerShown: false,
                 contentStyle: {backgroundColor: colors.bgApp},
-                animation: 'fade',
+                animation: 'fade_from_bottom',
             }}/>
             <Stack.Screen name={"[id]"} options={{
                 headerShown: false,
                 contentStyle: {backgroundColor: colors.bgApp},
-                animation: 'fade',
+                animation: 'fade_from_bottom',
             }}/>
             <Stack.Screen name={"new"} options={{
                 headerShown: false,
                 contentStyle: {backgroundColor: colors.bgApp},
-                animation: 'fade',
+                animation: 'fade_from_bottom',
             }}/>
         </Stack>
     );

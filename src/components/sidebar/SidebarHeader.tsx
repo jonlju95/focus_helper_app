@@ -6,17 +6,16 @@ import colors from "@/constants/colors";
 import typography from "@/constants/typography";
 import {LinearGradient} from "expo-linear-gradient";
 import {useSidebar} from "@/context/SidebarContext";
-import {useSetting} from "@/hooks/useSetting";
 
 interface HeaderProps {
     isMenu?: boolean;
+    username: string;
     title: string;
     onBack?: () => void;
 }
 
-function SidebarHeader({isMenu, title, onBack}: HeaderProps) {
+function SidebarHeader({isMenu, username, title, onBack}: HeaderProps) {
     const {close} = useSidebar();
-    const {value: username} = useSetting('USER_NAME');
 
     if (isMenu) {
         return (

@@ -1,12 +1,12 @@
-import { db } from "@/db/database";
-import {useEffect, useState } from "react";
+import {db} from "@/db/database";
+import {useCallback, useEffect, useState} from "react";
 import {user_settings} from "@/db/schema";
 import {eq} from "drizzle-orm";
 
 export function useSetting(key: string, defaultValue: string = '') {
     const [value, setValue] = useState(defaultValue);
 
-    useEffect(() => {
+    const load = useCallback(() => {
         const result = db
             .select()
             .from(user_settings)
@@ -15,15 +15,19 @@ export function useSetting(key: string, defaultValue: string = '') {
         if (result) setValue(result.value);
     }, [key]);
 
-    const save = async (newValue: string) => {
+    useEffect(() => {
+        load();
+    }, [load]);
+
+    const save = useCallback(async (newValue: string) => {
         await db.insert(user_settings)
-            .values({ key, value: newValue })
+            .values({key, value: newValue})
             .onConflictDoUpdate({
                 target: user_settings.key,
-                set: { value: newValue }
+                set: {value: newValue}
             });
         setValue(newValue);
-    };
+    }, [key]);
 
-    return { value, setValue, save };
+    return {value, setValue, save, refetch: load};
 }

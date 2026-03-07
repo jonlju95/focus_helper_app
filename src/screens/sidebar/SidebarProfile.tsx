@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Pressable, StyleSheet, View} from "react-native";
 import spacing from "@/constants/spacing";
 import colors from "@/constants/colors";
@@ -8,19 +8,35 @@ import SharedOptionPicker from "@/components/ui/sharedInputs/SharedOptionPicker"
 import SharedButton from "@/components/ui/SharedButton";
 import {useSetting} from "@/hooks/useSetting";
 import {useSidebarProfile} from "@/screens/sidebar/hooks/useSidebarProfile";
+import {useUserSettings} from "@/context/UserSettingsContext"
 
 interface SidebarProfileProps {
     onBack?: () => void
+    onSaved?: () => void;
 }
 
-function SidebarProfile({onBack}: SidebarProfileProps) {
-    const {value: username, setValue: setUsername, save: saveUsername} = useSetting('USER_NAME');
-    const {value: greeting, setValue: setGreeting, save: saveGreeting} = useSetting('USER_GREETING');
+function SidebarProfile({onBack, onSaved}: SidebarProfileProps) {
+    const {username: savedUsername, greetingId: savedGreetingId} = useUserSettings();
+    const {save: saveUsername} = useSetting('USER_NAME');
+    const {save: saveGreeting} = useSetting('USER_GREETING');
     const {greetings} = useSidebarProfile();
+
+    const [username, setUsername] = useState(savedUsername);
+    const [greeting, setGreeting] = useState(savedGreetingId);
+
+    // Sync local state if context values load after mount
+    useEffect(() => {
+        setUsername(savedUsername);
+    }, [savedUsername]);
+
+    useEffect(() => {
+        setGreeting(savedGreetingId);
+    }, [savedGreetingId]);
 
     const handleSave = async () => {
         await saveUsername(username);
         await saveGreeting(greeting);
+        onSaved?.();
         onBack?.();
     };
 

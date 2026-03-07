@@ -162,7 +162,7 @@ export default function ReminderListScreen() {
                         icon={<PlusIcon size={12} color="white" weight="bold"/>}
                         label="Add new reminder"
                         customStyle={{alignSelf: 'stretch'}}
-                        onPress={() => router.push('/reminders/new')}
+                        onPress={() => router.navigate(`/reminders/new?from=reminders`)}
                     />
                 </View>
             </ScrollView>

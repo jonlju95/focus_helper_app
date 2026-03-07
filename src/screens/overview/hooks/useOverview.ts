@@ -1,19 +1,18 @@
 import {useCallback, useState} from 'react';
 import {useFocusEffect} from 'expo-router';
 import {useExpensesDB} from '@/screens/expenses/hooks/useExpensesDB';
-import {useBudgetSettings} from '@/hooks/useBudgetSettings';
 import {useRemindersDB} from '@/screens/reminders/hooks/useRemindersDB';
 import {Reminder} from '@/types/reminder';
 import {useActivitiesDB} from "@/screens/activities/hooks/useActivitiesDB";
+import {useSetting} from "@/hooks/useSetting";
 
 export const useOverview = () => {
     const {getTopThreeReminders, getFutureReminders} = useRemindersDB();
     const {getFutureActivities} = useActivitiesDB();
     const {getRemainingBudget} = useExpensesDB();
-    const {getBudgetSettings} = useBudgetSettings();
+    const {value: monthlyIncome} = useSetting('MONTHLY_INCOME');
+    const {value: fixedExpenses} = useSetting('FIXED_EXPENSES');
 
-    const [monthlyIncome, setMonthlyIncome] = useState(0);
-    const [fixedExpenses, setFixedExpenses] = useState(0);
     const [totalSpent, setTotalSpent] = useState(0);
     const [reminders, setReminders] = useState<Reminder[]>([]);
 
@@ -23,10 +22,6 @@ export const useOverview = () => {
     useFocusEffect(
         useCallback(() => {
             getRemainingBudget().then(setTotalSpent);
-            getBudgetSettings().then(r => {
-                setMonthlyIncome(r.monthly_income);
-                setFixedExpenses(r.fixed_expenses);
-            });
             getTopThreeReminders().then(setReminders);
             getFutureReminders(new Date()).then(count => {
                 setFutureReminders(count);
@@ -38,9 +33,9 @@ export const useOverview = () => {
     );
 
     // Derived values — calculated here so screen doesn't need to
-    const remainingBudget = monthlyIncome + fixedExpenses - totalSpent;
-    const budgetProgress = monthlyIncome > 0
-        ? remainingBudget / monthlyIncome
+    const remainingBudget = Number(monthlyIncome) + (Number(fixedExpenses) * -1) + totalSpent;
+    const budgetProgress = Number(monthlyIncome) > 0
+        ? 1 - (totalSpent * -1) / (Number(monthlyIncome) - Number(fixedExpenses))
         : 0;
 
     // Hero item — most urgent thing to show

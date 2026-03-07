@@ -17,27 +17,40 @@ import {LinearGradient} from "expo-linear-gradient";
 import SectionLabel from "@/components/ui/SectionLabel";
 import StatCard from "@/components/ui/StatCard";
 import QuickAddButton from "@/screens/overview/components/QuickAddButton";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import DailyCards from "@/screens/overview/components/DailyCards";
 import {useOverview} from "@/screens/overview/hooks/useOverview";
 import {formatCurrency} from "@/utils/formatNumber";
 import {RelativePathString, router} from "expo-router";
 import EmptyState from "@/components/ui/EmptyState";
+import {useSidebarDB} from "@/screens/sidebar/hooks/useSidebarDB";
+import {useUserSettings} from "@/context/UserSettingsContext"
 
 export default function OverviewScreen() {
     const {
         totalSpent, remainingBudget, budgetProgress,
         reminders, heroReminder, heroLabel, futureReminders, futureActivities
     } = useOverview();
+    const {username, greetingId} = useUserSettings();
+
+    const {getGreeting} = useSidebarDB();
+
+    const [greeting, setGreeting] = useState<string>('');
+
+    useEffect(() => {
+        if (!greetingId) return;
+        getGreeting(greetingId).then(g => {
+            setGreeting(g?.phrase ?? '');
+        });
+    }, [greetingId, getGreeting]);
 
     const onQuickAddPress = (route: string) => {
-        const url: RelativePathString = `/${route}/new` as RelativePathString;
-        router.push(url);
+        router.navigate(`/${route}/new?from=overview` as RelativePathString);
     }
 
     return (
         <View style={sharedStyles.container}>
-            <TopBar title={'Good morning, Wednesday'} date={new Date().toLocaleDateString()} showDate={true}/>
+            <TopBar title={greeting + ', ' + username} date={new Date().toLocaleDateString()} showDate={true}/>
             <ScrollView style={sharedStyles.scroll}
                         contentContainerStyle={sharedStyles.scrollContent}
                         showsVerticalScrollIndicator={false}>

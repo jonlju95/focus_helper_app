@@ -118,7 +118,7 @@ function ExpensesListScreen() {
                         amount={formatCurrency((Number(monthlyIncome)) - (Number(fixedExpenses)) + (totalSpent))}
                         currency="kr"
                         variant="light"
-                        progress={totalSpent === 0 ? 1 : totalSpent / (Number(monthlyIncome) - Number(fixedExpenses))}
+                        progress={Number(monthlyIncome) === 0 ? 0 : 1 - (totalSpent * -1) / (Number(monthlyIncome) - Number(fixedExpenses))}
                     />
                 </View>
 
@@ -188,7 +188,7 @@ function ExpensesListScreen() {
                         icon={<PlusIcon size={12} color="white" weight="bold"/>}
                         label="Add new expense"
                         customStyle={{alignSelf: 'stretch'}}
-                        onPress={() => router.push('/expenses/new')}
+                        onPress={() => router.navigate(`/expenses/new?from=expenses`)}
                     />
                 </View>
             </ScrollView>

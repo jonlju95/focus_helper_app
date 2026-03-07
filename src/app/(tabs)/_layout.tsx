@@ -24,6 +24,7 @@ import {backupDatabase} from "@/utils/backupDatabase";
 import {setBackgroundColorAsync} from "expo-system-ui";
 import {migrate} from 'drizzle-orm/expo-sqlite/migrator';
 import {useDrizzleStudio} from "expo-drizzle-studio-plugin";
+import {UserSettingsProvider} from "@/context/UserSettingsContext";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -48,7 +49,6 @@ export default function RootLayout() {
     });
     const [migrationsReady, setMigrationsReady] = useState(false);
     const [migrationError, setMigrationError] = useState<Error | null>(null);
-
     useDrizzleStudio(expoDb)
 
 // Run migrations once on mount only
@@ -87,49 +87,51 @@ export default function RootLayout() {
     }
 
     return (
-        <SidebarProvider>
-            <StatusBar style="dark" backgroundColor="transparent"/>
-            <ThemeProvider value={AppTheme}>
-                <Tabs screenOptions={tabBarConfig}>
-                    <Tabs.Screen
-                        name="index"
-                        options={{
-                            title: 'Overview',
-                            tabBarIcon: ({color, focused}) => (
-                                <TabBarIcon icon="house" color={color} focused={focused}/>
-                            ),
-                        }}
-                    />
-                    <Tabs.Screen
-                        name="reminders"
-                        options={{
-                            title: 'Reminders',
-                            tabBarIcon: ({color, focused}) => (
-                                <TabBarIcon icon="bell" color={color} focused={focused}/>
-                            ),
-                        }}
-                    />
-                    <Tabs.Screen
-                        name="activities"
-                        options={{
-                            title: 'Activities',
-                            tabBarIcon: ({color, focused}) => (
-                                <TabBarIcon icon="calendar" color={color} focused={focused}/>
-                            ),
-                        }}
-                    />
-                    <Tabs.Screen
-                        name="expenses"
-                        options={{
-                            title: 'Expenses',
-                            tabBarIcon: ({color, focused}) => (
-                                <TabBarIcon icon="cart" color={color} focused={focused}/>
-                            ),
-                        }}
-                    />
-                </Tabs>
-                <Sidebar/>
-            </ThemeProvider>
-        </SidebarProvider>
+        <UserSettingsProvider>
+            <SidebarProvider>
+                <StatusBar style="dark" backgroundColor="transparent"/>
+                <ThemeProvider value={AppTheme}>
+                    <Tabs screenOptions={tabBarConfig}>
+                        <Tabs.Screen
+                            name="index"
+                            options={{
+                                title: 'Overview',
+                                tabBarIcon: ({color, focused}) => (
+                                    <TabBarIcon icon="house" color={color} focused={focused}/>
+                                ),
+                            }}
+                        />
+                        <Tabs.Screen
+                            name="reminders"
+                            options={{
+                                title: 'Reminders',
+                                tabBarIcon: ({color, focused}) => (
+                                    <TabBarIcon icon="bell" color={color} focused={focused}/>
+                                ),
+                            }}
+                        />
+                        <Tabs.Screen
+                            name="activities"
+                            options={{
+                                title: 'Activities',
+                                tabBarIcon: ({color, focused}) => (
+                                    <TabBarIcon icon="calendar" color={color} focused={focused}/>
+                                ),
+                            }}
+                        />
+                        <Tabs.Screen
+                            name="expenses"
+                            options={{
+                                title: 'Expenses',
+                                tabBarIcon: ({color, focused}) => (
+                                    <TabBarIcon icon="cart" color={color} focused={focused}/>
+                                ),
+                            }}
+                        />
+                    </Tabs>
+                    <Sidebar/>
+                </ThemeProvider>
+            </SidebarProvider>
+        </UserSettingsProvider>
     );
 }

@@ -16,7 +16,7 @@ interface ActivityFormData {
 }
 
 export function useActivitiesForm() {
-    const {id} = useLocalSearchParams<{ id?: string }>();
+    const { id, from } = useLocalSearchParams<{ id?: string, from?: string }>();
     const {getActivity, addActivity, updateActivity} = useActivitiesDB();
 
     const [activity, setActivity] = useState<Activity>();
@@ -70,12 +70,16 @@ export function useActivitiesForm() {
             await addActivity(activityToSave);
         }
 
-        router.dismissAll();
-        router.push('/activities');
-        router.replace({
-            pathname: '/activities/[id]',
-            params: {id: activityToSave.id}
-        });
+        if (from === 'overview') {
+            router.dismissAll();
+        } else {
+            router.dismissAll();
+            router.push('/activities');
+            router.replace({
+                pathname: '/activities/[id]',
+                params: {id: activityToSave.id}
+            });
+        }
     }
 
     const isDisabled =

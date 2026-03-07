@@ -10,42 +10,47 @@ const SIDEBAR_WIDTH = SCREEN_WIDTH * 0.85;
 
 function SidebarExport() {
     return (
-        <View style={styles.container}>
-            <Text style={styles.header}>Export your data at any time. Your data is only stored locally on your
-                device.</Text>
-            <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: spacing[3]}}>
-                <Pressable style={styles.card}>
-                    <View style={[styles.iconContainer, {backgroundColor: colors.successLight}]}>
-                        <FileArrowDownIcon size={20} color={colors.success} weight={'bold'}/>
-                    </View>
-                    <View style={{ flex: 1 }}>
-                        <Text style={styles.cardTitle}>Export as CSV</Text>
-                        <Text style={styles.cardSubtitle}>All expenses, reminders & activities</Text>
-                    </View>
-                    <ArrowRightIcon size={15} color={'#C8C0B4'} weight={'bold'}/>
-                </Pressable>
-                <Pressable style={styles.card}>
-                    <View style={[styles.iconContainer, {backgroundColor: colors.primaryLight}]}>
-                        <FileArrowDownIcon size={20} color={colors.primary} weight={'bold'}/>
-                    </View>
-                    <View style={{ flex: 1 }}>
-                        <Text style={styles.cardTitle}>Export as PDF</Text>
-                        <Text style={styles.cardSubtitle}>Formatted monthly summary report</Text>
-                    </View>
-                    <ArrowRightIcon size={15} color={'#C8C0B4'} weight={'bold'}/>
-                </Pressable>
-                <Pressable style={styles.card}>
-                    <View style={[styles.iconContainer, {backgroundColor: colors.infoLight}]}>
-                        <FileArrowDownIcon size={20} color={colors.info} weight={'bold'}/>
-                    </View>
-                    <View style={{ flex: 1 }}>
-                        <Text style={styles.cardTitle}>Export as JSON</Text>
-                        <Text style={styles.cardSubtitle}>Full data backup for developers</Text>
-                    </View>
-                    <ArrowRightIcon size={15} color={'#C8C0B4'} weight={'bold'}/>
-                </Pressable>
+        <>
+            <View style={styles.comingSoon}>
+                <Text style={[typography.styles.pageTitle, {color: colors.textMuted}]}>Coming soon</Text>
             </View>
-        </View>
+            <View style={styles.container}>
+                <Text style={styles.header}>Export your data at any time. Your data is only stored locally on your
+                    device.</Text>
+                <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: spacing[3]}}>
+                    <Pressable style={styles.card}>
+                        <View style={[styles.iconContainer, {backgroundColor: colors.successLight}]}>
+                            <FileArrowDownIcon size={20} color={colors.success} weight={'bold'}/>
+                        </View>
+                        <View style={{ flex: 1 }}>
+                            <Text style={styles.cardTitle}>Export as CSV</Text>
+                            <Text style={styles.cardSubtitle}>All expenses, reminders & activities</Text>
+                        </View>
+                        <ArrowRightIcon size={15} color={'#C8C0B4'} weight={'bold'}/>
+                    </Pressable>
+                    <Pressable style={styles.card}>
+                        <View style={[styles.iconContainer, {backgroundColor: colors.primaryLight}]}>
+                            <FileArrowDownIcon size={20} color={colors.primary} weight={'bold'}/>
+                        </View>
+                        <View style={{ flex: 1 }}>
+                            <Text style={styles.cardTitle}>Export as PDF</Text>
+                            <Text style={styles.cardSubtitle}>Formatted monthly summary report</Text>
+                        </View>
+                        <ArrowRightIcon size={15} color={'#C8C0B4'} weight={'bold'}/>
+                    </Pressable>
+                    <Pressable style={styles.card}>
+                        <View style={[styles.iconContainer, {backgroundColor: colors.infoLight}]}>
+                            <FileArrowDownIcon size={20} color={colors.info} weight={'bold'}/>
+                        </View>
+                        <View style={{ flex: 1 }}>
+                            <Text style={styles.cardTitle}>Export as JSON</Text>
+                            <Text style={styles.cardSubtitle}>Full data backup for developers</Text>
+                        </View>
+                        <ArrowRightIcon size={15} color={'#C8C0B4'} weight={'bold'}/>
+                    </Pressable>
+                </View>
+            </View>
+        </>
     );
 }
 
@@ -89,6 +94,17 @@ const styles = StyleSheet.create({
         fontFamily: `${typography.fonts.heading}_600`,
         color: colors.textMuted,
     },
+    comingSoon: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(255,255,255,0.85)',
+        zIndex: 999,
+        justifyContent: 'center',
+        alignItems: 'center',
+    }
 })
 
 export default SidebarExport;

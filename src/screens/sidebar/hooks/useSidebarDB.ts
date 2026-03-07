@@ -10,8 +10,15 @@ export const useSidebarDB = () => {
         return db.query.greetings.findMany();
     }
 
+    const getGreeting = async (id: string) => {
+        return db.query.greetings.findFirst({
+            where: (greetings, {eq}) => eq(greetings.id, id)
+        })
+    }
+
     return {
         getUserSettings,
-        getGreetings
+        getGreetings,
+        getGreeting
     }
 }

@@ -15,7 +15,7 @@ interface ExpenseFormData {
 }
 
 export function useExpenseForm() {
-    const {id} = useLocalSearchParams<{ id?: string }>();
+    const {id, from} = useLocalSearchParams<{ id?: string, from?: string }>();
     const {getExpense, addExpense, updateExpense} = useExpensesDB();
 
     const [expense, setExpense] = useState<Expense>();
@@ -45,7 +45,7 @@ export function useExpenseForm() {
             reset({
                 title: e.title,
                 date: new Date(e.date),
-                amount: (e.amount*-1).toString(),
+                amount: (e.amount * -1).toString(),
                 location: e.location,
                 description: e.description,
                 categoryId: e.categoryId
@@ -58,7 +58,7 @@ export function useExpenseForm() {
             id: expense?.id ?? Crypto.randomUUID(),
             title: data.title,
             date: data.date.toLocaleDateString(),
-            amount: Number(data.amount)*-1,
+            amount: Number(data.amount) * -1,
             location: data.location,
             description: data.description,
             categoryId: data.categoryId
@@ -70,12 +70,16 @@ export function useExpenseForm() {
             await addExpense(expenseToSave);
         }
 
-        router.dismissAll();
-        router.push('/expenses');
-        router.replace({
-            pathname: '/expenses/[id]',
-            params: {id: expenseToSave.id}
-        });
+        if (from === 'overview') {
+            router.dismissAll();
+        } else {
+            router.dismissAll();
+            router.push('/expenses');
+            router.replace({
+                pathname: '/expenses/[id]',
+                params: {id: expenseToSave.id}
+            });
+        }
     }
 
     const normalizeAmount = (value: string): string => {

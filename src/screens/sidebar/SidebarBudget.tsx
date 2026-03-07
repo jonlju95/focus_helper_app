@@ -36,24 +36,31 @@ function SidebarBudget({onBack}: SidebarBudgetProps) {
             </View>
             <View style={styles.settingsCard}>
                 <View style={[styles.settingsCardArea, {borderBottomWidth: 1, borderBottomColor: '#F5F0EA'}]}>
-                    <SharedInput value={monthlyIncome} label={'Monthly income (kr)'} keyboardType={'decimal-pad'} onChangeText={setMonthlyIncome}
+                    <SharedInput value={monthlyIncome} label={'Monthly income (kr)'} keyboardType={'decimal-pad'}
+                                 onChangeText={setMonthlyIncome}
                                  customStyle={{fontSize: 18, fontFamily: `${typography.fonts.heading}_800`}}/>
                 </View>
                 <View style={[styles.settingsCardArea]}>
-                    <SharedInput value={fixedExpenses} label={'Fixed monthly expenses (kr)'} keyboardType={'decimal-pad'} onChangeText={setFixedExpenses}
+                    <SharedInput value={fixedExpenses} label={'Fixed monthly expenses (kr)'}
+                                 keyboardType={'decimal-pad'} onChangeText={setFixedExpenses}
                                  customStyle={{fontSize: 18, fontFamily: `${typography.fonts.heading}_800`}}/>
                     <Text style={styles.settingsCardAreaLabel}>Rent, subscriptions, insurance, etc.</Text>
                 </View>
             </View>
             <View style={styles.budgetCard}>
                 <Text style={styles.budgetCardLabel}>Available for spending</Text>
-                <Text style={styles.budgetCardHeader}>{formatCurrency(Number(monthlyIncome) - Number(fixedExpenses) + totalSpent)} kr</Text>
-                <ProgressBar progress={totalSpent === 0 ? 1 : totalSpent / (Number(monthlyIncome) - Number(fixedExpenses))} color={colors.primary}/>
-                <Text style={styles.budgetCardMeta}>{Math.round(totalSpent === 0 ? 0 : totalSpent / (Number(monthlyIncome) - Number(fixedExpenses))*100)}% spent this month</Text>
+                <Text
+                    style={styles.budgetCardHeader}>{formatCurrency(Number(monthlyIncome) - Number(fixedExpenses) + totalSpent)} kr</Text>
+                <ProgressBar
+                    progress={totalSpent === 0 ? 1 : 1 - (totalSpent * -1) / (Number(monthlyIncome) - Number(fixedExpenses))}
+                    color={colors.primary}/>
+                <Text
+                    style={styles.budgetCardMeta}>~{Math.round(totalSpent === 0 ? 0 : (totalSpent * -1) / (Number(monthlyIncome) - Number(fixedExpenses)) * 100)}%
+                    spent this month</Text>
             </View>
             <View style={styles.buttonContainer}>
                 <SharedButton icon={<CheckIcon size={12} color={'white'} weight={'bold'}/>} label={'Save changes'}
-                              customStyle={{alignSelf: 'stretch'}} onPress={handleSave} />
+                              customStyle={{alignSelf: 'stretch'}} onPress={handleSave}/>
             </View>
         </View>
     );

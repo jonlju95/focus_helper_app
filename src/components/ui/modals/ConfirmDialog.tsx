@@ -29,7 +29,7 @@ export default function ConfirmDialog({
                            onPress={e => e.stopPropagation()}>
                     <View>
                         <Text style={[typography.styles.cardTitle, styles.title]}>{title}</Text>
-                        {message && <Text style={typography.styles.bodyText}>{message}</Text>}
+                        {message && <Text style={[typography.styles.bodyText, {color: colors.textMuted}]}>{message}</Text>}
                     </View>
                     <View style={[sharedStyles.row, {justifyContent: 'space-between', gap: spacing[3]}]}>
                         <SharedButton label={cancelLabel} onPress={onCancel}

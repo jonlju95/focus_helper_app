@@ -7,26 +7,26 @@ function RemindersLayout() {
             screenOptions={{
                 headerShown: false,
                 contentStyle: {backgroundColor: colors.bgApp},
-                animation: 'fade',
+                animation: 'fade_from_bottom',
                 animationDuration: 300
             }}
         >
             <Stack.Screen name={"index"} options={{
                 headerShown: false,
                 contentStyle: {backgroundColor: colors.bgApp},
-                animation: 'fade',
+                animation: 'fade_from_bottom',
                 animationDuration: 300
             }}/>
             <Stack.Screen name={"[id]"} options={{
                 headerShown: false,
                 contentStyle: {backgroundColor: colors.bgApp},
-                animation: 'fade',
+                animation: 'fade_from_bottom',
                 animationDuration: 300
             }}/>
             <Stack.Screen name={"new"} options={{
                 headerShown: false,
                 contentStyle: {backgroundColor: colors.bgApp},
-                animation: 'fade',
+                animation: 'fade_from_bottom',
                 animationDuration: 300
             }}/>
         </Stack>
