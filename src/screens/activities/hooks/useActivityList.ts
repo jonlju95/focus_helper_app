@@ -1,11 +1,11 @@
-import {useActivitiesDB} from "@/screens/activities/hooks/useActivitiesDB";
+import {useActivityDB} from "@/screens/activities/hooks/useActivityDB";
 import {useCallback, useState} from "react";
 import {Activity} from "@/screens/activities/types/activity";
 import {useFocusEffect} from "expo-router";
 import {formatSelectedDate} from "@/utils/dateTimeUtils";
 
 export const useActivityList = () => {
-    const {getActivities, getFutureActivities} = useActivitiesDB();
+    const {getActivities, getFutureActivities} = useActivityDB();
 
     const [allActivities, setAllActivities] = useState<Activity[]>([]);
     const [selectedDay, setSelectedDay] = useState<string>(new Date().toISOString().split('T')[0])

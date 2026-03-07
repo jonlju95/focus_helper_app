@@ -1,46 +1,28 @@
 import {Pressable, ScrollView, StyleSheet, Text, View} from "react-native";
 import TopBar from "@/components/ui/TopBar";
-import {router, useLocalSearchParams} from "expo-router";
+import {router} from "expo-router";
 import colors from "@/constants/colors";
 import typography from "@/constants/typography";
 import SharedButton from "@/components/ui/SharedButton";
 import spacing from "@/constants/spacing";
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {ClockIcon, FileTextIcon, MapPinIcon, PenIcon, ReceiptIcon, TrashIcon} from "phosphor-react-native";
 import {capitalise} from "@/utils/formatLabel";
 import {LinearGradient} from "expo-linear-gradient";
-import {Expense} from "@/types/expense";
-import {useExpensesDB} from "@/screens/expenses/hooks/useExpensesDB";
 import ConfirmDialog from "@/components/ui/modals/ConfirmDialog";
 import {sharedStyles} from "@/constants/sharedStyles";
 import SharedBadge from "@/components/ui/SharedBadge";
+import {useExpenseDetail} from "@/screens/expenses/hooks/useExpenseDetail";
 
 function ExpensesDetailScreen() {
-    const {id} = useLocalSearchParams<{ id: string }>();
-    const {getExpense, deleteExpense} = useExpensesDB();
-    const [expense, setExpense] = useState<Expense>();
-    const [deleteVisible, setDeleteVisible] = useState(false);
-
-    useEffect(() => {
-        if (!id) {
-            return;
-        }
-        getExpense(id).then((expense) => {
-            if (!expense) {
-                return;
-            }
-            setExpense(expense);
-        })
-    }, []);
+    const {
+        expense,
+        onDelete,
+        deleteVisible,
+        setDeleteVisible
+    } = useExpenseDetail();
 
     if (!expense) return <View><Text>Expense not found</Text></View>
-
-    const onDelete = async () => {
-        setDeleteVisible(false);
-        await deleteExpense(expense.id);
-        router.dismissAll();
-        router.replace('/expenses');
-    }
 
     return (
         <View style={sharedStyles.container}>

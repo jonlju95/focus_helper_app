@@ -1,11 +1,11 @@
 import {router, useLocalSearchParams} from "expo-router";
-import {useActivitiesDB} from "@/screens/activities/hooks/useActivitiesDB";
+import {useActivityDB} from "@/screens/activities/hooks/useActivityDB";
 import {useEffect, useState} from "react";
 import {Activity} from "@/screens/activities/types/activity";
 
 export const useActivityDetail = () => {
     const {id} = useLocalSearchParams<{ id: string }>();
-    const {getActivity, deleteActivity, togglePriority} = useActivitiesDB();
+    const {getActivity, deleteActivity, togglePriority} = useActivityDB();
     const [activity, setActivity] = useState<Activity>();
     const [deleteVisible, setDeleteVisible] = useState(false);
 

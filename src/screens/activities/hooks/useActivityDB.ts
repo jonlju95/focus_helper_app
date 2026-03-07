@@ -17,7 +17,7 @@ const mapActivity = (a: typeof activities.$inferSelect & {
     category: a.category ?? undefined
 });
 
-export function useActivitiesDB() {
+export function useActivityDB() {
     const getActivities = useCallback(async () => {
         const result = await db.query.activities.findMany({
             with: {

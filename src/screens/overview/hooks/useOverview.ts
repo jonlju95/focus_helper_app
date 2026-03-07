@@ -1,15 +1,15 @@
 import {useCallback, useState} from 'react';
 import {useFocusEffect} from 'expo-router';
-import {useExpensesDB} from '@/screens/expenses/hooks/useExpensesDB';
+import {useExpenseDB} from '@/screens/expenses/hooks/useExpenseDB';
 import {useReminderDB} from '@/screens/reminders/hooks/useReminderDB';
 import {Reminder} from '@/screens/reminders/types/reminder';
-import {useActivitiesDB} from "@/screens/activities/hooks/useActivitiesDB";
+import {useActivityDB} from "@/screens/activities/hooks/useActivityDB";
 import {useSetting} from "@/hooks/useSetting";
 
 export const useOverview = () => {
     const {getTopThreeReminders, getFutureReminders} = useReminderDB();
-    const {getFutureActivities} = useActivitiesDB();
-    const {getRemainingBudget} = useExpensesDB();
+    const {getFutureActivities} = useActivityDB();
+    const {getRemainingBudget} = useExpenseDB();
     const {value: monthlyIncome} = useSetting('MONTHLY_INCOME');
     const {value: fixedExpenses} = useSetting('FIXED_EXPENSES');
 

@@ -1,6 +1,4 @@
 import {Pressable, StyleSheet, Text, View} from "react-native";
-import {CATEGORY_COLORS} from "@/types/categoryColors";
-import {ExpenseTypes} from "@/types/expenseTypes";
 import {ClockIcon, ShoppingCartIcon} from "phosphor-react-native";
 import colors from "@/constants/colors";
 import spacing from "@/constants/spacing";

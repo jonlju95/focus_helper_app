@@ -1,7 +1,7 @@
 import {StyleSheet, View} from "react-native";
 import {router} from "expo-router";
-import React, {useEffect, useState} from "react";
-import SharedOptionPicker, {Option} from "@/components/ui/sharedInputs/SharedOptionPicker";
+import React from "react";
+import SharedOptionPicker from "@/components/ui/sharedInputs/SharedOptionPicker";
 import TopBar from "@/components/ui/TopBar";
 import spacing from "@/constants/spacing";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
@@ -11,7 +11,6 @@ import typography from "@/constants/typography";
 import SharedButton from "@/components/ui/SharedButton";
 import colors from "@/constants/colors";
 import {useExpenseForm} from "@/screens/expenses/hooks/useExpenseForm";
-import {useCategory} from "@/hooks/useCategory";
 import {sharedStyles} from "@/constants/sharedStyles";
 import {Controller} from "react-hook-form";
 
@@ -22,24 +21,9 @@ function ExpensesFormScreen() {
         isDisabled,
         isEditing,
         onSubmit,
-        normalizeAmount
+        normalizeAmount,
+        options
     } = useExpenseForm();
-
-    const {getExpenseCategories} = useCategory();
-    const [options, setOptions] = useState<Option[]>([]);
-
-    useEffect(() => {
-        getExpenseCategories().then(categories => {
-            let options: Option[] = [];
-            categories.forEach(category => {
-                options.push({
-                    label: category.name,
-                    value: category.id,
-                });
-            })
-            setOptions(options);
-        });
-    }, [])
 
     return (
         <View style={sharedStyles.container}>

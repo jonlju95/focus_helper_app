@@ -1,9 +1,11 @@
 import {router, useLocalSearchParams} from "expo-router";
-import {useExpensesDB} from "@/screens/expenses/hooks/useExpensesDB";
+import {useExpenseDB} from "@/screens/expenses/hooks/useExpenseDB";
 import {useEffect, useState} from "react";
-import {Expense} from "@/types/expense";
+import {Expense} from "@/screens/expenses/types/expense";
 import {useForm, useWatch} from "react-hook-form";
 import * as Crypto from 'expo-crypto';
+import {useCategory} from "@/hooks/useCategory";
+import {Option} from "@/components/ui/sharedInputs/SharedOptionPicker";
 
 interface ExpenseFormData {
     title: string;
@@ -16,7 +18,10 @@ interface ExpenseFormData {
 
 export function useExpenseForm() {
     const {id, from} = useLocalSearchParams<{ id?: string, from?: string }>();
-    const {getExpense, addExpense, updateExpense} = useExpensesDB();
+    const {getExpense, addExpense, updateExpense} = useExpenseDB();
+    const {getExpenseCategories} = useCategory();
+    const [options, setOptions] = useState<Option[]>([]);
+
 
     const [expense, setExpense] = useState<Expense>();
 
@@ -36,6 +41,17 @@ export function useExpenseForm() {
     const amountValue = useWatch({control, name: 'amount'});
 
     useEffect(() => {
+        getExpenseCategories().then(categories => {
+            let options: Option[] = [];
+            categories.forEach(category => {
+                options.push({
+                    label: category.name,
+                    value: category.id,
+                });
+            })
+            setOptions(options);
+        });
+
         if (!id) return;
 
         getExpense(id).then(e => {
@@ -51,7 +67,7 @@ export function useExpenseForm() {
                 categoryId: e.categoryId
             });
         });
-    }, [id]);
+    }, [getExpense, getExpenseCategories, id, reset]);
 
     const onSubmit = async (data: ExpenseFormData) => {
         const expenseToSave: Expense = {
@@ -102,6 +118,7 @@ export function useExpenseForm() {
         isDisabled,
         isEditing: !!expense?.id,
         onSubmit,
-        normalizeAmount
+        normalizeAmount,
+        options
     }
 }

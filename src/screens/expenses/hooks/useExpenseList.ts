@@ -1,7 +1,7 @@
 import {useCallback, useState} from 'react';
 import {useFocusEffect} from 'expo-router';
-import {useExpensesDB} from './useExpensesDB';
-import {Expense, MonthlySpending} from '@/types/expense';
+import {useExpenseDB} from './useExpenseDB';
+import {Expense, MonthlySpending} from '@/screens/expenses/types/expense';
 import {getRangeStart} from '@/utils/dateTimeUtils';
 import {useSetting} from "@/hooks/useSetting";
 
@@ -10,7 +10,7 @@ export type FilterRange = 'week' | 'month' | 'all';
 export function useExpenseList() {
     const {value: monthlyIncome} = useSetting('MONTHLY_INCOME');
     const {value: fixedExpenses} = useSetting('FIXED_EXPENSES');
-    const {getExpenses, getMonthlySpending, getRemainingBudget} = useExpensesDB();
+    const {getExpenses, getMonthlySpending, getRemainingBudget} = useExpenseDB();
 
     const [allExpenses, setAllExpenses] = useState<Expense[]>([]);
     const [monthlySpending, setMonthlySpending] = useState<MonthlySpending[]>([]);
@@ -38,6 +38,10 @@ export function useExpenseList() {
 
     const categoryTotal = monthlySpending.reduce((sum, s) => sum + s.total, 0);
 
+    const filterLabel =
+        filterRange === 'week' ? 'This week' :
+            filterRange === 'month' ? 'This month' : 'All';
+
     return {
         monthlyIncome,
         fixedExpenses,
@@ -50,5 +54,6 @@ export function useExpenseList() {
         filterVisible,
         setFilterRange,
         setFilterVisible,
+        filterLabel
     };
 }

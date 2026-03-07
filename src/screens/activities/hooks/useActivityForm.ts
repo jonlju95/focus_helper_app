@@ -1,5 +1,5 @@
 import {router, useLocalSearchParams} from "expo-router";
-import {useActivitiesDB} from "@/screens/activities/hooks/useActivitiesDB";
+import {useActivityDB} from "@/screens/activities/hooks/useActivityDB";
 import {useEffect, useState} from "react";
 import {Activity} from "@/screens/activities/types/activity";
 import {useForm, useWatch} from "react-hook-form";
@@ -34,7 +34,7 @@ interface ActivityFormData {
 
 export function useActivitiesForm() {
     const { id, from } = useLocalSearchParams<{ id?: string, from?: string }>();
-    const {getActivity, addActivity, updateActivity} = useActivitiesDB();
+    const {getActivity, addActivity, updateActivity} = useActivityDB();
     const {getActivityCategories} = useCategory();
     const [options, setOptions] = useState<Option[]>([]);
 

@@ -1,8 +1,9 @@
-import {Expense} from "@/types/expense";
+import {Expense} from "@/screens/expenses/types/expense";
 import {db} from "@/db/database";
 import {categories, expenses} from "@/db/schema";
 import {and, desc, eq, gte, lte, sum} from "drizzle-orm";
 import colors from "@/constants/colors";
+import {useCallback} from "react";
 
 const mapExpense = (e: typeof expenses.$inferSelect & {
     category: typeof categories.$inferSelect | null;
@@ -27,9 +28,9 @@ const getMonthRange = () => {
     };
 };
 
-export function useExpensesDB() {
+export function useExpenseDB() {
 
-    const getExpenses = async () => {
+    const getExpenses = useCallback(async () => {
         const result = await db.query.expenses.findMany({
             with: {
                 category: true
@@ -39,9 +40,9 @@ export function useExpensesDB() {
             ],
         });
         return result.map(mapExpense)
-    }
+    }, [])
 
-    const getExpense = async (id: string) => {
+    const getExpense = useCallback(async (id: string) => {
         return db.query.expenses.findFirst({
             with: {
                 category: true
@@ -50,18 +51,18 @@ export function useExpensesDB() {
         }).then(e => {
             return e ? mapExpense(e) : null;
         });
-    }
+    }, []);
 
-    const addExpense = async (expense: Expense) => {
+    const addExpense = useCallback(async (expense: Expense) => {
         await db.insert(expenses).values({
             ...expense,
             category_id: expense.categoryId
         });
 
         return expense;
-    }
+    }, [])
 
-    const updateExpense = async (expense: Expense) => {
+    const updateExpense = useCallback(async (expense: Expense) => {
         await db.update(expenses)
             .set({
                 title: expense.title,
@@ -74,13 +75,13 @@ export function useExpensesDB() {
             .where(eq(expenses.id, expense.id));
 
         return expense;
-    }
+    }, [])
 
-    const deleteExpense = async (id: string) => {
+    const deleteExpense = useCallback(async (id: string) => {
         await db.delete(expenses).where(eq(expenses.id, id));
-    }
+    }, [])
 
-    const getMonthlySpending = async () => {
+    const getMonthlySpending = useCallback(async () => {
         const {from, to} = getMonthRange();
 
         const result = await db
@@ -109,9 +110,9 @@ export function useExpensesDB() {
             colorText: r.colorText ?? colors.textMuted,
             total: Number(r.total ?? 0),
         }));
-    }
+    }, [])
 
-    const getRemainingBudget = async () => {
+    const getRemainingBudget = useCallback(async () => {
         const {from, to} = getMonthRange();
 
         const result = await db
@@ -125,7 +126,7 @@ export function useExpensesDB() {
             );
 
         return Number(result[0].total ?? 0);
-    }
+    }, [])
 
     return {
         getExpenses,

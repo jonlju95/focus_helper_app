@@ -25,7 +25,7 @@ import colors from '@/constants/colors';
 import spacing from '@/constants/spacing';
 import typography from '@/constants/typography';
 
-import {Expense} from '@/types/expense';
+import {Expense} from '@/screens/expenses/types/expense';
 import {useExpenseList} from '@/screens/expenses/hooks/useExpenseList';
 import {formatCurrency} from "@/utils/formatNumber";
 
@@ -62,6 +62,7 @@ function ExpensesListScreen() {
         monthlySpending, totalSpent, categoryTotal,
         filterRange, filterVisible,
         setFilterRange, setFilterVisible,
+        filterLabel
     } = useExpenseList();
 
     const renderCard = (expense: Expense) => (
@@ -77,10 +78,6 @@ function ExpensesListScreen() {
             })}
         />
     );
-
-    const filterLabel =
-        filterRange === 'week' ? 'This week' :
-            filterRange === 'month' ? 'This month' : 'All';
 
     return (
         <View style={sharedStyles.container}>

@@ -11,7 +11,7 @@ import SidebarCustomCategory from '@/screens/sidebar/SidebarCustomCategory';
 import SidebarExport from '@/screens/sidebar/SidebarExport';
 import SidebarAbout from '@/screens/sidebar/SidebarAbout';
 import colors from '@/constants/colors';
-import {SidebarPanel} from "@/types/sidebar";
+import {SidebarPanel} from "@/screens/sidebar/types/sidebar";
 import SidebarFooter from "@/screens/sidebar/components/SidebarFooter";
 import spacing from "@/constants/spacing";
 import SidebarHeader from "@/screens/sidebar/components/SidebarHeader";

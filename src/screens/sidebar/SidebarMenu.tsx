@@ -1,5 +1,5 @@
 import {Dimensions, StyleSheet, Text, View} from 'react-native';
-import {SidebarPanel} from '@/types/sidebar';
+import {SidebarPanel} from '@/screens/sidebar/types/sidebar';
 import spacing from "@/constants/spacing";
 import colors from "@/constants/colors";
 import typography from "@/constants/typography";
