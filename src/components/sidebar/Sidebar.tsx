@@ -40,7 +40,7 @@ export default function Sidebar() {
                 useNativeDriver: true,
             }),
         ]).start();
-    }, [isOpen]);
+    }, [isOpen, opacity, translateX]);
 
     // Reset to menu after close animation finishes
     useEffect(() => {
@@ -64,14 +64,14 @@ export default function Sidebar() {
             return false;
         });
         return () => handler.remove();
-    }, [isOpen, activePanel]);
+    }, [isOpen, activePanel, close]);
 
     const renderContent = () => {
         switch (activePanel) {
             case 'menu':
                 return <SidebarMenu onNavigate={setActivePanel}/>;
             case 'profile':
-                return <SidebarProfile/>;
+                return <SidebarProfile onBack={() => setActivePanel('menu')}/>;
             case 'budget':
                 return <SidebarBudget/>;
             case 'notifications':

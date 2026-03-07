@@ -1,11 +1,12 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Pressable, StyleSheet, View} from "react-native";
 import spacing from "@/constants/spacing";
 import colors from "@/constants/colors";
 import {CheckIcon, PenIcon, UserIcon} from "phosphor-react-native";
 import SharedInput from "@/components/ui/sharedInputs/SharedInput";
-import SharedOptionPicker, {Option} from "@/components/ui/sharedInputs/SharedOptionPicker";
+import SharedOptionPicker from "@/components/ui/sharedInputs/SharedOptionPicker";
 import SharedButton from "@/components/ui/SharedButton";
+import {useSetting} from "@/hooks/useSetting";
 import {useSidebarProfile} from "@/screens/sidebar/hooks/useSidebarProfile";
 
 interface SidebarProfileProps {
@@ -13,12 +14,15 @@ interface SidebarProfileProps {
 }
 
 function SidebarProfile({onBack}: SidebarProfileProps) {
-    const {username, greetings} = useSidebarProfile();
-    const [greeting, setGreeting] = useState<string>('goodMorning');
+    const {value: username, setValue: setUsername, save: saveUsername} = useSetting('USER_NAME');
+    const {value: greeting, setValue: setGreeting, save: saveGreeting} = useSetting('USER_GREETING');
+    const {greetings} = useSidebarProfile();
 
-    const changeGreeting = (value: string) => {
-        setGreeting(value);
-    }
+    const handleSave = async () => {
+        await saveUsername(username);
+        await saveGreeting(greeting);
+        onBack?.();
+    };
 
     return (
         <View style={styles.container}>
@@ -30,16 +34,28 @@ function SidebarProfile({onBack}: SidebarProfileProps) {
             </View>
             <View style={styles.settingsCard}>
                 <View style={[styles.settingsCardArea, {borderBottomWidth: 1, borderBottomColor: '#F5F0EA'}]}>
-                    <SharedInput value={username} label={'Your name'}/>
+                    <SharedInput
+                        value={username}
+                        label={'Your name'}
+                        onChangeText={setUsername}
+                    />
                 </View>
                 <View style={styles.settingsCardArea}>
-                    <SharedOptionPicker options={greetings} value={'499ed04d-bd73-433b-98a1-aabfdd39a6c7'} label={'Greeting style'}
-                                        onChange={changeGreeting}/>
+                    <SharedOptionPicker
+                        options={greetings}
+                        value={greeting}
+                        label={'Greeting style'}
+                        onChange={setGreeting}
+                    />
                 </View>
             </View>
             <View style={styles.buttonContainer}>
-                <SharedButton icon={<CheckIcon size={12} color={'white'} weight={'bold'}/>} label={'Save changes'}
-                              customStyle={{alignSelf: 'stretch'}} onPress={onBack}/>
+                <SharedButton
+                    icon={<CheckIcon size={12} color={'white'} weight={'bold'}/>}
+                    label={'Save changes'}
+                    customStyle={{alignSelf: 'stretch'}}
+                    onPress={handleSave}
+                />
             </View>
         </View>
     );

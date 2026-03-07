@@ -8,7 +8,7 @@ export const useSidebarAbout = () => {
 
     useEffect(() => {
         getUserSettings().then((settings) => {
-            setUsername(settings?.username ?? 'User');
+            // setUsername(settings?.username ?? 'User');
         })
     }, []);
 

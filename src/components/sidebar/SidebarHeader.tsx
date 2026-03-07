@@ -1,11 +1,12 @@
 import React from 'react';
 import {Pressable, StyleSheet, Text, View} from "react-native";
 import spacing from "@/constants/spacing";
-import {ArrowLeftIcon, PenIcon, UserIcon, XIcon} from "phosphor-react-native";
+import {ArrowLeftIcon, UserIcon, XIcon} from "phosphor-react-native";
 import colors from "@/constants/colors";
 import typography from "@/constants/typography";
 import {LinearGradient} from "expo-linear-gradient";
 import {useSidebar} from "@/context/SidebarContext";
+import {useSetting} from "@/hooks/useSetting";
 
 interface HeaderProps {
     isMenu?: boolean;
@@ -15,6 +16,7 @@ interface HeaderProps {
 
 function SidebarHeader({isMenu, title, onBack}: HeaderProps) {
     const {close} = useSidebar();
+    const {value: username} = useSetting('USER_NAME');
 
     if (isMenu) {
         return (
@@ -33,13 +35,9 @@ function SidebarHeader({isMenu, title, onBack}: HeaderProps) {
                         <UserIcon size={28} color="white" weight={'bold'}/>
                     </View>
                     <View>
-                        <Text style={styles.sidebarHeaderTitle}>Sunday</Text>
+                        <Text style={styles.sidebarHeaderTitle}>{username}</Text>
                         <Text style={styles.sidebarHeaderSubtitle}>Your personal helper</Text>
                     </View>
-                    <Pressable style={styles.sidebarEditProfile}>
-                        <PenIcon size={14} color="white" weight={'bold'}/>
-                        <Text style={styles.sidebarEditProfileText}>Edit profile</Text>
-                    </Pressable>
                 </View>
             </LinearGradient>
         )
