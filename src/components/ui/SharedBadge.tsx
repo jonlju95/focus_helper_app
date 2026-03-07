@@ -58,6 +58,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         padding: spacing[1],
         borderRadius: spacing[10],
+        opacity: 0.85
     }
 })
 

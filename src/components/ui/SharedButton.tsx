@@ -32,6 +32,7 @@ function SharedButton({
         ]} onPress={onPress} disabled={disabled}>
             {showIcon && (icon)}
             <Text style={[typography.styles.btnText,
+                styles.btnText,
                 disabled && styles.buttonLabelDisabled,
                 variant === 'secondary' && styles.secondaryText]}>{label}</Text>
         </Pressable>
@@ -64,6 +65,9 @@ const styles = StyleSheet.create({
         opacity: 0.6,
         elevation: 0,
         shadowOpacity: 0,
+    },
+    btnText: {
+        textAlign: "center",
     },
     buttonLabelDisabled: {
         color: colors.textMuted,

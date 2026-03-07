@@ -24,7 +24,6 @@ const mapReminder = (r: typeof reminders.$inferSelect & {
 
 export function useRemindersDB() {
     const [loading] = useState(true);
-    // const {error} = useMigrations(db, migrations);
 
     const getReminders = async () => {
         const result = await db.query.reminders.findMany({

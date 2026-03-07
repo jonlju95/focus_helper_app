@@ -1,2 +1,2 @@
 export type SidebarPanel =
-    'menu' | 'profile' | 'budget' | 'notifications' | 'categories' | 'export' | 'about';
+    'menu' | 'profile' | 'budget' | 'notifications' | 'categories' | 'customCategory' | 'export' | 'about';

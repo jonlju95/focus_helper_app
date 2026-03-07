@@ -1,11 +1,13 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Animated, BackHandler, Dimensions, Pressable, ScrollView, StyleSheet} from 'react-native';
 import {useSidebar} from '@/context/SidebarContext';
+import {useSidebarCategories} from '@/screens/sidebar/hooks/useSidebarCategories';
 import SidebarMenu from '@/screens/sidebar/SidebarMenu';
 import SidebarProfile from '@/screens/sidebar/SidebarProfile';
 import SidebarBudget from '@/screens/sidebar/SidebarBudget';
 import SidebarNotifications from '@/screens/sidebar/SidebarNotifications';
 import SidebarCategories from '@/screens/sidebar/SidebarCategories';
+import SidebarCustomCategory from '@/screens/sidebar/SidebarCustomCategory';
 import SidebarExport from '@/screens/sidebar/SidebarExport';
 import SidebarAbout from '@/screens/sidebar/SidebarAbout';
 import colors from '@/constants/colors';
@@ -20,6 +22,7 @@ const SIDEBAR_WIDTH = SCREEN_WIDTH * 0.85;
 
 export default function Sidebar() {
     const {isOpen, close} = useSidebar();
+    const { addCategory } = useSidebarCategories();
 
     const [activePanel, setActivePanel] = useState<SidebarPanel>('menu');
 
@@ -77,7 +80,12 @@ export default function Sidebar() {
             case 'notifications':
                 return <SidebarNotifications/>;
             case 'categories':
-                return <SidebarCategories/>;
+                return <SidebarCategories onManageCustom={() => setActivePanel('customCategory')}/>;
+            case 'customCategory':
+                return <SidebarCustomCategory onSave={async (name, colors, type) => {
+                    await addCategory(name, colors, type);
+                    setActivePanel('categories');
+                }}/>;
             case 'export':
                 return <SidebarExport/>;
             case 'about':

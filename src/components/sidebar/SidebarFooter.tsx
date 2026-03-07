@@ -16,6 +16,7 @@ function SidebarFooter() {
 const styles = StyleSheet.create({
     sidebarFooter: {
         padding: spacing[4],
+        paddingBottom: spacing[10],
         borderTopWidth: 1,
         borderTopColor: colors.border,
         justifyContent: "center",

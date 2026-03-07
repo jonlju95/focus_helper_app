@@ -4,4 +4,5 @@ export interface Category {
     colorBg: string;
     colorText: string;
     entityType: string;
+    is_custom?: boolean;
 }
