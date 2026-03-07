@@ -1,18 +1,17 @@
-import React, {useEffect, useState} from 'react';
 import {Dimensions, StyleSheet, View} from "react-native";
-import TopBar from "@/components/ui/TopBar";
-import {router} from "expo-router";
-import spacing from "@/constants/spacing";
-import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
-import {sharedStyles} from "@/constants/sharedStyles";
-import {useCategory} from "@/hooks/useCategory";
-import {useActivitiesForm} from "@/screens/activities/hooks/useActivityForm";
-import SharedOptionPicker, {Option} from "@/components/ui/sharedInputs/SharedOptionPicker";
 import {Controller} from "react-hook-form";
+import {router} from "expo-router";
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
+
+import spacing from "@/constants/spacing";
+import {sharedStyles} from "@/constants/sharedStyles";
+import TopBar from "@/components/ui/TopBar";
+import SharedOptionPicker from "@/components/ui/sharedInputs/SharedOptionPicker";
 import SharedInput from "@/components/ui/sharedInputs/SharedInput";
 import SharedDatePicker from "@/components/ui/sharedInputs/SharedDatePicker";
 import ToggleButton from "@/components/ui/sharedInputs/ToggleButton";
 import SharedButton from "@/components/ui/SharedButton";
+import {useActivitiesForm} from "@/screens/activities/hooks/useActivityForm";
 
 const FIELD_WIDTH = (Dimensions.get('window').width - 78) / 2;
 
@@ -22,24 +21,9 @@ function ActivitiesFormScreen() {
         handleSubmit,
         isDisabled,
         isEditing,
-        onSubmit
+        onSubmit,
+        options
     } = useActivitiesForm();
-
-    const {getActivityCategories} = useCategory();
-    const [options, setOptions] = useState<Option[]>([]);
-
-    useEffect(() => {
-        getActivityCategories().then(categories => {
-            let options: Option[] = [];
-            categories.forEach((category) => {
-                options.push({
-                    label: category.name,
-                    value: category.id
-                });
-            })
-            setOptions(options);
-        })
-    }, [])
 
     return (
         <View style={sharedStyles.container}>

@@ -1,10 +1,12 @@
 import {router, useLocalSearchParams} from "expo-router";
 import {useActivitiesDB} from "@/screens/activities/hooks/useActivitiesDB";
 import {useEffect, useState} from "react";
-import {Activity} from "@/types/activity";
+import {Activity} from "@/screens/activities/types/activity";
 import {useForm, useWatch} from "react-hook-form";
 import {parseTime} from "@/utils/dateTimeUtils";
 import * as Crypto from 'expo-crypto';
+import {useCategory} from "@/hooks/useCategory";
+import {Option} from "@/components/ui/sharedInputs/SharedOptionPicker";
 
 interface ActivityFormData {
     title: string;
@@ -15,9 +17,26 @@ interface ActivityFormData {
     categoryId?: string;
 }
 
+
+// 
+//     useEffect(() => {
+//         getActivityCategories().then(categories => {
+//             let options: Option[] = [];
+//             categories.forEach((category) => {
+//                 options.push({
+//                     label: category.name,
+//                     value: category.id
+//                 });
+//             })
+//             setOptions(options);
+//         })
+//     }, [])
+
 export function useActivitiesForm() {
     const { id, from } = useLocalSearchParams<{ id?: string, from?: string }>();
     const {getActivity, addActivity, updateActivity} = useActivitiesDB();
+    const {getActivityCategories} = useCategory();
+    const [options, setOptions] = useState<Option[]>([]);
 
     const [activity, setActivity] = useState<Activity>();
 
@@ -36,6 +55,17 @@ export function useActivitiesForm() {
     const titleValue = useWatch({control, name: 'title'});
 
     useEffect(() => {
+        getActivityCategories().then(categories => {
+            let options: Option[] = [];
+            categories.forEach((category) => {
+                options.push({
+                    label: category.name,
+                    value: category.id
+                });
+            })
+            setOptions(options);
+        })
+        
         if (!id) return;
 
         getActivity(id).then((a) => {
@@ -51,7 +81,7 @@ export function useActivitiesForm() {
                 categoryId: a.categoryId,
             });
         });
-    }, [id]);
+    }, [getActivity, getActivityCategories, id, reset]);
 
     const onSubmit = async (data: ActivityFormData) => {
         const activityToSave: Activity = {
@@ -93,5 +123,6 @@ export function useActivitiesForm() {
         isDisabled,
         isEditing: !!activity?.id,
         onSubmit,
+        options
     }
 }

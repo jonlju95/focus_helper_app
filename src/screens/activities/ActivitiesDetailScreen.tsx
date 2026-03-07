@@ -1,63 +1,30 @@
-import React, {useEffect, useState} from 'react';
 import {Dimensions, Pressable, ScrollView, StyleSheet, Text, View} from "react-native";
-import {router, useLocalSearchParams} from "expo-router";
-import TopBar from "@/components/ui/TopBar";
+import {router} from "expo-router";
+import {ClockIcon, FileTextIcon, PenIcon, TrashIcon} from "phosphor-react-native";
+
 import colors from "@/constants/colors";
 import spacing from "@/constants/spacing";
 import typography from "@/constants/typography";
+import {sharedStyles} from "@/constants/sharedStyles";
+import TopBar from "@/components/ui/TopBar";
 import ToggleButton from "@/components/ui/sharedInputs/ToggleButton";
 import SharedButton from "@/components/ui/SharedButton";
-import {ClockIcon, FileTextIcon, PenIcon, TrashIcon} from "phosphor-react-native";
-import {sharedStyles} from "@/constants/sharedStyles";
 import SharedBadge from "@/components/ui/SharedBadge";
-import {useActivitiesDB} from "@/screens/activities/hooks/useActivitiesDB";
-import {Activity} from "@/types/activity";
 import ConfirmDialog from "@/components/ui/modals/ConfirmDialog";
+import {useActivityDetail} from "@/screens/activities/hooks/useActivityDetail";
 
 const FIELD_WIDTH = (Dimensions.get('window').width - 78) / 2;
 
 function ActivitiesDetailScreen() {
-    const {id} = useLocalSearchParams<{ id: string }>();
-    const {getActivity, deleteActivity, togglePriority} = useActivitiesDB();
-    const [activity, setActivity] = useState<Activity>();
-    const [deleteVisible, setDeleteVisible] = useState(false);
-
-    useEffect(() => {
-        if (!id) {
-            return;
-        }
-        getActivity(id).then((activity) => {
-            if (!activity) {
-                return;
-            }
-            setActivity(activity);
-        })
-    }, []);
+    const {
+        activity,
+        onPriorityToggle,
+        onDelete,
+        deleteVisible,
+        setDeleteVisible
+    } = useActivityDetail();
 
     if (!activity) return <View><Text>Activity not found</Text></View>
-
-    const onPriorityToggle = async (priority: boolean) => {
-        const result = await togglePriority(activity.id, priority);
-        if (!result) {
-            return;
-        }
-
-        setActivity(prev => {
-            if (!prev) return prev;
-            return {
-                ...prev,
-                prioritized: result.prioritized,
-            };
-        });
-    }
-
-    const onDelete = async () => {
-        setDeleteVisible(false);
-        await deleteActivity(activity.id);
-        router.dismissAll();
-        router.replace('/activities');
-    }
-
 
     return (
         <View style={sharedStyles.container}>

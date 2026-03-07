@@ -1,7 +1,8 @@
-import {Activity} from "@/types/activity";
+import {Activity} from "@/screens/activities/types/activity";
 import {activities, categories} from "@/db/schema";
 import {db} from "@/db/database";
 import {and, count, eq, gt, lte} from "drizzle-orm";
+import {useCallback} from "react";
 
 const mapActivity = (a: typeof activities.$inferSelect & {
     category: typeof categories.$inferSelect | null;
@@ -17,7 +18,7 @@ const mapActivity = (a: typeof activities.$inferSelect & {
 });
 
 export function useActivitiesDB() {
-    const getActivities = async () => {
+    const getActivities = useCallback(async () => {
         const result = await db.query.activities.findMany({
             with: {
                 category: true
@@ -28,10 +29,10 @@ export function useActivitiesDB() {
                 asc(activities.prioritized),
             ],
         });
-        return result.map(mapActivity);
-    }
+        return result.map(mapActivity)
+    }, [])
 
-    const getActivity = async (id: string) => {
+    const getActivity = useCallback(async (id: string) => {
         return db.query.activities.findFirst({
             with: {
                 category: true
@@ -39,10 +40,11 @@ export function useActivitiesDB() {
             where: (activities, {eq}) => eq(activities.id, id)
         }).then(a => {
             return a ? mapActivity(a) : null
-        });
-    }
+        })
+    }, []);
 
-    const getFutureActivities = async (date: Date) => {
+
+    const getFutureActivities = useCallback(async (date: Date) => {
         const dateStr = date.toISOString().split('T')[0];
         const monthEnd = new Date(date.getFullYear(), date.getMonth() + 1, 0)
             .toISOString().split('T')[0];
@@ -57,18 +59,18 @@ export function useActivitiesDB() {
             );
 
         return result[0].count;
-    };
+    }, []);
 
-    const addActivity = async (activity: Activity) => {
+    const addActivity = useCallback(async (activity: Activity) => {
         await db.insert(activities).values({
             ...activity,
             category_id: activity.categoryId
         });
 
         return activity;
-    }
+    }, [])
 
-    const updateActivity = async (activity: Activity) => {
+    const updateActivity = useCallback(async (activity: Activity) => {
         await db.update(activities)
             .set({
                 title: activity.title,
@@ -81,19 +83,19 @@ export function useActivitiesDB() {
             .where(eq(activities.id, activity.id));
 
         return activity;
-    }
+    }, []);
 
-    const deleteActivity = async (id: string) => {
+    const deleteActivity = useCallback(async (id: string) => {
         await db.delete(activities).where(eq(activities.id, id));
-    }
+    }, []);
 
-    const togglePriority = async (activityId: string, prioritized: boolean) => {
+    const togglePriority = useCallback(async (activityId: string, prioritized: boolean) => {
         await db.update(activities)
             .set({prioritized: prioritized})
             .where(eq(activities.id, activityId))
 
         return {activityId, prioritized};
-    }
+    }, []);
 
     return {
         getActivities,
