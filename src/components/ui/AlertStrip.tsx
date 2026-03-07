@@ -8,7 +8,7 @@ import typography from "@/constants/typography";
 
 type IconName = 'warning' | 'bell' | 'coin' | 'receipt';
 
-interface AlertItem {
+interface AlertItemProps {
     icon: IconName;
     iconColor: string;
     iconBg: string;
@@ -19,8 +19,8 @@ interface AlertItem {
 }
 
 interface AlertStripProps {
-    left: AlertItem;
-    right: AlertItem;
+    left: AlertItemProps;
+    right: AlertItemProps;
 }
 
 const ICONS: Record<IconName, (props: { size: number; color: string; weight: 'fill' | 'regular' }) => JSX.Element> = {
@@ -40,7 +40,7 @@ function AlertStrip({left, right}: AlertStripProps) {
     );
 }
 
-function AlertItem({item}: { item: AlertItem }) {
+function AlertItem({item}: { item: AlertItemProps }) {
     const IconComponent = ICONS[item.icon];
 
     item.stacked = item.stacked ?? false;

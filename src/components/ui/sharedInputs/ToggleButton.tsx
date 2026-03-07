@@ -22,7 +22,7 @@ function ToggleButton({value, onChange, color = colors.primary, showLabel = true
             duration: 250,
             useNativeDriver: false,  // false because we animate backgroundColor too
         }).start();
-    }, [value]);
+    }, [positionAnim, value]);
 
     const bgColor = positionAnim.interpolate({
         inputRange: [0, 1],

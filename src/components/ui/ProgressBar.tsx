@@ -1,4 +1,3 @@
-// components/ui/ProgressBar.tsx
 import {useEffect, useRef} from 'react';
 import {Animated, StyleSheet, Text, View} from 'react-native';
 import colors from '@/constants/colors';
@@ -32,7 +31,7 @@ export default function ProgressBar({
             duration: 300,
             useNativeDriver: false,
         }).start();
-    }, [progress]);
+    }, [progress, widthAnim]);
 
     return (
         <>
