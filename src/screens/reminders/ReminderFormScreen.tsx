@@ -1,18 +1,17 @@
-import {useEffect, useState} from 'react';
 import {Dimensions, StyleSheet, View} from "react-native";
-import TopBar from "@/components/ui/TopBar";
-import {router} from "expo-router";
-import SharedInput from "@/components/ui/sharedInputs/SharedInput";
-import SharedButton from "@/components/ui/SharedButton";
-import SharedOptionPicker, {Option} from "@/components/ui/sharedInputs/SharedOptionPicker";
-import SharedDatePicker from "@/components/ui/sharedInputs/SharedDatePicker";
-import spacing from "@/constants/spacing";
-import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
-import {sharedStyles} from "@/constants/sharedStyles";
 import {Controller} from "react-hook-form";
+import {router} from "expo-router";
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
+
+import spacing from "@/constants/spacing";
+import {sharedStyles} from "@/constants/sharedStyles";
+import TopBar from "@/components/ui/TopBar";
 import ToggleButton from "@/components/ui/sharedInputs/ToggleButton";
+import SharedButton from "@/components/ui/SharedButton";
+import SharedInput from "@/components/ui/sharedInputs/SharedInput";
+import SharedOptionPicker from "@/components/ui/sharedInputs/SharedOptionPicker";
+import SharedDatePicker from "@/components/ui/sharedInputs/SharedDatePicker";
 import ReminderTable from "@/screens/reminders/components/ReminderTable";
-import {useReminderTabs} from "@/screens/reminders/hooks/useReminderTabs";
 import {useReminderForm} from "@/screens/reminders/hooks/useReminderForm";
 
 const FIELD_WIDTH = (Dimensions.get('window').width - 78) / 2;
@@ -20,24 +19,8 @@ const FIELD_WIDTH = (Dimensions.get('window').width - 78) / 2;
 function ReminderFormScreen() {
     const {
         control, handleSubmit, fields,
-        isDisabled, isEditing, addTask, deleteTask, onSubmit
+        isDisabled, isEditing, addTask, deleteTask, onSubmit, options
     } = useReminderForm();
-
-    const {getReminderTabs} = useReminderTabs();
-    const [options, setOptions] = useState<Option[]>([]);
-
-    useEffect(() => {
-        getReminderTabs().then((tabs) => {
-            let options: Option[] = [];
-            tabs.forEach((tab) => {
-                options.push({
-                    label: tab.name,
-                    value: tab.id,
-                });
-            })
-            setOptions(options);
-        });
-    }, []);
 
     return (
         <View style={sharedStyles.container}>

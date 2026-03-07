@@ -1,30 +1,20 @@
-import React, {useEffect, useState} from 'react';
 import {Pressable, StyleSheet, Text, View} from "react-native";
+
 import colors from "@/constants/colors";
-import {ReminderType} from "@/types/reminder";
 import spacing from "@/constants/spacing";
 import {sharedStyles} from "@/constants/sharedStyles";
-import {useReminderTabs} from "@/screens/reminders/hooks/useReminderTabs";
+import {ReminderType} from "@/screens/reminders/types/reminder";
 
 interface ReminderTabsProps {
+    tabs: ReminderType[];
     activeTab: ReminderType;
     onChange: (tab: ReminderType) => void;
 }
 
-function ReminderTabs({activeTab, onChange}: ReminderTabsProps) {
-    const {getReminderTabs} = useReminderTabs();
-
-    const [reminderTabs, setReminderTabs] = useState<ReminderType[]>([]);
-
-    useEffect(() => {
-        getReminderTabs().then(tabs => {
-            setReminderTabs(tabs);
-        })
-    }, []);
-
+function ReminderTabs({tabs, activeTab, onChange}: ReminderTabsProps) {
     return (
         <View style={[sharedStyles.row, sharedStyles.card, {padding: spacing[1]}]}>
-            {reminderTabs.map(tab => {
+            {tabs.map(tab => {
                 const isActive = activeTab.id === tab.id;
                 return (
                     <Pressable

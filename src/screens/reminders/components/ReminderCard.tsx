@@ -1,11 +1,12 @@
 import {Pressable, StyleSheet, Text, View} from "react-native";
 import {ArrowRightIcon, BellIcon, ClockIcon, DotOutlineIcon, StarIcon} from "phosphor-react-native";
+
 import colors from "@/constants/colors";
-import {Task} from "@/types/reminder";
-import ProgressBar from "@/components/ui/ProgressBar";
-import {sharedStyles} from "@/constants/sharedStyles";
 import spacing from "@/constants/spacing";
 import typography from "@/constants/typography";
+import {sharedStyles} from "@/constants/sharedStyles";
+import {Task} from "@/screens/reminders/types/reminder";
+import ProgressBar from "@/components/ui/ProgressBar";
 
 interface CardProps {
     iconColor: string,
@@ -32,7 +33,8 @@ function ReminderCard({iconColor, iconBg, title, date, time, priority, tasks, on
                 <BellIcon color={iconColor} size={18} weight={'fill'}/>
             </View>
             <View style={styles.cardLabel}>
-                <Text style={[typography.styles.cardTitle, {marginBottom: 2}, complete && styles.complete]}>{title}</Text>
+                <Text
+                    style={[typography.styles.cardTitle, {marginBottom: 2}, complete && styles.complete]}>{title}</Text>
                 <View style={[sharedStyles.row, styles.cardLabelTime]}>
                     <ClockIcon color={colors.textMuted} size={11} weight={'fill'}/>
                     <Text style={[typography.styles.metaText, complete && styles.complete]}>{date}</Text>

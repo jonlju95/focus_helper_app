@@ -12,9 +12,9 @@ import SidebarExport from '@/screens/sidebar/SidebarExport';
 import SidebarAbout from '@/screens/sidebar/SidebarAbout';
 import colors from '@/constants/colors';
 import {SidebarPanel} from "@/types/sidebar";
-import SidebarFooter from "@/components/sidebar/SidebarFooter";
+import SidebarFooter from "@/screens/sidebar/components/SidebarFooter";
 import spacing from "@/constants/spacing";
-import SidebarHeader from "@/components/sidebar/SidebarHeader";
+import SidebarHeader from "@/screens/sidebar/components/SidebarHeader";
 import {capitalise} from "@/utils/formatLabel";
 import {useUserSettings} from "@/context/UserSettingsContext"
 

@@ -1,100 +1,36 @@
-import {router, useLocalSearchParams} from "expo-router";
-import {Dimensions, LayoutAnimation, Pressable, ScrollView, StyleSheet, Text, View} from "react-native";
-import TopBar from "@/components/ui/TopBar";
-import colors from "@/constants/colors";
+import {Dimensions, Pressable, ScrollView, StyleSheet, Text, View} from "react-native";
+import {router} from "expo-router";
 import {ClockIcon, PenIcon, TrashIcon} from "phosphor-react-native";
-import ReminderTable from "@/screens/reminders/components/ReminderTable";
-import {useEffect, useState} from "react";
-import ProgressBar from "@/components/ui/ProgressBar";
-import ToggleButton from "@/components/ui/sharedInputs/ToggleButton";
-import SharedButton from "@/components/ui/SharedButton";
+
+import colors from "@/constants/colors";
 import spacing from "@/constants/spacing";
 import typography from "@/constants/typography";
 import {sharedStyles} from "@/constants/sharedStyles";
+import TopBar from "@/components/ui/TopBar";
+import ProgressBar from "@/components/ui/ProgressBar";
+import ToggleButton from "@/components/ui/sharedInputs/ToggleButton";
+import SharedButton from "@/components/ui/SharedButton";
 import SharedBadge from "@/components/ui/SharedBadge";
-import {useRemindersDB} from "@/screens/reminders/hooks/useRemindersDB";
-import {Reminder} from "@/types/reminder";
 import ConfirmDialog from "@/components/ui/modals/ConfirmDialog";
+import ReminderTable from "@/screens/reminders/components/ReminderTable";
+import {useReminderDetail} from "@/screens/reminders/hooks/useReminderDetail";
 
 const FIELD_WIDTH = (Dimensions.get('window').width - 78) / 2;
 
 function ReminderDetailScreen() {
-    const {id} = useLocalSearchParams<{ id: string }>();
-    const {getReminder, deleteReminder, toggleTask, togglePriority} = useRemindersDB();
-    const [reminder, setReminder] = useState<Reminder>();
-    const [deleteVisible, setDeleteVisible] = useState(false);
-    const [deleteContext, setDeleteContext] = useState<'delete' | 'complete'>('delete');
-
-    const progress = reminder && reminder.tasks.length > 0
-        ? reminder.tasks.filter(t => t.completed).length / reminder.tasks.length
-        : 0;
-
-    useEffect(() => {
-        if (!id) {
-            return;
-        }
-        getReminder(id).then(reminder => {
-            if (!reminder) {
-                return;
-            }
-            setReminder(reminder)
-        })
-    }, []);
+    const {
+        reminder,
+        deleteVisible,
+        setDeleteVisible,
+        deleteContext,
+        progress,
+        onTaskToggle,
+        onPriorityToggle,
+        onDelete,
+        handleDeletePress,
+    } = useReminderDetail();
 
     if (!reminder) return <View><Text>Reminder not found</Text></View>;
-
-    const onTaskToggle = async (taskId: string) => {
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-
-        const result = await toggleTask(reminder.id, taskId);
-        if (!result || !reminder) return;
-
-        // Calculate new tasks before setting state
-        const updatedTasks = reminder.tasks.map(t =>
-            t.id === result.taskId
-                ? {...t, completed: result.completed}
-                : t
-        );
-
-        const allComplete = updatedTasks.every(t => t.completed);
-
-        setReminder(prev => {
-            if (!prev) return prev;
-            return {...prev, tasks: updatedTasks};
-        });
-
-        if (allComplete) {
-            setDeleteContext('complete');
-            setDeleteVisible(true);
-        }
-    };
-
-    const onPriorityToggle = async (priority: boolean) => {
-        const result = await togglePriority(reminder.id, priority);
-        if (!result) {
-            return;
-        }
-
-        setReminder(prev => {
-            if (!prev) return prev;
-            return {
-                ...prev,
-                prioritized: result.prioritized,
-            };
-        });
-    }
-
-    const onDelete = async () => {
-        setDeleteVisible(false);
-        await deleteReminder(reminder.id);
-        router.dismissAll();
-        router.replace('/reminders');
-    }
-
-    const handleDeletePress = () => {
-        setDeleteContext('delete');
-        setDeleteVisible(true);
-    };
 
     return (
         <View style={sharedStyles.container}>

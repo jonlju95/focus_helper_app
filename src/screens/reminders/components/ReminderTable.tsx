@@ -1,12 +1,13 @@
-import {Task} from '@/types/reminder';
+import {useState} from "react";
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import {CheckSquareIcon, ListChecksIcon, PlusIcon, SquareIcon, TrashIcon} from 'phosphor-react-native';
+
 import colors from '@/constants/colors';
-import SharedInput from "@/components/ui/sharedInputs/SharedInput";
-import {useState} from "react";
 import spacing from "@/constants/spacing";
-import {sharedStyles} from "@/constants/sharedStyles";
 import typography from "@/constants/typography";
+import {sharedStyles} from "@/constants/sharedStyles";
+import {Task} from '@/screens/reminders/types/reminder';
+import SharedInput from "@/components/ui/sharedInputs/SharedInput";
 
 interface ReminderTableProps {
     tasks?: Task[];
@@ -17,8 +18,6 @@ interface ReminderTableProps {
 }
 
 function ReminderTable({tasks, onToggle, isEditing = false, onAddTask, onDeleteTask}: ReminderTableProps) {
-
-
     const [newTaskLabel, setNewTaskLabel] = useState('');
 
     const handleAdd = () => {

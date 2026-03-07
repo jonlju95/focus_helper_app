@@ -5,7 +5,7 @@ import colors from "@/constants/colors";
 import typography from "@/constants/typography";
 import {getMonthName} from "@/utils/dateTimeUtils";
 import ProgressBar from "@/components/ui/ProgressBar";
-import SidebarLink from "@/components/sidebar/SidebarLink";
+import SidebarLink from "@/screens/sidebar/components/SidebarLink";
 import {useSetting} from "@/hooks/useSetting";
 import {formatCurrency} from "@/utils/formatNumber";
 import {sharedStyles} from "@/constants/sharedStyles";

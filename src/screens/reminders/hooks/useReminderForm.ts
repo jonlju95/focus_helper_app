@@ -2,9 +2,11 @@ import {useEffect, useState} from 'react';
 import {useFieldArray, useForm} from 'react-hook-form';
 import {router, useLocalSearchParams} from 'expo-router';
 import * as Crypto from 'expo-crypto';
-import {Reminder, Task} from '@/types/reminder';
-import {useRemindersDB} from './useRemindersDB';
+
+import {Option} from "@/components/ui/sharedInputs/SharedOptionPicker";
+import {Reminder, Task} from '@/screens/reminders/types/reminder';
 import {parseTime} from "@/utils/dateTimeUtils";
+import {useReminderDB} from './useReminderDB';
 
 interface ReminderFormData {
     title: string;
@@ -16,10 +18,11 @@ interface ReminderFormData {
 }
 
 export function useReminderForm() {
-    const { id, from } = useLocalSearchParams<{ id?: string, from?: string }>();
-    const {getReminder, addReminder, updateReminder} = useRemindersDB();
+    const {id, from} = useLocalSearchParams<{ id?: string, from?: string }>();
+    const {getReminder, addReminder, updateReminder, getReminderTabs} = useReminderDB();
 
     const [reminder, setReminder] = useState<Reminder>();
+    const [options, setOptions] = useState<Option[]>([]);
 
     const {control, handleSubmit, reset, formState: {errors, isSubmitting}} =
         useForm<ReminderFormData>({
@@ -35,8 +38,18 @@ export function useReminderForm() {
 
     const {fields, append, remove} = useFieldArray({control, name: 'tasks'});
 
-    // Load existing reminder or set defaults
     useEffect(() => {
+        getReminderTabs().then((tabs) => {
+            let options: Option[] = [];
+            tabs.forEach((tab) => {
+                options.push({
+                    label: tab.name,
+                    value: tab.id,
+                });
+            })
+            setOptions(options);
+        })
+
         if (!id) return;
         getReminder(id).then(r => {
             if (!r) {
@@ -53,7 +66,8 @@ export function useReminderForm() {
                 tasks: r.tasks,
             });
         });
-    }, [id]);
+
+    }, [getReminder, getReminderTabs, id, reset]);
 
     const addTask = (label: string) => {
         append({
@@ -106,5 +120,6 @@ export function useReminderForm() {
         addTask,
         deleteTask,
         onSubmit,
+        options
     };
 }

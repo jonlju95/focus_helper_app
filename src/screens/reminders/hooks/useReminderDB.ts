@@ -1,8 +1,9 @@
-import {useState} from 'react';
-import {Reminder} from '@/types/reminder';
+import {useCallback} from 'react';
+import {and, count, eq, gt, lte} from 'drizzle-orm';
+
+import {db} from '@/db/database';
 import {reminder_types, reminders, tasks} from '@/db/schema';
-import {and, count, eq, gt, lte} from "drizzle-orm";
-import {db} from "@/db/database";
+import {Reminder} from '@/screens/reminders/types/reminder';
 
 const mapReminder = (r: typeof reminders.$inferSelect & {
     tasks: typeof tasks.$inferSelect[];
@@ -22,51 +23,42 @@ const mapReminder = (r: typeof reminders.$inferSelect & {
     })),
 });
 
-export function useRemindersDB() {
-    const [loading] = useState(true);
-
-    const getReminders = async () => {
+export function useReminderDB() {
+    const getReminders = useCallback(async () => {
         const result = await db.query.reminders.findMany({
             with: {tasks: true, type: true},
             orderBy: (reminders, {asc}) => [
                 asc(reminders.date),
                 asc(reminders.time),
-                asc(reminders.prioritized)
+                asc(reminders.prioritized),
             ],
         });
         return result.map(mapReminder);
-    }
+    }, []);
 
-    const getReminder = async (id: string) => {
-        return db.query.reminders.findFirst({
-            with: {
-                tasks: true,
-                type: true,
-            },
-            where: (reminders, {eq}) => eq(reminders.id, id)
-        }).then(r => {
-            return r ? mapReminder(r) : null;
-        })
-    }
+    const getReminder = useCallback(async (id: string) => {
+        const r = await db.query.reminders.findFirst({
+            with: {tasks: true, type: true},
+            where: (reminders, {eq}) => eq(reminders.id, id),
+        });
+        return r ? mapReminder(r) : null;
+    }, []);
 
-    const addReminder = async (reminder: Reminder) => {
+    const addReminder = useCallback(async (reminder: Reminder) => {
         await db.transaction(async (tx) => {
-            await tx.insert(reminders).values({
-                ...reminder,
-                type_id: reminder.typeId
-            });
+            await tx.insert(reminders).values({...reminder, type_id: reminder.typeId});
             await tx.insert(tasks).values(
                 reminder.tasks.map((task, index) => ({
                     ...task,
                     reminder_id: reminder.id,
                     sort_order: index,
-                })));
+                }))
+            );
         });
-
         return reminder;
-    };
+    }, []);
 
-    const updateReminder = async (reminder: Reminder) => {
+    const updateReminder = useCallback(async (reminder: Reminder) => {
         await db.transaction(async (tx) => {
             await tx.update(reminders)
                 .set({
@@ -78,9 +70,7 @@ export function useRemindersDB() {
                 })
                 .where(eq(reminders.id, reminder.id));
 
-            // Delete existing tasks and re-insert
-            await tx.delete(tasks)
-                .where(eq(tasks.reminder_id, reminder.id));
+            await tx.delete(tasks).where(eq(tasks.reminder_id, reminder.id));
 
             if (reminder.tasks.length > 0) {
                 await tx.insert(tasks).values(
@@ -94,67 +84,55 @@ export function useRemindersDB() {
                 );
             }
         });
-
         return reminder;
-    };
+    }, []);
 
-    const deleteReminder = async (id: string) => {
+    const deleteReminder = useCallback(async (id: string) => {
         await db.delete(reminders).where(eq(reminders.id, id));
-    };
+    }, []);
 
-    const toggleTask = async (reminderId: string, taskId: string) => {
+    const toggleTask = useCallback(async (taskId: string) => {
         const task = await db.query.tasks.findFirst({
             where: (tasks, {eq}) => eq(tasks.id, taskId),
         });
-
         if (!task) return;
-
         await db.update(tasks)
             .set({completed: !task.completed})
             .where(eq(tasks.id, taskId));
+        return {taskId, completed: !task.completed};
+    }, []);
 
-        return {reminderId, taskId, completed: !task.completed};
-    };
-
-    const togglePriority = async (reminderId: string, prioritized: boolean) => {
+    const togglePriority = useCallback(async (reminderId: string, prioritized: boolean) => {
         await db.update(reminders)
-            .set({prioritized: prioritized})
-            .where(eq(reminders.id, reminderId))
-
+            .set({prioritized})
+            .where(eq(reminders.id, reminderId));
         return {reminderId, prioritized};
-    }
+    }, []);
 
-    const getTopThreeReminders = async () => {
+    const getTopThreeReminders = useCallback(async () => {
         const result = await db.query.reminders.findMany({
             with: {tasks: true, type: true},
-            orderBy: (reminders, {asc}) => [
-                asc(reminders.date),
-                asc(reminders.time)
-            ],
+            orderBy: (reminders, {asc}) => [asc(reminders.date), asc(reminders.time)],
             limit: 3,
         });
         return result.map(mapReminder);
-    }
+    }, []);
 
-    const getFutureReminders = async (date: Date) => {
+    const getFutureReminders = useCallback(async (date: Date) => {
         const dateStr = date.toISOString().split('T')[0];
         const monthEnd = new Date(date.getFullYear(), date.getMonth() + 1, 0)
             .toISOString().split('T')[0];
-
         const result = await db.select({count: count()})
             .from(reminders)
-            .where(
-                and(
-                    gt(reminders.date, dateStr),
-                    lte(reminders.date, monthEnd)
-                )
-            );
-
+            .where(and(gt(reminders.date, dateStr), lte(reminders.date, monthEnd)));
         return result[0].count;
-    };
+    }, []);
+
+    const getReminderTabs = useCallback(async () => {
+        return db.query.reminder_types.findMany();
+    }, []);
 
     return {
-        loading,
         getReminders,
         getReminder,
         addReminder,
@@ -163,6 +141,7 @@ export function useRemindersDB() {
         toggleTask,
         togglePriority,
         getTopThreeReminders,
-        getFutureReminders
+        getFutureReminders,
+        getReminderTabs,
     };
 }

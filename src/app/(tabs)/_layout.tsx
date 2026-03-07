@@ -18,7 +18,7 @@ import {TabBarIcon} from '@/components/navigation/TabBarIcon';
 import {tabBarConfig} from '@/components/navigation/tabBarConfig';
 import colors from '@/constants/colors';
 import {SidebarProvider} from '@/context/SidebarContext';
-import Sidebar from '@/components/sidebar/Sidebar';
+import Sidebar from '@/screens/sidebar/components/Sidebar';
 import {db, expoDb, migrations} from '@/db/database';
 import {backupDatabase} from "@/utils/backupDatabase";
 import {setBackgroundColorAsync} from "expo-system-ui";

@@ -1,57 +1,31 @@
-import {Pressable, ScrollView, StyleSheet, Text, View} from "react-native";
-import TopBar from "@/components/ui/TopBar";
-import colors from "@/constants/colors";
-import spacing from "@/constants/spacing";
-import ReminderTabs from "@/screens/reminders/components/ReminderTabs";
-import {Reminder, ReminderType} from "@/types/reminder";
-import React, {useCallback, useEffect, useState} from "react";
-import ReminderCard from "@/screens/reminders/components/ReminderCard";
-import {router, useFocusEffect} from "expo-router";
-import {CalendarBlankIcon, ClockIcon, FunnelIcon, PlusIcon} from "phosphor-react-native";
-import AlertStrip from "@/components/ui/AlertStrip";
-import SharedButton from "@/components/ui/SharedButton";
-import SectionLabel from "@/components/ui/SectionLabel";
-import {sharedStyles} from "@/constants/sharedStyles";
-import {useRemindersDB} from "@/screens/reminders/hooks/useRemindersDB";
-import EmptyState from "@/components/ui/EmptyState";
-import {useReminderTabs} from "@/screens/reminders/hooks/useReminderTabs";
-import RangeFilterModal from "@/components/ui/modals/RangeFilterModal";
-import {getRangeStart} from "@/utils/dateTimeUtils";
-import typography from "@/constants/typography";
+import React from 'react';
+import {Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {router} from 'expo-router';
+import {CalendarBlankIcon, ClockIcon, FunnelIcon, PlusIcon} from 'phosphor-react-native';
+
+import colors from '@/constants/colors';
+import spacing from '@/constants/spacing';
+import typography from '@/constants/typography';
+import {sharedStyles} from '@/constants/sharedStyles';
+import {Reminder} from '@/screens/reminders/types/reminder';
+import AlertStrip from '@/components/ui/AlertStrip';
+import EmptyState from '@/components/ui/EmptyState';
+import RangeFilterModal from '@/components/ui/modals/RangeFilterModal';
+import SectionLabel from '@/components/ui/SectionLabel';
+import SharedButton from '@/components/ui/SharedButton';
+import TopBar from '@/components/ui/TopBar';
+import ReminderCard from '@/screens/reminders/components/ReminderCard';
+import ReminderTabs from '@/screens/reminders/components/ReminderTabs';
+import {useReminderList} from '@/screens/reminders/hooks/useReminderList';
 
 export default function ReminderListScreen() {
-    const {getReminders} = useRemindersDB();
-    const {getReminderTabs} = useReminderTabs();
-
-    const [allReminders, setAllReminders] = useState<Reminder[]>([]);
-    const [activeTab, setActiveTab] = useState<ReminderType>();
-    const [filterVisible, setFilterVisible] = useState(false);
-    const [filterRange, setFilterRange] = useState<'week' | 'month' | 'all'>('month');
-
-    const today = new Date().toISOString().split('T')[0];
-    const rangeStart = getRangeStart(filterRange);
-
-    useEffect(() => {
-        getReminderTabs().then(tabs => {
-            if (tabs.length > 0) setActiveTab(tabs[0]);
-        });
-    }, []);
-
-    useFocusEffect(
-        useCallback(() => {
-            getReminders().then(setAllReminders);
-        }, [])
-    );
-
-    const byType = allReminders.filter(r => r.typeId === activeTab?.id);
-
-    const pastReminders = byType.filter(r =>
-        r.date < today &&
-        (rangeStart === null || r.date >= rangeStart)
-    );
-
-    const todayReminders = byType.filter(r => r.date === today);
-    const upcomingReminders = byType.filter(r => r.date > today);
+    const {
+        reminderTabs,
+        activeTab, setActiveTab,
+        filterVisible, setFilterVisible,
+        filterRange, setFilterRange,
+        pastReminders, todayReminders, upcomingReminders,
+    } = useReminderList();
 
     const renderCard = (reminder: Reminder) => (
         <ReminderCard
@@ -63,18 +37,14 @@ export default function ReminderListScreen() {
             iconBg={reminder.prioritized ? colors.primaryLight : colors.infoLight}
             priority={reminder.prioritized}
             tasks={reminder.tasks}
-            onPress={() => router.push({
-                pathname: '/reminders/[id]',
-                params: {id: reminder.id},
-            })}
-            complete={reminder.tasks.filter(r => r.completed).length === reminder.tasks.length}
+            onPress={() => router.push({pathname: '/reminders/[id]', params: {id: reminder.id}})}
+            complete={reminder.tasks.filter(t => t.completed).length === reminder.tasks.length}
         />
     );
 
     return (
         <View style={sharedStyles.container}>
             <TopBar title="Reminders"/>
-
             <ScrollView
                 style={sharedStyles.scroll}
                 contentContainerStyle={sharedStyles.scrollContent}
@@ -97,21 +67,15 @@ export default function ReminderListScreen() {
                     }}
                 />
 
-                {activeTab && (
-                    <ReminderTabs activeTab={activeTab} onChange={setActiveTab}/>
-                )}
+                {activeTab && <ReminderTabs tabs={reminderTabs} activeTab={activeTab} onChange={setActiveTab}/>}
 
-                {/* Past */}
                 <View style={styles.section}>
                     <View style={[sharedStyles.row, styles.sectionHeader]}>
                         <SectionLabel
                             icon={<ClockIcon size={13} color={colors.textMuted} weight="fill"/>}
                             label="Past reminders"
                         />
-                        <Pressable
-                            style={styles.filterButton}
-                            onPress={() => setFilterVisible(true)}
-                        >
+                        <Pressable style={styles.filterButton} onPress={() => setFilterVisible(true)}>
                             <FunnelIcon size={14} color={colors.textMuted} weight="fill"/>
                             <Text style={styles.filterButtonText}>
                                 {filterRange === 'week' ? 'This week' :
@@ -119,11 +83,9 @@ export default function ReminderListScreen() {
                             </Text>
                         </Pressable>
                     </View>
-
                     {pastReminders.length === 0
                         ? <EmptyState message="No past reminders"/>
-                        : pastReminders.map(renderCard)
-                    }
+                        : pastReminders.map(renderCard)}
                 </View>
 
                 <RangeFilterModal
@@ -133,7 +95,6 @@ export default function ReminderListScreen() {
                     onClose={() => setFilterVisible(false)}
                 />
 
-                {/* Today */}
                 <View style={styles.section}>
                     <SectionLabel
                         icon={<ClockIcon size={13} color={colors.textMuted} weight="fill"/>}
@@ -141,11 +102,9 @@ export default function ReminderListScreen() {
                     />
                     {todayReminders.length === 0
                         ? <EmptyState message="Nothing due today"/>
-                        : todayReminders.map(renderCard)
-                    }
+                        : todayReminders.map(renderCard)}
                 </View>
 
-                {/* Upcoming */}
                 <View style={styles.section}>
                     <SectionLabel
                         icon={<CalendarBlankIcon size={13} color={colors.textMuted} weight="fill"/>}
@@ -153,8 +112,7 @@ export default function ReminderListScreen() {
                     />
                     {upcomingReminders.length === 0
                         ? <EmptyState message="Nothing upcoming"/>
-                        : upcomingReminders.map(renderCard)
-                    }
+                        : upcomingReminders.map(renderCard)}
                 </View>
 
                 <View style={sharedStyles.buttonContainer}>
@@ -162,7 +120,7 @@ export default function ReminderListScreen() {
                         icon={<PlusIcon size={12} color="white" weight="bold"/>}
                         label="Add new reminder"
                         customStyle={{alignSelf: 'stretch'}}
-                        onPress={() => router.navigate(`/reminders/new?from=reminders`)}
+                        onPress={() => router.navigate('/reminders/new?from=reminders')}
                     />
                 </View>
             </ScrollView>
@@ -171,17 +129,9 @@ export default function ReminderListScreen() {
 }
 
 const styles = StyleSheet.create({
-    section: {
-        gap: spacing[3],
-    },
-    sectionHeader: {
-        justifyContent: 'space-between',
-    },
-    filterButton: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: spacing[1],
-    },
+    section: {gap: spacing[3]},
+    sectionHeader: {justifyContent: 'space-between'},
+    filterButton: {flexDirection: 'row', alignItems: 'center', gap: spacing[1]},
     filterButtonText: {
         fontSize: 12,
         fontFamily: `${typography.fonts.heading}_600`,
