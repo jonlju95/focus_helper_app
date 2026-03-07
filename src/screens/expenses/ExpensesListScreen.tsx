@@ -29,7 +29,6 @@ import {Expense} from '@/types/expense';
 import {useExpenseList} from '@/screens/expenses/hooks/useExpenseList';
 import {formatCurrency} from "@/utils/formatNumber";
 
-// ── CategoryCardItem ─────────────────────────────────────────
 interface CategoryCardItemProps {
     color: string;
     title: string;
@@ -96,11 +95,11 @@ function ExpensesListScreen() {
                 <AlertStrip
                     left={{
                         icon: 'coin', iconColor: colors.success, iconBg: colors.successLight,
-                        label: 'Monthly income', value: `${formatCurrency(monthlyIncome)} kr`, stacked: true,
+                        label: 'Monthly income', value: `${formatCurrency(Number(monthlyIncome))} kr`, stacked: true,
                     }}
                     right={{
                         icon: 'receipt', iconColor: colors.urgent, iconBg: colors.urgentLight,
-                        label: 'Fixed expenses', value: `${formatCurrency(fixedExpenses)} kr`, stacked: true,
+                        label: 'Fixed expenses', value: `${formatCurrency(Number(fixedExpenses))} kr`, stacked: true,
                     }}
                 />
 
@@ -116,10 +115,10 @@ function ExpensesListScreen() {
                     <StatCard
                         icon={<CoinsIcon size={11} color={colors.textMuted} weight="bold"/>}
                         label="Remaining budget"
-                        amount={formatCurrency((monthlyIncome) + (fixedExpenses) + (totalSpent))}
+                        amount={formatCurrency((Number(monthlyIncome)) - (Number(fixedExpenses)) + (totalSpent))}
                         currency="kr"
                         variant="light"
-                        progress={((monthlyIncome) + (fixedExpenses) + (totalSpent)) / monthlyIncome}
+                        progress={totalSpent === 0 ? 1 : totalSpent / (Number(monthlyIncome) - Number(fixedExpenses))}
                     />
                 </View>
 

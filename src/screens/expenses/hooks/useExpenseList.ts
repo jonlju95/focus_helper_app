@@ -1,34 +1,29 @@
 import {useCallback, useState} from 'react';
 import {useFocusEffect} from 'expo-router';
 import {useExpensesDB} from './useExpensesDB';
-import {useBudgetSettings} from '@/hooks/useBudgetSettings';
 import {Expense, MonthlySpending} from '@/types/expense';
 import {getRangeStart} from '@/utils/dateTimeUtils';
+import {useSetting} from "@/hooks/useSetting";
 
 export type FilterRange = 'week' | 'month' | 'all';
 
 export function useExpenseList() {
+    const {value: monthlyIncome} = useSetting('MONTHLY_INCOME');
+    const {value: fixedExpenses} = useSetting('FIXED_EXPENSES');
     const {getExpenses, getMonthlySpending, getRemainingBudget} = useExpensesDB();
-    const {getBudgetSettings} = useBudgetSettings();
 
     const [allExpenses, setAllExpenses] = useState<Expense[]>([]);
     const [monthlySpending, setMonthlySpending] = useState<MonthlySpending[]>([]);
     const [totalSpent, setTotalSpent] = useState(0);
     const [filterRange, setFilterRange] = useState<FilterRange>('month');
     const [filterVisible, setFilterVisible] = useState(false);
-    const [monthlyIncome, setMonthlyIncome] = useState<number>(0);
-    const [fixedExpenses, setFixedExpenses] = useState<number>(0);
 
     useFocusEffect(
         useCallback(() => {
             getExpenses().then(setAllExpenses);
             getMonthlySpending().then(setMonthlySpending);
             getRemainingBudget().then(setTotalSpent);
-            getBudgetSettings().then(r => {
-                setMonthlyIncome(r.monthly_income);
-                setFixedExpenses(r.fixed_expenses);
-            });
-        }, [])
+        }, [getExpenses, getMonthlySpending, getRemainingBudget])
     );
 
     const today = new Date().toISOString().split('T')[0];

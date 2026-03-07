@@ -33,19 +33,19 @@ function SidebarMenu({onNavigate}: SidebarMenuProps) {
                     </View>
                     <View style={styles.monthlyBudgetItem}>
                         <Text style={styles.monthlyBudgetItemText}>Fixed expenses</Text>
-                        <Text style={[styles.monthlyBudgetItemAmount, {color: colors.primary}]}>{formatCurrency(Number(fixedExpenses))} kr</Text>
+                        <Text style={[styles.monthlyBudgetItemAmount, {color: colors.primary}]}>{formatCurrency(Number(fixedExpenses)*-1)} kr</Text>
                     </View>
                     <View style={styles.monthlyBudgetItem}>
                         <Text style={styles.monthlyBudgetItemText}>Remaining</Text>
-                        <Text style={styles.monthlyBudgetItemAmount}>{formatCurrency(Number(income) + Number(fixedExpenses))} kr</Text>
+                        <Text style={styles.monthlyBudgetItemAmount}>{formatCurrency(Number(income) - Number(fixedExpenses))} kr</Text>
                     </View>
                 </View>
-                <ProgressBar progress={Number(income) === 0 ? 0 : (Number(fixedExpenses) / Number(income))} color={colors.primary}/>
+                <ProgressBar progress={Number(income) === 0 ? 0 : (Number(income) - Number(fixedExpenses)) / Number(income)} color={colors.primary}/>
             </View>
             <View style={{flex: 1}}>
                 <SidebarLink onPress={() => onNavigate('profile')} title={'Edit profile'} subtitle={username}
                              icon={'profile'} color={colors.primary} bg={colors.primaryLight}/>
-                <SidebarLink onPress={() => onNavigate('budget')} title={'Budget & Income'} subtitle={'19 245 kr /' +
+                <SidebarLink onPress={() => onNavigate('budget')} title={'Budget & Income'} subtitle={formatCurrency(Number(income))+'kr /' +
                     ' mo'} icon={'coins'} color={colors.success} bg={colors.successLight}/>
                 <SidebarLink onPress={() => onNavigate('notifications')} title={'Notifications'} subtitle={'5 active'}
                              icon={'notifications'} color={colors.warning} bg={colors.warningLight}/>

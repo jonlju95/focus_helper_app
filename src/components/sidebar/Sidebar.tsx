@@ -73,7 +73,7 @@ export default function Sidebar() {
             case 'profile':
                 return <SidebarProfile onBack={() => setActivePanel('menu')}/>;
             case 'budget':
-                return <SidebarBudget/>;
+                return <SidebarBudget onBack={() => setActivePanel('menu')}/>;
             case 'notifications':
                 return <SidebarNotifications/>;
             case 'categories':

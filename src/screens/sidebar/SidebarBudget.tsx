@@ -7,44 +7,55 @@ import SharedButton from "@/components/ui/SharedButton";
 import spacing from "@/constants/spacing";
 import typography from "@/constants/typography";
 import ProgressBar from "@/components/ui/ProgressBar";
+import {useSetting} from "@/hooks/useSetting";
+import {formatCurrency} from "@/utils/formatNumber";
+import {useExpenseList} from "@/screens/expenses/hooks/useExpenseList";
 
 interface SidebarBudgetProps {
     onBack?: () => void
 }
 
 function SidebarBudget({onBack}: SidebarBudgetProps) {
+    const {value: monthlyIncome, setValue: setMonthlyIncome, save: saveMonthlyIncome} = useSetting('MONTHLY_INCOME');
+    const {value: fixedExpenses, setValue: setFixedExpenses, save: saveFixedExpenses} = useSetting('FIXED_EXPENSES');
+    const {totalSpent} = useExpenseList();
+
+    const handleSave = async () => {
+        await saveMonthlyIncome(monthlyIncome);
+        await saveFixedExpenses(fixedExpenses);
+        onBack?.();
+    };
+
     return (
-        <>
-            <View style={styles.container}>
-                <View style={styles.userIcon}>
-                    <UserIcon size={36} color={colors.primary} weight={'bold'}/>
-                    <Pressable style={styles.userEdit}>
-                        <PenIcon size={11} color={colors.primaryLight} weight={'bold'}/>
-                    </Pressable>
+        <View style={styles.container}>
+            <View style={styles.userIcon}>
+                <UserIcon size={36} color={colors.primary} weight={'bold'}/>
+                <Pressable style={styles.userEdit}>
+                    <PenIcon size={11} color={colors.primaryLight} weight={'bold'}/>
+                </Pressable>
+            </View>
+            <View style={styles.settingsCard}>
+                <View style={[styles.settingsCardArea, {borderBottomWidth: 1, borderBottomColor: '#F5F0EA'}]}>
+                    <SharedInput value={monthlyIncome} label={'Monthly income (kr)'} keyboardType={'decimal-pad'} onChangeText={setMonthlyIncome}
+                                 customStyle={{fontSize: 18, fontFamily: `${typography.fonts.heading}_800`}}/>
                 </View>
-                <View style={styles.settingsCard}>
-                    <View style={[styles.settingsCardArea, {borderBottomWidth: 1, borderBottomColor: '#F5F0EA'}]}>
-                        <SharedInput value={'19 245'} label={'Monthly income (kr)'}
-                                     customStyle={{fontSize: 18, fontFamily: `${typography.fonts.heading}_800`}}/>
-                    </View>
-                    <View style={[styles.settingsCardArea]}>
-                        <SharedInput value={'8 830'} label={'Fixed monthly expenses (kr)'}
-                                     customStyle={{fontSize: 18, fontFamily: `${typography.fonts.heading}_800`}}/>
-                        <Text style={styles.settingsCardAreaLabel}>Rent, subscriptions, insurance, etc.</Text>
-                    </View>
-                </View>
-                <View style={styles.budgetCard}>
-                    <Text style={styles.budgetCardLabel}>Available for spending</Text>
-                    <Text style={styles.budgetCardHeader}>10 415 kr</Text>
-                    <ProgressBar progress={0.38} color={colors.primary}/>
-                    <Text style={styles.budgetCardMeta}>38% spent this month</Text>
-                </View>
-                <View style={styles.buttonContainer}>
-                    <SharedButton icon={<CheckIcon size={12} color={'white'} weight={'bold'}/>} label={'Save changes'}
-                                  customStyle={{alignSelf: 'stretch'}} onPress={onBack}/>
+                <View style={[styles.settingsCardArea]}>
+                    <SharedInput value={fixedExpenses} label={'Fixed monthly expenses (kr)'} keyboardType={'decimal-pad'} onChangeText={setFixedExpenses}
+                                 customStyle={{fontSize: 18, fontFamily: `${typography.fonts.heading}_800`}}/>
+                    <Text style={styles.settingsCardAreaLabel}>Rent, subscriptions, insurance, etc.</Text>
                 </View>
             </View>
-        </>
+            <View style={styles.budgetCard}>
+                <Text style={styles.budgetCardLabel}>Available for spending</Text>
+                <Text style={styles.budgetCardHeader}>{formatCurrency(Number(monthlyIncome) - Number(fixedExpenses) + totalSpent)} kr</Text>
+                <ProgressBar progress={totalSpent === 0 ? 1 : totalSpent / (Number(monthlyIncome) - Number(fixedExpenses))} color={colors.primary}/>
+                <Text style={styles.budgetCardMeta}>{Math.round(totalSpent === 0 ? 0 : totalSpent / (Number(monthlyIncome) - Number(fixedExpenses))*100)}% spent this month</Text>
+            </View>
+            <View style={styles.buttonContainer}>
+                <SharedButton icon={<CheckIcon size={12} color={'white'} weight={'bold'}/>} label={'Save changes'}
+                              customStyle={{alignSelf: 'stretch'}} onPress={handleSave} />
+            </View>
+        </View>
     );
 }
 
