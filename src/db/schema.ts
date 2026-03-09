@@ -52,12 +52,6 @@ export const expenses = sqliteTable('expenses', {
     category_id: text('category_id').references(() => categories.id, { onDelete: "set null" }),
 });
 
-export const budget_settings = sqliteTable('budget_settings', {
-    id: text('id').primaryKey(),
-    monthly_income: real('monthly_income').notNull().default(0),
-    fixed_expenses: real('fixed_expenses').notNull().default(0),
-});
-
 export const greetings = sqliteTable('greetings', {
     id: text('id').primaryKey(),
     phrase: text('phrase').notNull(),

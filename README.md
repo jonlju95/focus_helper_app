@@ -1,50 +1,160 @@
-# Welcome to your Expo app 👋
+# Focus Helper
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A mobile app built for people with ADHD to help manage daily life - tracking reminders, activities, and expenses in
+one place, with a calm and distraction-free interface.
 
-## Get started
+---
 
-1. Install dependencies
+## Features
 
-   ```bash
-   npm install
-   ```
+### Reminders
 
-2. Start the app
+Create reminders with optional tasks, due dates, and times. Reminders are organized by type (e.g. Reminders, Shopping,
+Notes) and split into past, today, and upcoming sections. Each task can be checked off individually, and when all tasks
+are complete the app prompts you to delete the reminder. Reminders can be prioritized to make them stand out.
 
-   ```bash
-   npx expo start
-   ```
+### Activities
 
-In the output, you'll find options to open the app in a
+Log activities with a date, time, category, and optional description. Activities can be prioritized and are organized by
+past, today, and upcoming. Categories are color-coded and split between activity types (e.g. Meeting, Errand,
+Appointment).
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+### Expenses
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+Track spending with a title, amount, date, category, location, and description. Expenses are displayed with a running
+total and support range filtering by week, month, or all time. A budget overview shows monthly income, fixed expenses,
+and discretionary spending at a glance.
 
-## Get a fresh project
+### Overview
 
-When you're ready, run:
+A home screen showing a summary of today's reminders, upcoming items, and quick-add buttons for all three entity types.
+Quick-adding opens a form as a modal and returns you to the overview on save.
 
-```bash
-npm run reset-project
+### Settings (Sidebar)
+
+A slide-in sidebar with sections for:
+
+- **Profile** - set your name and preferred greeting style
+- **Budget** - configure monthly income and fixed expenses
+- **Notifications** - toggle notification preferences per category
+- **Categories** - view built-in expense and activity categories, manage custom ones
+- **Export** - export your data
+- **About** - app info
+
+---
+
+## Tech Stack
+
+| Area       | Technology                        |
+|------------|-----------------------------------|
+| Framework  | React Native + Expo (SDK 52)      |
+| Routing    | Expo Router (file-based)          |
+| Database   | expo-sqlite via Drizzle ORM       |
+| Migrations | Drizzle Kit                       |
+| Forms      | React Hook Form                   |
+| UI         | Custom components, Phosphor icons |
+| Fonts      | Nunito + Nunito Sans              |
+
+---
+
+## Project Structure
+
+```
+src/
+  app/                  # Expo Router file-based routes
+    (tabs)/             # Tab navigator screens
+      reminders/        # Reminder list + detail
+      activities/       # Activity list + detail
+      expenses/         # Expense list + detail
+    reminders/new.tsx   # Form screens (modals, outside tabs)
+    expenses/new.tsx
+    activities/new.tsx
+  components/           # Shared UI components
+    ui/                 # Buttons, inputs, cards, modals
+    sidebar/            # Sidebar shell components
+    navigation/         # Tab bar config and icons
+  constants/            # Colors, spacing, typography, shared styles
+  context/              # React context providers
+  db/                   # Drizzle setup, schema, relations
+  drizzle/              # Migration SQL files
+  hooks/                # Shared hooks (useSetting)
+  screens/              # Feature screens and hooks
+    reminders/
+      components/       # ReminderCard, ReminderTable, ReminderTabs
+      hooks/            # useRemindersDB, useReminderList, useReminderForm, useReminderDetail
+    activities/
+    expenses/
+    overview/
+    sidebar/
+  types/                # Shared TypeScript types
+  utils/                # Date helpers, formatting, navigation, backup
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### Code Architecture
 
-## Learn more
+The codebase follows a strict separation of responsibilities:
 
-To learn more about developing your project with Expo, look at the following resources:
+- **`useXxxDB`** - database access only. Queries, inserts, updates, deletes.
+- **`useXxxList`** - filtering, sorting, and derived state for list screens.
+- **`useXxxForm`** - form state, validation, and submit logic via React Hook Form.
+- **`useXxxDetail`** - state and handlers for detail screens.
+- **Screen components** - JSX rendering only. No data fetching, no business logic.
+- **UI components** - pure display. Receive props, emit events.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+---
 
-## Join the community
+## Database
 
-Join our community of developers creating universal apps.
+SQLite via `expo-sqlite` with Drizzle ORM. Migrations run automatically on app start using Drizzle's expo migrator.
+Foreign keys are enabled after migrations complete.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+### Tables
+
+| Table             | Description                                               |
+|-------------------|-----------------------------------------------------------|
+| `reminders`       | Reminder entries                                          |
+| `tasks`           | Checklist items belonging to a reminder                   |
+| `reminder_types`  | Reminder categories (Reminders, Shopping, Notes)          |
+| `activities`      | Activity log entries                                      |
+| `expenses`        | Expense entries                                           |
+| `categories`      | Shared color-coded categories for expenses and activities |
+| `user_settings`   | Key-value store for app settings and preferences          |
+| `greetings`       | Selectable greeting phrases for the overview screen       |
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18+
+- Android Studio with an emulator, or a physical Android device
+- Android SDK with CMake 3.30.1
+
+### Install
+
+```bash
+npm install
+npx expo prebuild
+```
+
+### Run (development)
+
+```bash
+npx expo start
+```
+
+### Build APK
+
+```bash
+npx expo run:android --variant release
+```
+
+---
+
+## Notes
+
+- The app is Android-only at this stage.
+- Daily database backups are created automatically on launch.
+- Custom categories can be added from the sidebar with a name, color, and type.
+- All amounts are added as positive values, but stored as negative internally.
