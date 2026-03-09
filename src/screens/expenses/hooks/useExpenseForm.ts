@@ -87,21 +87,24 @@ export function useExpenseForm() {
         }
 
         if (from === 'overview') {
-            router.dismissAll();
+            router.dismiss();
         } else {
-            router.dismissAll();
-            router.push('/expenses');
-            router.replace({
-                pathname: '/expenses/[id]',
-                params: {id: expenseToSave.id}
-            });
+            router.dismiss();
+            setTimeout(() => {
+                router.navigate('/expenses');
+                router.push({
+                    pathname: '/expenses/[id]',
+                    params: {id: expenseToSave.id}
+                });
+            }, 0);
+
         }
     }
 
     const normalizeAmount = (value: string): string => {
         return value
-            .replace(',', '.')   // comma → period for parseFloat
-            .replace(/[^0-9.]/g, '');  // strip anything that's not digit or period
+            .replace(',', '.')
+            .replace(/[^0-9.]/g, '');
     };
 
     const isDisabled =

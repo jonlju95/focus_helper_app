@@ -20,11 +20,6 @@ function ActivitiesLayout() {
                 contentStyle: {backgroundColor: colors.bgApp},
                 animation: 'fade_from_bottom',
             }}/>
-            <Stack.Screen name={"new"} options={{
-                headerShown: false,
-                contentStyle: {backgroundColor: colors.bgApp},
-                animation: 'fade_from_bottom',
-            }}/>
         </Stack>
     );
 }

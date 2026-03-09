@@ -101,14 +101,17 @@ export function useActivitiesForm() {
         }
 
         if (from === 'overview') {
-            router.dismissAll();
+            router.dismiss();
         } else {
-            router.dismissAll();
-            router.push('/activities');
-            router.replace({
-                pathname: '/activities/[id]',
-                params: {id: activityToSave.id}
-            });
+            console.log('activity')
+            router.dismiss();
+            setTimeout(() => {
+                router.navigate('/activities');
+                router.replace({
+                    pathname: '/activities/[id]',
+                    params: {id: activityToSave.id}
+                });
+            }, 0);
         }
     }
 

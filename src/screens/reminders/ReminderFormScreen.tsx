@@ -24,7 +24,7 @@ function ReminderFormScreen() {
 
     return (
         <View style={sharedStyles.container}>
-            <TopBar title={isEditing ? 'Edit reminder' : 'New reminder'} showBack={true}
+            <TopBar title={isEditing ? 'Edit reminder' : 'New reminder'} showBack={true} showMenu={false}
                     onBack={() => router.back()}/>
             <KeyboardAwareScrollView
                 style={sharedStyles.scroll}

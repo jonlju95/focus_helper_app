@@ -34,7 +34,7 @@ function ReminderDetailScreen() {
 
     return (
         <View style={sharedStyles.container}>
-            <TopBar title={reminder.title} showBack={true} onBack={() => router.back()}/>
+            <TopBar title={'Details'} showBack={true} onBack={() => router.back()}/>
 
             <ScrollView style={sharedStyles.scroll}
                         contentContainerStyle={sharedStyles.scrollContent}

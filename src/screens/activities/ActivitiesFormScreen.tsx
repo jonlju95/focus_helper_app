@@ -27,7 +27,7 @@ function ActivitiesFormScreen() {
 
     return (
         <View style={sharedStyles.container}>
-            <TopBar title={isEditing ? 'Edit activity' : 'New activity'} showBack={true} onBack={() => router.back()}/>
+            <TopBar title={isEditing ? 'Edit activity' : 'New activity'} showBack={true} showMenu={false} onBack={() => router.back()}/>
             <KeyboardAwareScrollView
                 style={sharedStyles.scroll}
                 contentContainerStyle={sharedStyles.scrollContent}

@@ -97,14 +97,16 @@ export function useReminderForm() {
         }
 
         if (from === 'overview') {
-            router.dismissAll();
+            router.dismiss();
         } else {
-            router.dismissAll();
-            router.push('/reminders');
-            router.replace({
-                pathname: '/reminders/[id]',
-                params: {id: reminderToSave.id}
-            });
+            router.dismiss();
+            setTimeout(() => {
+                router.navigate('/(tabs)/reminders');
+                router.push({
+                    pathname: '/(tabs)/reminders/[id]',
+                    params: {id: reminderToSave.id}
+                });
+            }, 0);
         }
     };
 

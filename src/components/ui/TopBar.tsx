@@ -11,11 +11,12 @@ interface TopBarProps {
     date?: string;
     showBack?: boolean;
     showDate?: boolean;
+    showMenu?: boolean;
     onBack?: () => void;
 }
 
 
-export default function TopBar({title, date, showBack, showDate, onBack}: TopBarProps) {
+export default function TopBar({title, date, showBack, showDate, showMenu = true, onBack}: TopBarProps) {
     const {open} = useSidebar();
 
     return (
@@ -32,9 +33,11 @@ export default function TopBar({title, date, showBack, showDate, onBack}: TopBar
                 )}
             </View>
 
-            <Pressable style={styles.button} onPress={open}>
-                <ListIcon size={20} color={colors.textSecondary} weight="bold"/>
-            </Pressable>
+            {showMenu ? (
+                <Pressable style={styles.button} onPress={open}>
+                    <ListIcon size={20} color={colors.textSecondary} weight="bold"/>
+                </Pressable>
+            ) : <></>}
         </View>
     );
 }

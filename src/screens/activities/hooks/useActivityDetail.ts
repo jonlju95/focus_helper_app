@@ -42,7 +42,7 @@ export const useActivityDetail = () => {
         setDeleteVisible(false);
         await deleteActivity(activity.id);
         router.dismissAll();
-        router.replace('/activities');
+        router.push('/activities');
     }
 
     return {

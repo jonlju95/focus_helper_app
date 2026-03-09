@@ -48,7 +48,7 @@ function CategoryCardItem({color, title, amount, progress}: CategoryCardItemProp
                     <ProgressBar progress={progress} color={color}/>
                 </View>
                 <Text style={[typography.styles.cardTitle, styles.categoryAmount]}>
-                    {amount} kr
+                    {formatCurrency(amount)} kr
                 </Text>
             </View>
         </View>

@@ -27,7 +27,7 @@ function ExpensesFormScreen() {
 
     return (
         <View style={sharedStyles.container}>
-            <TopBar title={isEditing ? 'Edit expense' : 'New expense'} showBack={true} onBack={() => router.back()}/>
+            <TopBar title={isEditing ? 'Edit expense' : 'New expense'} showBack={true} showMenu={false} onBack={() => router.back()}/>
 
             <KeyboardAwareScrollView
                 style={sharedStyles.scroll}

@@ -52,7 +52,8 @@ function ReminderTable({tasks, onToggle, isEditing = false, onAddTask, onDeleteT
                     ]}>
                     <Text style={[
                         typography.styles.bodyText,
-                        task.completed && styles.taskLabelCompleted]}>
+                        task.completed && styles.taskLabelCompleted,
+                        {flexWrap: 'wrap', flexShrink: 1}]}>
                         {task.label}
                     </Text>
 
