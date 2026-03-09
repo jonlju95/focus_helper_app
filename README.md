@@ -1,7 +1,15 @@
 # Focus Helper
 
-A mobile app built for people with ADHD to help manage daily life - tracking reminders, activities, and expenses in
-one place, with a calm and distraction-free interface.
+A mobile app built for people with ADHD to help manage daily life - tracking reminders, activities, and expenses in one
+place, with a calm and distraction-free interface.
+
+---
+
+## Screenshots
+
+| Overview                              | Reminders                               | Activities                                | Expenses                              | Sidebar                             |
+|---------------------------------------|-----------------------------------------|-------------------------------------------|---------------------------------------|-------------------------------------|
+| ![Overview](screenshots/overview.jpg) | ![Reminders](screenshots/reminders.jpg) | ![Activities](screenshots/activities.jpg) | ![Expenses](screenshots/expenses.jpg) | ![Sidebar](screenshots/sidebar.jpg) |
 
 ---
 
@@ -118,6 +126,7 @@ Foreign keys are enabled after migrations complete.
 | `activities`      | Activity log entries                                      |
 | `expenses`        | Expense entries                                           |
 | `categories`      | Shared color-coded categories for expenses and activities |
+| `budget_settings` | Monthly income and fixed expense values                   |
 | `user_settings`   | Key-value store for app settings and preferences          |
 | `greetings`       | Selectable greeting phrases for the overview screen       |
 
@@ -157,4 +166,4 @@ npx expo run:android --variant release
 - The app is Android-only at this stage.
 - Daily database backups are created automatically on launch.
 - Custom categories can be added from the sidebar with a name, color, and type.
-- All amounts are added as positive values, but stored as negative internally.
+- All amounts are stored as negative values internally and displayed as positive.
